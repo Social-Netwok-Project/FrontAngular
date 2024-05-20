@@ -1,3 +1,5 @@
+import {Post} from "./post";
+
 export class Member {
   protected memberId: number | undefined;
 
@@ -13,6 +15,7 @@ export class Member {
   // PFP IMAGE URL (COMPUTED WHEN NEEDED)
   pfpImgUrl: string | undefined;
 
+  posts: Post[] = [];
 
   constructor(username: string, email: string, password: string, birthdate: string,
               creationDate?: string, userId?: number,

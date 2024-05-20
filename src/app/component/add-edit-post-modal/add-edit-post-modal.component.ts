@@ -3,17 +3,23 @@ import {faCheck, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {CookieService} from "ngx-cookie-service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ModalComponent} from "../misc/modal-component";
 import {ModalOpenType} from "../misc/modal-open-type";
 import {CurrentMemberService} from "../../service/current-member.service";
-import {generateRandomString} from "../misc/functions";
+import {generateRandomString, getCurrentDate} from "../misc/functions";
+import {Post} from "../../model/post";
+import {PostImage} from "../../model/post-image";
+import {PostService} from "../../service/post.service";
+import {PostVideoService} from "../../service/post-video.service";
+import {PostImageService} from "../../service/post-image.service";
+import {UploadStatus} from "../misc/form-component";
+import {PostVideo} from "../../model/post-video";
 
 @Component({
-  selector: 'app-add-edit-product-modal',
+  selector: 'app-add-edit-tweet-modal',
   standalone: true,
   imports: [
     FaIconComponent,
@@ -26,25 +32,40 @@ import {generateRandomString} from "../misc/functions";
 })
 export class AddEditPostModalComponent extends ModalComponent {
   @Input() override isModalOpen = false
-  @Output() override onModalChangeEmitter = new EventEmitter<boolean>()
+  @Output() override onModalChangeEmitter = new EventEmitter<boolean>();
+
+  private readonly maxSize: number = 100000000;
+  private readonly maxImages: number = 4;
+  private readonly maxVideos: number = 2;
 
   faXmark = faXmark;
   faCheck = faCheck;
 
-  files: File[] = [];
-  statusMsg: string = "";
+  images: File[] = [];
+  videos: File[] = [];
+  imagesStatusMsg: string = "";
+  videosStatusMsg: string = "";
 
-  productImagesIdsToDelete: number[] = [];
+  postImagesIdsToDelete: number[] = [];
+  postVideosIdsToDelete: number[] = [];
 
-  isSuccess: boolean = false;
+  isImagesSuccess: boolean = false;
+  isVideosSuccess: boolean = false;
+
+  isPostAdded: boolean = false;
 
   faTrash = faTrash;
 
-  @ViewChild('imageInput') imageInput!: ElementRef;
-
   @Input() modalOpenType: ModalOpenType = ModalOpenType.NONE;
+  @Input() editingPost!: Post;
 
-  constructor(protected override currentMemberService: CurrentMemberService,
+  @ViewChild("videoInput") videoInput!: ElementRef;
+  @ViewChild("imageInput") imageInput!: ElementRef;
+
+  constructor(protected override postService: PostService,
+              protected override postImageService: PostImageService,
+              protected override postVideoService: PostVideoService,
+              protected override currentMemberService: CurrentMemberService,
               protected override router: Router, protected override route: ActivatedRoute) {
     super();
   }
@@ -52,212 +73,418 @@ export class AddEditPostModalComponent extends ModalComponent {
   override isFormValid(): boolean {
     let checkedFileTypes: boolean = true;
 
-    for (let i = 0; i < this.files.length; i++) {
-      checkedFileTypes = this.files[i].type == 'image/png' || this.files[i].type == 'image/jpeg';
+    for (let i = 0; i < this.images.length; i++) {
+
+      checkedFileTypes = this.images[i].type == 'image/png' || this.images[i].type == 'image/jpeg';
       if (!checkedFileTypes) break;
     }
 
-    return true
-    // this.editingProduct.name.length > 0 &&
-    //   this.editingProduct.price > 0 &&
-      checkedFileTypes
+    return this.editingPost.title.length > 0 && this.editingPost.body.length > 0 && checkedFileTypes
+  }
+
+  getFilesSize(files: File[]): number {
+    let size = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      size += files[i].size;
+    }
+
+    console.log(size)
+    return size;
   }
 
   onImageSelected(event: any) {
-    for (let i = 0; i < event.target.files.length; i++) {
-      this.files.push(event.target.files[i]);
-      let newFileName = `${generateRandomString(10)}-${i}-${this.files[i].name}`
+    if((this.images.length + event.target.files.length) > this.maxImages) {
+      this.imagesStatusMsg = `You can only upload ${this.maxImages} images!`;
+    } else if(this.getFilesSize(this.images) + this.getFilesSize(event.target.files) > this.maxSize) {
+      this.imagesStatusMsg = `Image size is too big! Max is 100MB`;
+    } else {
+      for (let i = 0; i < event.target.files.length; i++) {
+        this.images.push(event.target.files[i]);
+        let name = `${generateRandomString(10)}-${i}-${this.images[i].name}`
 
-      // let productImage = new ProductImage(
-      //   event.target.files[i].name, newFileName,
-      //   this.editingProduct.productId!, event.target.files[i].name
-      // );
-      // productImage.imageUrl = URL.createObjectURL(event.target.files[i]);
+        let postImage = new PostImage(name, this.images[i].name, this.editingPost.postId!);
+        postImage.imageUrl = URL.createObjectURL(event.target.files[i]);
 
-      // this.editingProduct.productImages.push(productImage);
+        this.editingPost.postImages.push(postImage);
+      }
     }
+
+    this.imageInput.nativeElement.value = "";
+  }
+
+  onVideoSelected(event: any) {
+    if(this.videos.length + event.target.files.length > this.maxVideos) {
+      this.videosStatusMsg = `You can only upload ${this.maxVideos} videos!`;
+    } else if(this.getFilesSize(this.videos) + this.getFilesSize(event.target.files) > this.maxSize) {
+      this.videosStatusMsg = `Video size is too big! Max is 100MB`;
+    } else {
+      for (let i = 0; i < event.target.files.length; i++) {
+        console.log(event.target.files[i])
+
+        this.videos.push(event.target.files[i]);
+        let name = `${generateRandomString(10)}-${i}-${this.videos[i].name}`
+
+        let postVideo = new PostVideo(name, this.videos[i].name, this.videos[i].size, this.videos[i].size, this.editingPost.postId!);
+        postVideo.videoUrl = URL.createObjectURL(event.target.files[i]);
+
+        this.editingPost.postVideos.push(postVideo);
+      }
+    }
+
+    this.videoInput.nativeElement.value = "";
   }
 
   onAcceptClick() {
     if (!this.isFormValid()) {
-      this.statusMsg = "Invalid form data!";
+      this.imagesStatusMsg = "Invalid form data!";
       return;
     }
 
-    // if (this.modalOpenType == ModalOpenType.ADD) {
-    //   let productImagesToAdd = this.editingProduct.productImages
-    //   this.editingProduct.productImages = [];
-    //
-    //   this.productService.addEntity(this.editingProduct).subscribe({
-    //     next: (jsonProduct: Product) => {
-    //       let product = Product.fromJson(jsonProduct);
-    //       this.editingProduct.productId = product.productId;
-    //
-    //       new Observable<number>((observer) => {
-    //         let count = 1;
-    //         if(productImagesToAdd.length == 0) observer.next(0);
-    //
-    //         productImagesToAdd.forEach((productImage: ProductImage) => {
-    //           productImage.productId = product.productId!;
-    //           this.productImageService.addEntity(productImage).subscribe({
-    //             next: (jsonProductImage: ProductImage) => {
-    //               let productImage = ProductImage.fromJson(jsonProductImage);
-    //               console.log("Added product image with id: " + productImage.productImageId);
-    //               product.productImages.push(productImage);
-    //               observer.next(count++);
-    //             },
-    //             error: (error: HttpErrorResponse) => {
-    //               observer.error(error);
-    //               console.error(error);
-    //             }
-    //           });
-    //         });
-    //       }).subscribe({
-    //         next: (count: number) => {
-    //           if (count === productImagesToAdd.length) {
-    //             console.log("done adding product images")
-    //             this.editingProduct.productImages = productImagesToAdd;
-    //             this.uploadProductImages(product);
-    //           }
-    //         },
-    //         error: (error: HttpErrorResponse) => {
-    //           console.error(error);
-    //         }
-    //
-    //       });
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       console.error(error);
-    //     }
-    //   });
-    // }
-    // else if (this.modalOpenType == ModalOpenType.EDIT) {
-    //   console.log(this.editingProduct)
-    //
-    //   this.productService.updateEntity(this.editingProduct).subscribe({
-    //     next: (product: Product) => {
-    //       this.uploadProductImages(Product.fromJson(product));
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //       console.error(error);
-    //     }
-    //   });
-    //
-    //   this.productImagesIdsToDelete.forEach((productImageId: number) => {
-    //     this.productImageService.deleteEntity(productImageId).subscribe({
-    //       next: () => {
-    //         console.log("Deleted product image with id: " + productImageId);
-    //         let productImageToRemove = this.editingProduct.productImages
-    //           .find((productImage: ProductImage) => productImage.productImageId === productImageId);
-    //
-    //         this.editingProduct.productImages.splice(this.editingProduct.productImages.indexOf(productImageToRemove!), 1)
-    //
-    //         this.productImageService.deleteFile(productImageToRemove!.path).subscribe({
-    //           next: () => {
-    //             console.log("Deleted product image file with path: " + productImageToRemove!.path);
-    //           },
-    //           error: (error: HttpErrorResponse) => {
-    //             console.error(error);
-    //           }
-    //         });
-    //       },
-    //       error: (error: HttpErrorResponse) => {
-    //         console.error(error);
-    //       }
-    //     });
-    //   });
-    // }
+    if (this.modalOpenType == ModalOpenType.ADD) {
+      let postImagesToAdd = this.editingPost.postImages
+      let postVideosToAdd = this.editingPost.postVideos
+      this.editingPost.postImages = [];
+      this.editingPost.postVideos = [];
+
+      this.editingPost.creation_date = getCurrentDate();
+
+      let successCount = 0;
+      new Observable<boolean>(observer => {
+        this.postService.addEntity(this.editingPost).subscribe({
+          next: (jsonPost: Post) => {
+            let post = Post.fromJson(jsonPost);
+            this.editingPost.postId = post.postId;
+
+            new Observable<number>((observer) => {
+              let count = 1;
+              if (postImagesToAdd.length == 0) observer.next(0);
+
+              postImagesToAdd.forEach((postImage: PostImage) => {
+                postImage.postId = post.postId!;
+                this.postImageService.addEntity(postImage).subscribe({
+                  next: (jsonPostImage: PostImage) => {
+                    let postImage = PostImage.fromJson(jsonPostImage);
+                    console.log("Added post image with id: " + postImage.postImageId);
+                    post.postImages.push(postImage);
+                    observer.next(count++);
+                  },
+                  error: (error: HttpErrorResponse) => {
+                    observer.error(error);
+                    console.error(error);
+                  }
+                });
+              });
+            }).subscribe({
+              next: (count: number) => {
+                if (count === postImagesToAdd.length) {
+                  console.log("Added all post images")
+                  this.editingPost.postImages = postImagesToAdd;
+                  this.uploadPostImages(post).then((isSuccess: boolean) => {
+                    this.isImagesSuccess = isSuccess;
+                    observer.next(isSuccess);
+                  });
+                }
+              },
+              error: (error: HttpErrorResponse) => {
+                console.error(error);
+                observer.next(false);
+              }
+            });
+
+            new Observable<number>((observer) => {
+              let count = 1;
+              if (postVideosToAdd.length == 0) observer.next(0);
+
+              postVideosToAdd.forEach((postVideo: PostVideo) => {
+                postVideo.postId = post.postId!;
+                this.postVideoService.addEntity(postVideo).subscribe({
+                  next: (jsonPostVideo: PostVideo) => {
+                    let postVideo = PostVideo.fromJson(jsonPostVideo);
+                    console.log("Added post video with id: " + postVideo.postVideoId);
+                    post.postVideos.push(postVideo);
+                    observer.next(count++);
+                  },
+                  error: (error: HttpErrorResponse) => {
+                    observer.error(error);
+                    console.error(error);
+                  }
+                });
+              });
+            }).subscribe({
+              next: (count: number) => {
+                if (count === postVideosToAdd.length) {
+                  console.log("Added all post videos")
+                  this.editingPost.postVideos = postVideosToAdd;
+                  this.uploadPostVideos(post).then((isSuccess: boolean) => {
+                    this.isVideosSuccess = isSuccess;
+                    observer.next(isSuccess);
+                  });
+                }
+              },
+              error: (error: HttpErrorResponse) => {
+                console.error(error);
+                observer.next(false);
+              }
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error);
+            observer.next(false);
+          }
+        });
+      }).subscribe({
+        next: (isSuccess: boolean) => {
+          if(isSuccess) {
+            successCount++;
+            if(successCount == 2) {
+              this.resetValues();
+              this.isPostAdded = true;
+            }
+          }
+        }
+      });
+    }
+    else if (this.modalOpenType == ModalOpenType.EDIT) {
+      this.postService.updateEntity(this.editingPost).subscribe({
+        next: (post: Post) => {
+          this.uploadPostImages(Post.fromJson(post));
+          this.uploadPostVideos(Post.fromJson(post));
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      });
+
+      this.postImagesIdsToDelete.forEach((postImageId: number) => {
+        this.postImageService.deleteEntity(postImageId).subscribe({
+          next: () => {
+            console.log("Deleted post image with id: " + postImageId);
+            let postImageToRemove = this.editingPost.postImages
+              .find((postImage: PostImage) => postImage.postImageId === postImageId);
+
+            this.editingPost.postImages.splice(this.editingPost.postImages.indexOf(postImageToRemove!), 1)
+
+            this.postImageService.deleteFile(postImageToRemove!.name).subscribe({
+              next: () => {
+                console.log("Deleted post image file with path: " + postImageToRemove!.name);
+              },
+              error: (error: HttpErrorResponse) => {
+                console.error(error);
+              }
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error);
+          }
+        });
+      });
+      this.postVideosIdsToDelete.forEach((postVideoId: number) => {
+        this.postVideoService.deleteEntity(postVideoId).subscribe({
+          next: () => {
+            console.log("Deleted post video with id: " + postVideoId);
+            let postVideoToRemove = this.editingPost.postVideos
+              .find((postVideo: PostVideo) => postVideo.postVideoId === postVideoId);
+
+            this.editingPost.postVideos.splice(this.editingPost.postVideos.indexOf(postVideoToRemove!), 1)
+
+            this.postVideoService.deleteFile(postVideoToRemove!.name).subscribe({
+              next: () => {
+                console.log("Deleted post video file with path: " + postVideoToRemove!.name);
+              },
+              error: (error: HttpErrorResponse) => {
+                console.error(error);
+              }
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error);
+          }
+        });
+      });
+    }
   }
-  // uploadProductImages(product: Product) {
-  //   let formData = new FormData();
-  //
-  //   for (let i = 0; i < this.files.length; i++) {
-  //     let currentProductImage = this.editingProduct.productImages
-  //       .find((productImage: ProductImage) => productImage.name === this.files[i].name)!;
-  //
-  //     let newProductImage = product.productImages
-  //       .find((productImage: ProductImage) => productImage.path === currentProductImage.path)!;
-  //
-  //     currentProductImage.productImageId = newProductImage.productImageId;
-  //
-  //     formData.append('files', this.files[i], currentProductImage.path);
-  //   }
-  //
-  //   if (this.files.length > 0) {
-  //     this.uploadFiles(this.productImageService, formData).subscribe({
-  //       next: (uploadStatus: UploadStatus) => {
-  //         this.statusMsg = uploadStatus.statusMsg;
-  //         if (uploadStatus.isSuccessful) {
-  //           this.isSuccess = true;
-  //           this.resetValues();
-  //         }
-  //       },
-  //       error: (error: HttpErrorResponse) => {
-  //         console.error(error);
-  //       }
-  //     });
-  //   } else {
-  //     this.isSuccess = true;
-  //   }
-  //
-  //   if (this.modalOpenType == ModalOpenType.ADD) {
-  //     this.currentUserService.user?.products!.push(this.editingProduct);
-  //     this.resetValues();
-  //   }
 
-  // }
-  // private resetValues() {
-  //   if (this.modalOpenType == ModalOpenType.ADD) {
-  //     this.editingProduct = new Product("", false, 0, this.currentUserService.user?.getUserId()!, "");
-  //   }
-  //
-  //   for (let i = this.editingProduct.productImages.length - 1; i >= 0; i--) {
-  //     if (this.editingProduct.productImages[i].productImageId == undefined) {
-  //       this.editingProduct.productImages.splice(i, 1);
-  //     } else if (this.editingProduct.productImages[i].mightDelete) {
-  //       this.editingProduct.productImages[i].mightDelete = false;
-  //     }
-  //   }
-  //
-  //   this.files = [];
-  //   this.productImagesIdsToDelete = [];
+  uploadPostImages(post: Post) {
+    return new Promise<boolean>((resolve, reject) => {
+      let formData = new FormData();
 
-  // }
+      for (let i = 0; i < this.images.length; i++) {
+        let currentPostImage = this.editingPost.postImages
+          .find((postImage: PostImage) => postImage.fileName === this.images[i].name)!;
 
-  // onDeleteImage(productImage: ProductImage) {
-  //   let isInDeletingList: boolean = productImage.productImageId != undefined &&
-  //     this.productImagesIdsToDelete.includes(productImage.productImageId);
-  //
-  //   // IF NOT IN PRODUCT IMAGES TO DELETE AND NOT ORIGINAL PRODUCT IMAGE
-  //   if (!isInDeletingList && productImage.productImageId == undefined) {
-  //     console.log("removed from potential list")
-  //     // REMOVE FROM PRODUCT IMAGES
-  //     this.editingProduct?.productImages.splice(this.editingProduct?.productImages
-  //       .findIndex((productImage1: ProductImage) => productImage1.imageUrl == productImage.imageUrl), 1);
-  //
-  //     // REMOVE FROM FILES
-  //     let indexFiles = this.files.findIndex((file: File) => URL.createObjectURL(file) == productImage.imageUrl);
-  //     this.files.splice(indexFiles, 1);
-  //   }
-  //   // IF NOT IN DELETING BUT ORIGINAL PRODUCT IMAGE
-  //   else if (!isInDeletingList && productImage.productImageId != undefined) {
-  //     // ADD TO PRODUCT IMAGES TO DELETE
-  //     productImage.mightDelete = true;
-  //     this.productImagesIdsToDelete.push(productImage.productImageId);
-  //   }
-  //   // IF ALREADY IN DELETING AND ORIGINAL PRODUCT IMAGE
-  //   else if (isInDeletingList && productImage.productImageId != undefined) {
-  //     // REMOVE FROM PRODUCT IMAGES TO DELETE
-  //     productImage.mightDelete = false;
-  //     this.productImagesIdsToDelete.splice(this.productImagesIdsToDelete
-  //       .findIndex((productImageId: number) => productImageId === productImage.productImageId), 1);
-  //   }
-  // }
+        let newPostImage = post.postImages
+          .find((postImage: PostImage) => postImage.name === currentPostImage.name)!;
+
+        currentPostImage.postImageId = newPostImage.postImageId;
+
+        formData.append('files', this.images[i], currentPostImage.name);
+      }
+
+      if (this.images.length > 0) {
+        this.uploadFiles(this.postImageService, formData).subscribe({
+          next: (uploadStatus: UploadStatus) => {
+            this.imagesStatusMsg = uploadStatus.statusMsg;
+            if (uploadStatus.isSuccessful && uploadStatus.isDone) {
+              console.log("Successfully uploaded post images")
+              resolve(true);
+            } else if(!uploadStatus.isSuccessful && uploadStatus.isDone) {
+              console.log("Failed to upload post images")
+              resolve(false);
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            resolve(false)
+            console.error(error);
+          }
+        });
+      } else {
+        resolve(true);
+      }
+    })
+  }
+
+  uploadPostVideos(post: Post) {
+    return new Promise<boolean>((resolve, reject) => {
+      let formData = new FormData();
+
+      for (let i = 0; i < this.videos.length; i++) {
+        let currentPostVideo = this.editingPost.postVideos
+          .find((postVideo: PostVideo) => postVideo.fileName === this.videos[i].name)!;
+
+        let newPostVideo = post.postVideos
+          .find((postVideo: PostVideo) => postVideo.name === currentPostVideo.name)!;
+
+        currentPostVideo.postVideoId = newPostVideo.postVideoId;
+
+        formData.append('files', this.videos[i], currentPostVideo.name);
+      }
+
+      if (this.videos.length > 0) {
+        this.uploadFiles(this.postVideoService, formData).subscribe({
+          next: (uploadStatus: UploadStatus) => {
+            this.videosStatusMsg = uploadStatus.statusMsg;
+            if (uploadStatus.isSuccessful && uploadStatus.isDone) {
+              resolve(true);
+              console.log("Successfully uploaded post videos")
+            } else if(!uploadStatus.isSuccessful && uploadStatus.isDone){
+              resolve(false);
+              console.log("Failed to upload post videos")
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            resolve(false);
+            console.error(error);
+          }
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  }
+
+  private resetValues() {
+    if (this.modalOpenType == ModalOpenType.ADD) {
+      this.editingPost = new Post("", "", "", this.currentMemberService.user?.getUserId()!);
+    }
+
+    for (let i = this.editingPost.postImages.length - 1; i >= 0; i--) {
+      if (this.editingPost.postImages[i].postImageId == undefined) {
+        this.editingPost.postImages.splice(i, 1);
+        this.editingPost.postVideos.splice(i, 1);
+      } else if (this.editingPost.postImages[i].mightDelete) {
+        this.editingPost.postImages[i].mightDelete = false;
+        this.editingPost.postVideos[i].mightDelete = false;
+      }
+    }
+
+    this.images = [];
+    this.videos = [];
+    this.postImagesIdsToDelete = [];
+    this.postVideosIdsToDelete = [];
+  }
+
+  onDeleteImage(postImage: PostImage) {
+    let isInDeletingList: boolean = postImage.postImageId != undefined &&
+      this.postImagesIdsToDelete.includes(postImage.postImageId!);
+
+    // IF NOT IN POST IMAGES TO DELETE AND NOT ORIGINAL POST IMAGE
+    if (!isInDeletingList && postImage.postImageId == undefined) {
+      console.log("removed from potential list")
+      // REMOVE FROM POST IMAGES
+      this.editingPost?.postImages.splice(this.editingPost?.postImages
+        .findIndex((postImage1: PostImage) => postImage1.imageUrl == postImage.imageUrl), 1);
+
+      // REMOVE FROM FILES
+      let indexFiles = this.images.findIndex((file: File) => URL.createObjectURL(file) == postImage.imageUrl);
+      this.images.splice(indexFiles, 1);
+    }
+    // IF NOT IN DELETING BUT ORIGINAL POST IMAGE
+    else if (!isInDeletingList && postImage.postImageId != undefined) {
+      // ADD TO POST IMAGES TO DELETE
+      postImage.mightDelete = true;
+      this.postImagesIdsToDelete.push(postImage.postImageId!);
+    }
+    // IF ALREADY IN DELETING AND ORIGINAL POST IMAGE
+    else if (isInDeletingList && postImage.postImageId != undefined) {
+      // REMOVE FROM POST IMAGES TO DELETE
+      postImage.mightDelete = false;
+      this.postImagesIdsToDelete.splice(this.postImagesIdsToDelete
+        .findIndex((postImageId: number) => postImageId === postImage.postImageId), 1);
+    }
+  }
 
   override closeModal() {
-    this.statusMsg = "";
-    this.isSuccess = false;
-    // this.resetValues();
+    this.resetMessages();
+    this.resetValues();
     super.closeModal();
+  }
+
+  onDeleteVideo(postVideo: PostVideo) {
+    let isInDeletingList: boolean = postVideo.postVideoId != undefined &&
+      this.postVideosIdsToDelete.includes(postVideo.postVideoId!);
+
+    // IF NOT IN POST IMAGES TO DELETE AND NOT ORIGINAL POST IMAGE
+    if (!isInDeletingList && postVideo.postVideoId == undefined) {
+      console.log("removed from potential list")
+      // REMOVE FROM POST IMAGES
+      this.editingPost?.postVideos.splice(this.editingPost?.postVideos
+        .findIndex((postVideo1: PostVideo) => postVideo1.videoUrl == postVideo.videoUrl), 1);
+
+      // REMOVE FROM FILES
+      let indexFiles = this.videos.findIndex((file: File) => URL.createObjectURL(file) == postVideo.videoUrl);
+      this.videos.splice(indexFiles, 1);
+    }
+    // IF NOT IN DELETING BUT ORIGINAL POST IMAGE
+    else if (!isInDeletingList && postVideo.postVideoId != undefined) {
+      // ADD TO POST IMAGES TO DELETE
+      postVideo.mightDelete = true;
+      this.postVideosIdsToDelete.push(postVideo.postVideoId!);
+    }
+    // IF ALREADY IN DELETING AND ORIGINAL POST IMAGE
+    else if (isInDeletingList && postVideo.postVideoId != undefined) {
+      // REMOVE FROM POST IMAGES TO DELETE
+      postVideo.mightDelete = false;
+      this.postVideosIdsToDelete.splice(this.postVideosIdsToDelete
+        .findIndex((postVideoId: number) => postVideoId === postVideo.postVideoId), 1);
+    }
+  }
+
+  isSuccess() {
+    return this.isImagesSuccess && this.isVideosSuccess;
+  }
+
+  checkIfPostAdded() {
+    if(this.isPostAdded) {
+      this.resetMessages()
+      this.isPostAdded = false;
+    }
+  }
+
+  private resetMessages() {
+    this.imagesStatusMsg = "";
+    this.videosStatusMsg = "";
+    this.isImagesSuccess = false;
+    this.isVideosSuccess = false;
   }
 }

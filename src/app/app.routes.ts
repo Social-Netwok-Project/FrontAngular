@@ -9,6 +9,7 @@ import {StorageKeys} from "./component/misc/storage-keys";
 import {RegisterComponent} from "./component/authentication/register/register.component";
 import {PasswordRecoveryComponent} from "./component/authentication/password-recovery/password-recovery.component";
 import {PasswordResetComponent} from "./component/authentication/password-reset/password-reset.component";
+import {SwitchUsersComponent} from "./component/switch-users/switch-users.component";
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -18,6 +19,7 @@ export const routes: Routes = [
   {path: 'password-recovery', component: PasswordRecoveryComponent},
   {path: `password-reset/:${StorageKeys.USER_TOKEN}`, component: PasswordResetComponent},
   {path: 'messages', component: MessagesComponent},
+  {path: 'switch-users', component: SwitchUsersComponent},
   {
     path: 'user-account', component: UserAccountComponent, children: [
       {path: 'connection-security', component: ConnectionSecurityComponent},

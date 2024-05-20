@@ -318,14 +318,34 @@ $hoverBackground: rgba(0, 0, 0, 0.3);
 
 .default-text-area-3 {
   background: $colorP17;
-  border-radius: 15px;
+  border-radius: 5px;
   border: grey solid 1px;
   height: 90px;
   max-height: 300px;
   margin: 5px 0 5px 0;
   white-space:pre;
-  text-indent: 10px;
+  padding: 5px 10px 5px 10px;
   width: 100%;
+}
+
+.default-text-area-3::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+.default-text-area-3::-webkit-scrollbar-track {
+  border-radius: 15px;
+}
+
+/* Handle */
+.default-text-area-3::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+}
+
+/* Handle on hover */
+.default-text-area-3::-webkit-scrollbar-thumb:hover {
+  border-radius: 15px;
 }
 
 .default-check-box-1 {

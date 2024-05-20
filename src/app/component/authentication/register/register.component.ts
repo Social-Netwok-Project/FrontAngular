@@ -17,6 +17,7 @@ import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import {emailElement, usernameElement} from "../../misc/editable-element";
 import {AuthenticationComponent} from "../authentication-component";
 import {HttpErrorResponse} from "@angular/common/http";
+import {getCurrentDate} from "../../misc/functions";
 
 @Component({
   selector: 'app-register',
@@ -80,10 +81,7 @@ export class RegisterComponent extends AuthenticationComponent implements OnInit
           // Generating hash from password with bcrypt (one of the packages that is used for hashing passwords)
           if (!this.isEmailExists) {
             bcrypt.hash(this.passwordInput, this.hashSalt, (err, hashPassword) => {
-              let creationDate = new Date().toISOString().slice(0, 10).replace('T', ' ');
-              console.log(creationDate)
-
-              let newMember: Member = new Member(this.usernameInput, this.emailInput, hashPassword, this.birthDateInput, creationDate)
+              let newMember: Member = new Member(this.usernameInput, this.emailInput, hashPassword, this.birthDateInput, getCurrentDate())
               console.log(newMember)
               this.memberService.addEntity(newMember).subscribe({
                 next: (jsonMember: Member) => {

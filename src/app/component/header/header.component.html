@@ -64,5 +64,11 @@
     <button class="register-button" type="button" (click)="registerOnClick()">Register</button>
   </div>
 </div>
+<app-add-edit-tweet-modal
+  [isModalOpen]="isAddEditTweetModalOpen"
+  [modalOpenType]="modalOpenType"
+  [editingPost]="editingPost"
+  (onModalChangeEmitter)="onAddEditTweetModalChange($event)"
+></app-add-edit-tweet-modal>
 
 

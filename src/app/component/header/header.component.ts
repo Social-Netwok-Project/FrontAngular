@@ -14,6 +14,9 @@ import {NgxResizeObserverModule} from "ngx-resize-observer";
 import {logout, ProfileMenuItem, profileMenuItems} from "../user-account/profile-menu-item/profile-menu-item";
 import {MemberService} from "../../service/member.service";
 import {navigationItems} from "./navigation-item";
+import {AddEditPostModalComponent} from "../add-edit-post-modal/add-edit-post-modal.component";
+import {ModalOpenType} from "../misc/modal-open-type";
+import {Post} from "../../model/post";
 
 @Component({
   selector: 'app-header',
@@ -21,7 +24,7 @@ import {navigationItems} from "./navigation-item";
   imports: [LogoComponent,
     FontAwesomeModule, NgStyle,
     FormsModule, AutoCompleteModule,
-    NgxResizeObserverModule, NgIf, NgForOf],
+    NgxResizeObserverModule, NgIf, NgForOf, AddEditPostModalComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   host: {
@@ -29,22 +32,24 @@ import {navigationItems} from "./navigation-item";
   }
 })
 export class HeaderComponent extends CookieComponent implements OnInit {
-  profileMenuItems = profileMenuItems;
-
-
   // Logic Fields
   showMenu: boolean = false;
 
   dropDownMenuTop: number = 0;
   // Font Awesome Icons
   faBars = faBars;
-
   faXmark = faXmark;
+  faPlus = faPlus;
+
   navigationItems = navigationItems;
+  profileMenuItems = profileMenuItems;
 
   // DOM Elements
-
   @ViewChild('headerBody') headerBody!: ElementRef;
+
+  isAddEditTweetModalOpen: boolean = false;
+  modalOpenType: ModalOpenType = ModalOpenType.NONE;
+  editingPost!: Post;
 
   constructor(protected override currentMemberService: CurrentMemberService,
               protected override memberService: MemberService,
@@ -60,8 +65,8 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   routeToAndCloseBurgerMenu(profileMenuItem: ProfileMenuItem) {
     if (profileMenuItem != logout) {
       this.routeTo(profileMenuItem.link)
-      this.currentMemberService.setUserToNull();
     } else {
+      this.currentMemberService.setUserToNull();
       this.loginOnClick();
     }
 
@@ -89,8 +94,12 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   }
 
   tweetOnClick() {
-
+    this.isAddEditTweetModalOpen = true;
+    this.modalOpenType = ModalOpenType.ADD;
+    this.editingPost = new Post("", "", "", this.currentMemberService.user?.getUserId()!)
   }
 
-  protected readonly faPlus = faPlus;
+  onAddEditTweetModalChange(newVal: boolean) {
+    this.isAddEditTweetModalOpen = newVal;
+  }
 }

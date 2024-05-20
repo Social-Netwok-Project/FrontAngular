@@ -2,70 +2,93 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header my-modal-header">
-        <span class="modal-header-title">{{ modalOpenType }} Product</span>
+        <span class="modal-header-title">{{ modalOpenType }} Post</span>
         <div class="clickable-icon-elem-1" (click)="closeModal()">
           <fa-icon [icon]="faXmark" [class]="['clickable-icon-1']"></fa-icon>
         </div>
       </div>
       <div class="modal-body">
-<!--        <div class="my-modal-element">-->
-<!--          <div class="add-form-elem-1">-->
-<!--            <label for="name-input">Name:*</label>-->
-<!--            <input class="default-input-3" type="text" [(ngModel)]="editingProduct.name" id="name-input">-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="my-modal-element">-->
-<!--          <div class="add-form-elem-1">-->
-<!--            <label for="price-input">Price:*</label>-->
-<!--            <input class="default-input-3" type="number" [(ngModel)]="editingProduct.price" id="price-input">-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="my-modal-element">-->
-<!--          <div class="add-form-elem-2">-->
-<!--            <label for="is-vegan-input">Vegan:*</label>-->
-<!--            <input class="default-check-box-1" type="checkbox" [(ngModel)]="editingProduct.vegan" id="is-vegan-input">-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="my-modal-element">-->
-<!--          <div class="add-form-elem-1">-->
-<!--            <label for="description-input">Description:</label>-->
-<!--            <input class="default-input-3" type="text" [(ngModel)]="editingProduct.description" id="description-input">-->
-<!--          </div>-->
-<!--        </div>-->
+        <div class="my-modal-element">
+          <div class="add-form-elem-1">
+            <label for="title-input">Title:</label>
+            <input class="default-input-3" type="text" [(ngModel)]="editingPost.title" (click)="checkIfPostAdded()" id="title-input">
+          </div>
+        </div>
+        <div class="my-modal-element">
+          <div class="add-form-elem-1">
+            <label for="body-input">Body:</label>
+            <textarea class="default-text-area-3" [(ngModel)]="editingPost.body" (click)="checkIfPostAdded()" id="body-input"></textarea>
+          </div>
+        </div>
         <div class="my-modal-element">
           <div class="add-form-elem-1">
             <span>Select Images:</span>
             <div class="drag-and-drop-elem">
               <span>Click Or Drag</span>
-              <input #imageInput id="images-input" type="file" multiple="multiple" accept="image/*" name="files"
+              <input #imageInput  id="images-input" type="file" multiple="multiple" accept="image/png, image/gif, image/jpeg" name="files"
                      class="drag-and-drop-input" (change)="onImageSelected($event)">
             </div>
-            <span class="validation-error-span">{{ statusMsg }}</span>
           </div>
-<!--          <div class="add-form-elem-1" *ngIf="editingProduct?.productImages!.length > 0">-->
-<!--            <span>Product Images:</span>-->
-<!--          </div>-->
-<!--          <div class="image-preview-container">-->
-<!--            <div *ngFor="let productImage of editingProduct?.productImages">-->
-<!--              <div class="image-preview-elem-main">-->
-<!--                <div class="image-preview-elem">-->
-<!--                  <img class="image-preview" src="{{productImage.imageUrl}}" alt="img">-->
-<!--                </div>-->
+          <div class="add-form-elem-1" *ngIf="editingPost.postImages!.length > 0">
+            <span>Post Images:</span>
+          </div>
+          <div class="image-preview-container">
+            <div *ngFor="let postImage of editingPost.postImages">
+              <div class="image-preview-elem-main">
+                <div class="image-preview-elem">
+                  <img class="image-preview" src="{{postImage.imageUrl}}" alt="img">
+                </div>
 
-<!--                <div class="image-preview-edit-elem">-->
-<!--                  <fa-icon [icon]="faTrash" [class]="['clickable-icon-1', 'trash-icon']"-->
-<!--                           (click)="onDeleteImage(productImage)"></fa-icon>-->
-<!--                </div>-->
+                <div class="image-preview-edit-elem">
+                  <fa-icon [icon]="faTrash" [class]="['clickable-icon-1', 'trash-icon']"
+                           (click)="onDeleteImage(postImage)"></fa-icon>
+                </div>
 
-<!--                <div class="icon-might-delete-elem" *ngIf="productImage.mightDelete">-->
-<!--                  <fa-icon [icon]="faXmark" [class]="['clickable-icon-1', 'might-delete-icon']"-->
-<!--                           (click)="onDeleteImage(productImage)"></fa-icon>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-          <div class="add-form-elem-1" *ngIf="isSuccess">
-            <span class="validation-success-span">Product {{modalOpenType}}ed successfully</span>
+                <div class="image-might-delete-elem" *ngIf="postImage.mightDelete">
+                  <fa-icon [icon]="faXmark" [class]="['clickable-icon-1', 'might-delete-icon']"
+                           (click)="onDeleteImage(postImage)"></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="validation-error-span">{{ imagesStatusMsg }}</span>
+        </div>
+        <div class="my-modal-element">
+          <div class="add-form-elem-1">
+            <span>Select Videos:</span>
+            <div class="drag-and-drop-elem">
+              <span>Click Or Drag</span>
+              <input #videoInput  id="videos-input" type="file" multiple="multiple" accept="video/mp4" name="files"
+                     class="drag-and-drop-input" (change)="onVideoSelected($event)">
+            </div>
+          </div>
+          <div class="add-form-elem-1" *ngIf="editingPost.postVideos!.length > 0">
+            <span>Post Videos:</span>
+          </div>
+          <div class="video-preview-container">
+            <div *ngFor="let postVideo of editingPost.postVideos">
+              <div class="video-preview-elem-main">
+                <div class="video-preview-elem">
+                  <span>{{postVideo.fileName}}</span>
+                </div>
+
+                <div class="video-preview-edit-elem">
+                  <fa-icon [icon]="faTrash" [class]="['clickable-icon-3', 'trash-icon']"
+                           (click)="onDeleteVideo(postVideo)"></fa-icon>
+                </div>
+
+                <div class="video-might-delete-elem" *ngIf="postVideo.mightDelete">
+                  <fa-icon [icon]="faXmark" [class]="['clickable-icon-3', 'might-delete-icon']"
+                           (click)="onDeleteVideo(postVideo)"></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="validation-error-span">{{ videosStatusMsg }}</span>
+        </div>
+        <div class="my-modal-element">
+          <div class="add-form-elem-1" *ngIf="isSuccess()">
+            <span class="validation-success-span">Post {{modalOpenType}}ed successfully</span>
           </div>
         </div>
       </div>

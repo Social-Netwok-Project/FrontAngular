@@ -1,17 +1,27 @@
 export class PostVideo {
-  postVideoId!: number;
-  name!: string;
-  length!: number;
-  size!: number;
+  postVideoId!: number | undefined;
+  name: string;
+  fileName: string;
 
-  constructor(postVideoId: number, name: string, length: number, size: number) {
-    this.postVideoId = postVideoId;
+  length: number;
+  size: number;
+
+  postId: number;
+
+  videoUrl: string | undefined;
+  mightDelete: boolean = false;
+
+  constructor(name: string, fileName: string, length: number, size: number, postId: number, postVideoId?: number) {
     this.name = name;
+    this.fileName = fileName;
     this.length = length;
     this.size = size;
+    this.postId = postId;
+
+    this.postVideoId = postVideoId;
   }
 
   public static fromJson(jsonPostVideo: PostVideo): PostVideo {
-    return new PostVideo(jsonPostVideo.postVideoId, jsonPostVideo.name, jsonPostVideo.length, jsonPostVideo.size);
+    return new PostVideo(jsonPostVideo.name, jsonPostVideo.fileName, jsonPostVideo.length, jsonPostVideo.size, jsonPostVideo.postId, jsonPostVideo.postVideoId);
   }
 }

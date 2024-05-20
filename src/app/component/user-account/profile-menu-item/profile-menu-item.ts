@@ -1,6 +1,6 @@
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {
-  faArrowRightFromBracket,
+  faArrowRightFromBracket, faArrowRightToBracket,
   faGear,
   faLock,
   faMessage,

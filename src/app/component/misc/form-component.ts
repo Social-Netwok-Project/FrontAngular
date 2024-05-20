@@ -21,11 +21,11 @@ export abstract class FormComponent extends CookieComponent {
               console.log('Response header has been received');
               break;
             case HttpEventType.Response:
-              subscriber.next(new UploadStatus('Your file(s) have been uploaded successfully!', true));
+              subscriber.next(new UploadStatus('Your file(s) have been uploaded successfully!', true, true));
               break;
             case HttpEventType.Sent:
-              console.log('Request has been made!');
-              subscriber.next(new UploadStatus('Uploading...', false));
+              // console.log('Request has been made!');
+              subscriber.next(new UploadStatus('Uploading...', true, false));
               break;
             default:
               // console.log('Event: ', httpEvent);
@@ -33,7 +33,7 @@ export abstract class FormComponent extends CookieComponent {
         },
         error: (error: HttpErrorResponse) => {
           console.log("Error uploading file: ", error);
-          subscriber.next(new UploadStatus('An error occurred while uploading your profile picture.', false));
+          subscriber.next(new UploadStatus('An error occurred while uploading your file(s).', false, false));
         }
       });
     });
@@ -43,10 +43,12 @@ export abstract class FormComponent extends CookieComponent {
 export class UploadStatus {
   statusMsg: string = '';
   isSuccessful: boolean = false;
+  isDone: boolean = false;
 
-  constructor(statusMessage: string, isSuccessful: boolean) {
+  constructor(statusMessage: string, isSuccessful: boolean, isDone: boolean = true) {
     this.statusMsg = statusMessage;
     this.isSuccessful = isSuccessful;
+    this.isDone = isDone;
   }
 }
 

@@ -8,12 +8,18 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Member} from "../../model/member";
 import {CurrentMemberService} from "../../service/current-member.service";
 import {Observable} from "rxjs";
+import {PostService} from "../../service/post.service";
+import {PostImageService} from "../../service/post-image.service";
+import {PostVideoService} from "../../service/post-video.service";
 
 export abstract class CookieComponent {
   // Services
   protected cookieService!: CookieService;
   protected currentMemberService!: CurrentMemberService;
   protected memberService!: MemberService;
+  protected postService!: PostService;
+  protected postImageService!: PostImageService;
+  protected postVideoService!: PostVideoService;
 
   protected router!: Router;
   protected route!: ActivatedRoute;
