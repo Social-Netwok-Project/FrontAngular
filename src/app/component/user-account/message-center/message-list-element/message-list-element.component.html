@@ -1,0 +1,13 @@
+<div class="message-container" [style.justify-content]="messageListElement?.position">
+  <div class="message-body-div">
+    <div class="info-div">
+<!--      <span class="username-span small-span">{{ messageListElement?.message?.messageUserOwner?.getName() }}</span>-->
+      <span class="small-span">{{timeStamp}}</span>
+    </div>
+    <div class="message-div {{messageListElement?.messageType?.backgroundClass}}">
+      <span class="expandable-span">{{messageListElement?.message?.message}}</span>
+    </div>
+<!--    <span class="small-span">{{messageListElement?.messageType?.userCategory?.name}}</span>-->
+  </div>
+</div>
+

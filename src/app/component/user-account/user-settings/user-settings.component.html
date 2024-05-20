@@ -1,0 +1,38 @@
+<div class="main-page-body-div">
+  <div class="user-settings-body">
+    <div class="h1-div">
+      <h1 class="main-page-h1">Your account settings</h1>
+    </div>
+
+    <div class="profile-card-body">
+      <div class="profile-card">
+        <div class="pfp-image-elem-main">
+          <div class="pfp-image-elem">
+            <img class="image-frame" src="{{currentMemberService.user?.pfpImgUrl}}" alt="pfp"
+                 *ngIf="currentMemberService.user?.hasPfpImg()">
+            <fa-icon [class]="['user-icon']" [icon]="faUser" *ngIf="!currentMemberService.user?.hasPfpImg()"></fa-icon>
+          </div>
+
+          <div class="pfp-edit-elem" (click)="openModal()">
+            <fa-icon [class]="['camera-icon']" [icon]="faCamera"></fa-icon>
+          </div>
+        </div>
+        <div class="profile-top-div-info">
+          <span class="text-font-700">{{ currentMemberService.user?.username }}</span>
+          <span>{{ currentMemberService.user?.username }}</span>
+          <span>{{ currentMemberService.user?.email }}</span>
+        </div>
+      </div>
+      <div class="profile-edit-elem">
+        <div class="clickable-icon-elem-1" (click)="routeTo('/user-account/connection-security')">
+          <fa-icon [class]="['clickable-icon-1']" [icon]="faPenToSquare"></fa-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-upload-pfp-modal
+  [isModalOpen]="isModalOpen"
+  [user]="user"
+  (onModalChangeEmitter)="closeModal($event)"
+></app-upload-pfp-modal>

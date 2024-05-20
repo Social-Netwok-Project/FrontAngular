@@ -1,0 +1,27 @@
+<div class="cs-body-div">
+  <div class="cs-main-div">
+    <div class="my-modal-header-2">
+      <span class="modal-header-title-2">Connection And Security</span>
+      <div class="clickable-icon-elem-1" (click)="closeModal()" *ngIf="isModal">
+        <fa-icon [icon]="faXmark" [class]="['clickable-icon-1']"></fa-icon>
+      </div>
+    </div>
+    <div class="editable-elements-main" *ngFor="let editableElement of editableElements">
+      <app-cs-elem
+        [editableElement]="editableElement"
+        [editingUserType]="editingUserType">
+      </app-cs-elem>
+    </div>
+    <div class="separation-line-small"></div>
+    <span class="validation-error-span" *ngIf="isNotSuccess()">Could not update information</span>
+    <span class="validation-success-span" *ngIf="isSuccess()">Changes Applied Successfully</span>
+    <div class="cs-elem-last">
+      <div class="cs-button-elem">
+        <button class="default-btn" type="button" (click)="onApplyChanges()">Apply Changes</button>
+      </div>
+      <div class="cs-button-elem">
+        <button class="default-btn" type="button" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

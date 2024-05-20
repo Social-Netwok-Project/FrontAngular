@@ -1,0 +1,34 @@
+<div class="modal my-modal" *ngIf="isModalOpen">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header my-modal-header">
+        <span class="modal-header-title">Upload profile picture</span>
+        <div class="clickable-icon-elem-1" (click)="closeModal()">
+          <fa-icon [icon]="faXmark" [class]="['clickable-icon-1']"></fa-icon>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="my-modal-element">
+          <div class="pfp-image-elem-main">
+            <fa-icon [class]="['user-icon']" [icon]="faUser" *ngIf="!internalHasUserPfpImg()"></fa-icon>
+            <img src="{{getUserPfpImgUrl()}}" alt="profile" class="image-frame" *ngIf="internalHasUserPfpImg()">
+          </div>
+        </div>
+        <div class="my-modal-element">
+          <div class="add-form-elem-1">
+            <input #imageInput type="file" accept="image/*" name="files" class="form-control" (change)="onPfpImgSelected($event)">
+            <span class="validation-error-span">{{statusMsg}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="clickable-icon-elem-1">
+          <fa-icon [icon]="faCheck" [class]="['clickable-icon-1']" (click)="onSaveChanges()"></fa-icon>
+        </div>
+        <div class="clickable-icon-elem-1">
+          <fa-icon [icon]="faTrash" [class]="['clickable-icon-1']" (click)="deleteImage()"></fa-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

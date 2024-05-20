@@ -1,0 +1,20 @@
+<div (onResize)="handleFooterTopMinValue($event, 0)" class="profile-main-div">
+  <div class="profile-menu-body">
+    <div class="profile-menu">
+      <div *ngFor="let profileMenuItem of profileMenuItems">
+        <app-profile-menu-item
+          [profileMenuItem]="profileMenuItem">
+        </app-profile-menu-item>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-info-body">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
+<app-footer
+  [footerTopMinValue]="footerTopMinValue"
+  [position]="position"
+></app-footer>

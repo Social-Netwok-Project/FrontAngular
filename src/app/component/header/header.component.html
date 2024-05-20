@@ -1,0 +1,63 @@
+<div class="header-body-div text-font-700" (onResize)="handleResize($event)">
+  <div class="header-elem">
+    <div class="burger-menu-elem">
+      <div class="burger-menu-icon-elem" (click)="burgerMenuOnClick()">
+        <fa-icon [class]="['burger-menu-icon']" [icon]="faBars"></fa-icon>
+      </div>
+      <div class="drop-down-menu" [style.top.px]="dropDownMenuTop" *ngIf="showMenu">
+        <div class="dpm-title-elem">
+          <span *ngIf="currentMemberService.isLoggedIn()"
+                class="main-title-span">Welcome, {{ currentMemberService.user?.username }}!</span>
+          <span *ngIf="!currentMemberService.isLoggedIn()" class="main-title-span">Welcome To Twitter v2!</span>
+          <div class="clickable-icon-elem-1" (click)="xMarkOnClick()">
+            <fa-icon [icon]="faXmark" [class]="['clickable-icon-1']"></fa-icon>
+          </div>
+        </div>
+        <div class="dpm-logged-out-elem" *ngIf="!currentMemberService.isLoggedIn()">
+          <div class="logged-out-button-elem" *ngIf="!currentMemberService.isLoggedIn()">
+            <button class="default-btn" type="button" (click)="loginOnClick()">Login</button>
+          </div>
+          <div class="logged-out-button-elem" *ngIf="!currentMemberService.isLoggedIn()">
+            <button class="default-btn" type="button" (click)="registerOnClick()">Register</button>
+          </div>
+        </div>
+        <div class="dpm-func-menu" *ngIf="currentMemberService.isLoggedIn()">
+          <div class="dpm-func-elem-div" *ngFor="let profileMenuItem of profileMenuItems">
+            <div class="dpm-func-elem" (click)="routeToAndCloseBurgerMenu(profileMenuItem)">
+              <div class="dpm-func-icon-elem">
+                <fa-icon [icon]="profileMenuItem.icon" [class]="['func-icon']"></fa-icon>
+              </div>
+              <span class="dpm-func-span">{{profileMenuItem.name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-elem logo-title-elem" (click)="routeToHome()">
+    <img class="logo-img" src="assets/logo.png" alt="logo">
+    <div class="title-elem">
+      <span>Twitter v2</span>
+    </div>
+  </div>
+  <div class="header-elem search-elem">
+<!--    <p-autoComplete name="auto-complete"-->
+<!--                    [(ngModel)]="selectedBusiness"-->
+<!--                    [placeholder]="'Search Restaurants'"-->
+<!--                    [inputStyleClass]="'default-input-1'"-->
+<!--                    [styleClass]="'default-input-1-container'"-->
+<!--                    [style.width.%]="100"-->
+<!--                    [suggestions]="getFilteredBusinesses()"-->
+<!--                    (completeMethod)="onSearchBusiness($event)"-->
+<!--                    (click)="onClick()"-->
+<!--                    (onKeyUp)="onSubmit($event)"/>-->
+  </div>
+  <div class="header-elem login-button-elem" *ngIf="!currentMemberService.isLoggedIn()">
+    <button class="login-button" type="button" (click)="loginOnClick()">Login</button>
+  </div>
+  <div class="header-elem register-button-elem" *ngIf="!currentMemberService.isLoggedIn()">
+    <button class="register-button" type="button" (click)="registerOnClick()">Register</button>
+  </div>
+</div>
+
+

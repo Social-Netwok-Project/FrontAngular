@@ -1,0 +1,127 @@
+@import '../common';
+
+.sign-form-body {
+  padding: 60px 0 60px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-form-body-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: #d9d9d9 solid 1px;
+  border-radius: 20px;
+  width: 450px;
+
+  padding: 20px;
+  background-color: $colorP12;
+}
+
+.sign-form-body-div-2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: #d9d9d9 solid 1px;
+  border-radius: 20px;
+  width: 600px;
+  padding: 20px;
+  background-color: $colorP12;
+}
+
+.sign-form-elem h1 {
+  margin: 0 0 0 0;
+  text-align: center;
+}
+
+.sign-form-elem label, .sign-form-elem span, .sign-form-elem input {
+  width: 100%;
+}
+
+.centered-span {
+  text-align: center;
+}
+
+.sign-form-elem-merged {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+}
+
+.sign-form-elem-merged div:nth-child(2) {
+  margin: 0 0 0 20px;
+}
+
+.sign-form-elem {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 5px 0 5px 0;
+}
+
+
+.sign-form-elem input {
+  background: $colorP13;
+  border-radius: 10px;
+  border: grey solid 1px;
+  height: 40px;
+  margin: 5px 0 5px 0;
+  font-weight: 700;
+  white-space:pre;
+  text-indent: 10px;
+}
+
+.sign-form-elem input:hover{
+  border: $colorP11 solid 1px;
+}
+
+.auth-button {
+  background: $colorP13;
+  border-radius: 40px;
+  border: #d9d9d9 solid 2px;
+  height: 50px;
+  min-width: 150px;
+
+  margin: 5px 0 5px 0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.auth-button:hover {
+  background: $colorP14;
+  border: $colorP11 solid 2px;
+}
+
+
+// BACKGROUND STUFF
+.background {
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
+  height: 1040px;
+  width: 100%;
+}
+
+.background-image {
+  background-image: url('../../../assets/bg-img.png');
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+  filter: blur(5px);
+}
+
+.background-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba($colorP14, 0.2) 0%, rgba($colorP13, 0.4) 15%, rgba($colorP12, 0.8) 76%, rgba($colorP11, 1) 100%);
+}

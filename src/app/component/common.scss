@@ -1,0 +1,642 @@
+/* COLOR PALETTE 1
+$colorP11: #64395F;
+$colorP12: #C075B7;
+$colorP13: #6CACA0;
+$colorP14: #07878B;
+*/
+
+/* COLOR PALETTE 2
+$colorP21: #EDCB96;
+$colorP22: #F7C4A5;
+$colorP23: #9E7682;
+$colorP24: #605770;
+$colorP25: #4D4861;
+ */
+
+// Actual Color Palette
+$colorP10: #915c35;
+$colorP11_2: #e0bb95;
+$colorP11: #D4A373;
+$colorP12: #FAEDCD;
+$colorP13: #FEFAE0;
+$colorP14: #E9EDC9;
+$colorP15: #CCD5AE;
+$colorP16: #f6f3ea;
+$colorP17: #f3f0f0;
+$colorP18: #d9d9d9;
+$colorP19: #3f3f3f;
+$colorP20: #737373;
+$colorP21: #FCFCFC;
+
+$validColor_1: #429f47;
+$validColor_2: #89c48b;
+$invalidColor_1: #ff6a53;
+$invalidColor_2: #f88b7c;
+
+$boxShadowDefault: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+$hoverBackground: rgba(0, 0, 0, 0.3);
+
+
+// For non scss files
+:root {
+  --colorP10: #915c35;
+  --colorP11: #D4A373;
+  --colorP12: #FAEDCD;
+  --colorP13: #FEFAE0;
+  --colorP14: #E9EDC9;
+  --colorP15: #CCD5AE;
+  --colorP16: #f6f3ea;
+  --colorP17: #f3f0f0;
+  --colorP18: #d9d9d9;
+  --colorP19: #3f3f3f;
+  --colorP20: #737373;
+}
+
+.our-linear-background-1 {
+  background: linear-gradient(to top, $colorP15, $colorP14, $colorP13, $colorP12, $colorP11);
+
+  top: 0;
+  left: 0;
+  width: 100%;
+  height:100%;
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  z-index:-10;
+}
+
+.our-light-background-1 {
+  background: $colorP16;
+
+  top: 0;
+  left: 0;
+  width: 100%;
+  height:100%;
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  z-index:-10;
+}
+
+// DEFAULT FONT FAMILY FOR EVERYTHING
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+.separation-line-1 {
+  padding: 1px;
+  background: radial-gradient($colorP11 30%, $colorP12, $colorP12);
+  border-radius: 1px;
+  margin: 10px 15px 10px 15px;
+  flex-grow: 1;
+}
+
+.separation-line-2 {
+  padding: 1px;
+  background: radial-gradient($colorP11 55%, $colorP12, $colorP12);
+  border-radius: 1px;
+  margin: 10px 15px 10px 15px;
+}
+
+.separation-line-small {
+  width: 80%;
+  padding: 1px;
+  background: radial-gradient($colorP11 30%, $colorP12, $colorP12);
+  border-radius: 1px;
+  margin: 1px 15px 1px 15px;
+}
+
+.vertical-separation-line {
+  height: 100%;
+  width: 3px;
+  padding: 1px;
+  border-radius: 1px;
+  background: radial-gradient($colorP11 30%, $colorP12, $colorP12);
+}
+
+
+.text-font {
+  font-style: normal;
+}
+
+.text-font-100 {
+  font-style: normal;
+  font-weight: 100;
+}
+
+.text-font-200 {
+  font-style: normal;
+  font-weight: 200;
+}
+
+.text-font-300 {
+  font-style: normal;
+  font-weight: 300;
+}
+
+.text-font-500 {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.text-font-700{
+  font-style: normal;
+  font-weight: 700;
+}
+
+// COMMON SPANS
+.validation-error-span {
+  color: #B81111;
+  font-size: 13px;
+}
+
+.validation-success-span {
+  color: #0B6623;
+  font-size: 13px;
+}
+
+.colorP11-span {
+  color: $colorP11;
+}
+
+.title-span {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+// DEFAULT MAIN PAGE DIV
+.main-page-body-div {
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+  width: 100%;
+}
+
+.header-elem {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.header-icon-elem {
+  padding-right: 10px;
+}
+
+.header-icon {
+  font-size: 30px;
+}
+
+.main-page-h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 10px 0 10px 0;
+}
+
+// DEFAULT BUTTON STYLES
+
+.default-btn {
+  background: $colorP11;
+  border-radius: 15px;
+  //border: #d9d9d9 solid 2px;
+  border: transparent;
+  height: 35px;
+  width: 100%;
+
+  margin: 5px 0 5px 0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.allow-button, .deny-button {
+  border-radius: 15px;
+  border: transparent;
+  height: 35px;
+  width: 100%;
+
+  margin: 5px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.allow-button {
+  background: $validColor_1;;
+}
+
+.allow-button:hover {
+  background: $validColor_2;
+}
+
+.deny-button {
+  background: $invalidColor_1;
+}
+
+.deny-button:hover {
+  background: $invalidColor_2;
+}
+
+.default-btn:hover{
+  background: $colorP11_2;
+  //border: $colorP11 solid 2px;
+}
+
+.href-button {
+  font-weight: 500;
+  font-size: 16px;
+  border: transparent;
+  background: transparent;
+  text-decoration: none;
+  color: $colorP11;
+
+  padding: 0;
+}
+
+.href-button:hover {
+  cursor: pointer;
+}
+
+.add-form-elem-1 {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  width: 100%;
+}
+
+.add-form-elem-2 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+
+.default-input-1 {
+  background: $colorP21;
+  border-radius: 15px;
+  border: grey solid 1px;
+  height: 35px;
+  margin: 5px 0 5px 0;
+  white-space:pre;
+  text-indent: 10px;
+  width: 100%;
+}
+
+.default-input-1-container {
+  width: 100%;
+}
+
+
+.default-input-1-container ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.default-input-1:hover{
+  border: $colorP11 solid 1px;
+}
+
+.default-input-2 {
+  border-radius: 15px;
+  border: grey solid 1px;
+  height: 35px;
+  margin: 5px 0 5px 0;
+  white-space:pre;
+  text-indent: 10px;
+  width: 100%;
+}
+
+.default-input-3 {
+  background: $colorP17;
+  border-radius: 15px;
+  border: grey solid 1px;
+  height: 35px;
+  margin: 5px 0 5px 0;
+  white-space:pre;
+  text-indent: 10px;
+  width: 100%;
+}
+
+.default-text-area-3 {
+  background: $colorP17;
+  border-radius: 15px;
+  border: grey solid 1px;
+  height: 90px;
+  max-height: 300px;
+  margin: 5px 0 5px 0;
+  white-space:pre;
+  text-indent: 10px;
+  width: 100%;
+}
+
+.default-check-box-1 {
+  background-color: $colorP17;
+  border-radius: 15px;
+  border: grey solid 1px;
+  margin: 5px;
+}
+
+.default-file-input-1 {
+  background: $colorP17;
+  margin: 5px 0 5px 0;
+}
+
+.drag-and-drop-input {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.drag-and-drop-elem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  background: $colorP17;
+  margin: 5px 0 5px 0;
+
+  height: 80px;
+  width: 100%;
+  border-radius: 15px;
+  border: 2px dashed $colorP18;
+}
+
+.drag-and-drop-elem:hover {
+  border: 2px solid $colorP18;
+}
+
+.drag-and-drop-elem span {
+  cursor: pointer;
+  position: absolute;
+}
+
+.clickable-div {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  height: 200px;
+  width: 500px;
+  text-decoration: none;
+  background: linear-gradient(to top left, $colorP15, $colorP11);
+  margin: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.icon-elem-1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.clickable-icon-elem-1, .clickable-icon-elem-1-clicked, .clickable-icon-elem-1-static {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  min-width: 40px;
+  max-width: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  border-radius: 50%;
+}
+
+.clickable-icon-elem-1-static-clicked {
+  display: flex;
+  background: $colorP11;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  min-width: 40px;
+  max-width: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  border-radius: 50%;
+}
+
+.clickable-icon-elem-1:hover {
+  background: $colorP11;
+}
+
+.clickable-icon-elem-1-clicked {
+  background: $colorP11;
+}
+
+.clickable-icon-1 {
+  font-size: 25px;
+  padding: 5px;
+}
+
+.clickable-icon-elem-2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  min-width: 25px;
+  max-width: 25px;
+  min-height: 25px;
+  max-height: 25px;
+  border-radius: 50%;
+}
+
+.clickable-icon-elem-2:hover {
+  background: $colorP11;
+}
+
+.clickable-icon-2 {
+  font-size: 15px;
+  padding: 5px;
+}
+
+.clickable-icon-elem-3 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  min-width: 30px;
+  max-width: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  border-radius: 50%;
+}
+
+.clickable-icon-elem-3:hover {
+  background: $colorP11;
+}
+
+.clickable-icon-3 {
+  font-size: 20px;
+  padding: 5px;
+}
+
+// COMMON DIV ELEMENTS
+
+.add-new-elem-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border: dashed 2px $colorP11;
+  background-color: $colorP17;
+  box-shadow: $boxShadowDefault;
+  border-radius: 20px;
+  cursor: pointer;
+
+  min-height: 150px;
+  max-height: 150px;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.add-new-elem-div:hover {
+  border: solid 2px $colorP11;
+}
+
+.add-plus-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 60px;
+  width: 60px;
+}
+
+.plus-icon {
+  font-size: 50px;
+  color: $colorP11;
+}
+
+// COMMON MODAL STUFF
+
+.my-modal-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.my-modal-header-2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  padding: 20px 0 20px 0;
+}
+
+.modal-header-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.modal-header-title-2 {
+  font-size: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.my-modal {
+  display: block;
+  border-radius: 15px;
+  padding: 5px;
+}
+
+.my-modal-element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px;
+}
+
+.my-modal-content {
+  border: none;
+  width: 100%;
+}
+
+// DEFAULT ICONS
+.user-icon {
+  font-size: 65px;
+  color: $colorP19;
+}
+
+.camera-icon {
+  font-size: 30px;
+  color: $colorP17;
+}
+
+.star-icon {
+  color: gold;
+}
+
+.icon-small {
+  font-size: 14px;
+}
+
+// SEARCH ELEMENTS
+.search-div {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  width: 100%;
+}
+
+.filter-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+  padding: 0 10px 0 0;
+}
+
+.select-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+  padding: 0 0 0 10px;
+  min-width: 300px;
+}
+
+.input-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+  flex-grow: 1;
+  padding: 0 10px 0 10px;
+}
+
+// HIDE NUMBER INPUT ARROWS
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

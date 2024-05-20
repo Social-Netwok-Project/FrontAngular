@@ -1,0 +1,124 @@
+@import "../common";
+
+//$pfpImageSize: 150px;
+$profileMenuItemWidth: 350px;
+
+.profile-main-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-direction: row;
+}
+
+.profile-info-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 70vw;
+}
+
+.profile-menu-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 30vw;
+  height: 90vh;
+}
+
+.profile-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  margin: 40px;
+
+  box-shadow: $boxShadowDefault;
+  border-radius: 10px;
+}
+
+.profile-menu-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
+  cursor: pointer;
+
+  width: $profileMenuItemWidth;
+  max-width: $profileMenuItemWidth;
+  height: 70px;
+  padding: 20px;
+
+  background: white;
+}
+
+.profile-menu-item:hover {
+  background: $colorP11;
+}
+
+.profile-menu-item:hover > span {
+  color: white;
+}
+
+.profile-menu-item:hover > .profile-menu-item-icon-elem > .profile-menu-item-icon {
+  color: white;
+}
+
+.profile-menu-item span {
+  font-size: 20px;
+  text-wrap: wrap;
+  word-wrap: break-word;
+}
+
+.profile-menu-item-clicked {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
+  cursor: pointer;
+
+  width: $profileMenuItemWidth;
+  max-width: $profileMenuItemWidth;
+  height: 70px;
+  padding: 20px;
+
+  background: $colorP11;
+}
+
+.profile-menu-item-clicked > span {
+  color: white;
+}
+
+.profile-menu-item-clicked > .profile-menu-item-icon-elem > .profile-menu-item-icon {
+  color: white;
+}
+
+.profile-menu-item-clicked span {
+  font-size: 20px;
+  text-wrap: wrap;
+  word-wrap: break-word;
+}
+
+.profile-menu-item-icon-elem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-right: 20px;
+}
+
+.profile-menu-item-icon {
+  font-size: 20px;
+}
+
+@media only screen and (max-width: 960px) {
+  .profile-top-div-pfp img, .profile-pfp-overlay {
+    border-radius: 50px;
+  }
+}

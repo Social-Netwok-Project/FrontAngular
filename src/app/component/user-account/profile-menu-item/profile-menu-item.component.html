@@ -1,0 +1,9 @@
+<div class="{{profileMenuItem.class}}"
+     [style.border-radius]="borderRadius"
+     [style.border-bottom]="hasBorderBottom ? '1px solid #d9d9d9' : 'none'"
+     (click)="onClick()">
+  <div class="profile-menu-item-icon-elem">
+    <fa-icon [class]="['profile-menu-item-icon']" [icon]="this.profileMenuItem.icon"></fa-icon>
+  </div>
+  <span>{{this.profileMenuItem.name}}</span>
+</div>

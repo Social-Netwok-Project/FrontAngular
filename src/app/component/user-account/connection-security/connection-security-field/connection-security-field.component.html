@@ -1,0 +1,27 @@
+<div class="cs-elem">
+  <div class="cs-elem-content">
+    <div *ngIf="isEditingPasswordElement()">
+      <label for="old-password-input">Old Password:</label>
+      <input type="password" id="old-password-input" [(ngModel)]="oldPassword" class="default-input-3">
+      <span class="validation-error-span" *ngIf="isOldPasswordInvalid()">{{ oldPasswordInvalidMessage }}</span>
+    </div>
+
+    <span>{{ editableElement.name }}:</span>
+    <label for="new-value-input" *ngIf="!isEditingField">{{ getValue() }}</label>
+    <input id="new-value-input" class="default-input-3" type="{{editableElement.editableElementType}}" value="{{getValue()}}"
+           [(ngModel)]="newValue" *ngIf="isEditingField">
+    <span class="validation-error-span" *ngIf="isFieldInvalid()">{{ fieldInvalidMessage }}</span>
+    <span class="validation-error-span" *ngIf="isPasswordInvalid()">{{ passwordInvalidMessage }}</span>
+
+    <div *ngIf="isEditingPasswordElement()">
+      <label for="password-confirmation-input">Password Confirmation:</label>
+      <input type="password" id="password-confirmation-input" [(ngModel)]="passwordConfirmation" class="default-input-3">
+      <span class="validation-error-span" *ngIf="isPasswordsNotMatch()">{{ passwordsNotMatchMessage }}</span>
+    </div>
+  </div>
+  <div class="cs-button-elem" *ngIf="isEditable">
+    <button class="default-btn" type="button" (click)="onEdit()" *ngIf="!isEditingField">Edit</button>
+    <button class="default-btn" type="button" (click)="onConfirm()" *ngIf="isEditingField">Confirm</button>
+    <button class="default-btn" type="button" (click)="onCancel()" *ngIf="isEditingField">Cancel</button>
+  </div>
+</div>

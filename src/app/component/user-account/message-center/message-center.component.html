@@ -1,0 +1,42 @@
+<div class="main-page-body-div">
+  <div class="header-elem">
+    <div class="header-icon-elem">
+      <fa-icon [class]="['header-icon']" [icon]="faMessage"></fa-icon>
+    </div>
+    <h1 class="main-page-h1">Message Center</h1>
+  </div>
+  <div class="separation-line-2"></div>
+  <div class="message-box-body-div">
+    <div class="message-box-body">
+      <div class="header-div">
+        <span>Chat With Your Friends!</span>
+      </div>
+      <div class="container-div">
+        <div class="customer-orders-container">
+<!--          <div class="customer-order-body-div" *ngFor="let customerOrderElement of getConversations()" (click)="onConversationClick(customerOrderElement)">-->
+<!--            <app-customer-order-element-->
+<!--              [style.width.%]="100"-->
+<!--              [customerOrderElement]="customerOrderElement">-->
+<!--            </app-customer-order-element>-->
+<!--          </div>-->
+        </div>
+        <div class="message-main-area-div">
+          <div #messageAreaDiv class="message-area-div">
+            <span>This is the beginning of the chat with your friend. Say Hello :)</span>
+            <div class="message-list-body-div" *ngFor="let messageList of messageListElements">
+              <app-message-list-element
+                [style.width.%]="100"
+                [messageListElement]="messageList">
+              </app-message-list-element>
+            </div>
+          </div>
+          <form class="message-input-form" (ngSubmit)="onMessageEnter()">
+            <input class="default-input-2" [(ngModel)]="messageTyped" placeholder="Type a message..." name="message-input">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

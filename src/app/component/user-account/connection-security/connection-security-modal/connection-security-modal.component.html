@@ -1,0 +1,15 @@
+<div class="modal my-modal" *ngIf="isModalOpen">
+  <div class="modal-dialog">
+    <div class="modal-content my-modal-content">
+      <app-connection-security-element
+        [userSubject]="editingUserSubject"
+        [user]="editingUser"
+        [userService]="editingUserService"
+        [userCategory]="editingUserCategory"
+        [editingUserType]="editingUserType"
+        [isModal]="true"
+        (onCloseModal)="onCloseModal($event)"
+      ></app-connection-security-element>
+    </div>
+  </div>
+</div>

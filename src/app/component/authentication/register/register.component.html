@@ -1,0 +1,63 @@
+<div class="sign-form-body">
+  <form (ngSubmit)="onSubmit()">
+    <div class="sign-form-body-div-2">
+      <div class="sign-form-elem">
+        <app-logo></app-logo>
+        <h1>Login</h1>
+      </div>
+      <div class="sign-form-elem">
+        <label for="username-input">Username:</label>
+        <input type="text" id="username-input" [(ngModel)]="usernameInput" name="username-input">
+        <span class="validation-error-span" *ngIf="isUsernameInvalid()">{{ fieldInvalidMessage }}</span>
+      </div>
+      <div class="sign-form-elem">
+        <label for="email-input">Email:</label>
+        <input type="email" id="email-input" [(ngModel)]="emailInput" name="email-input">
+        <span class="validation-error-span" *ngIf="isEmailInvalid()">{{ fieldInvalidMessage }}</span>
+        <span class="validation-error-span" *ngIf="isEmailExists">Email already exists.</span>
+      </div>
+      <div class="sign-form-elem">
+        <label for="birthdate-input">Birdate:</label>
+        <input type="date" id="birthdate-input" [(ngModel)]="birthDateInput" name="birthdate-input">
+        <span class="validation-error-span" *ngIf="isBirthDateInvalid()">{{ fieldInvalidMessage }}</span>
+      </div>
+
+      <div class="sign-form-elem">
+        <label for="password-input">Password:</label>
+        <input type="password" id="password-input" [(ngModel)]="passwordInput" name="password-input">
+        <span class="validation-error-span" *ngIf="isPasswordInvalid()">{{ passwordInvalidMessage }}</span>
+      </div>
+      <div class="sign-form-elem">
+        <label for="passwordConfirmation-input">Password Confirmation:</label>
+        <input type="password" id="passwordConfirmation-input" [(ngModel)]="confirmPasswordInput"
+               name="passwordConfirmation-input">
+        <span class="validation-error-span" *ngIf="isPasswordsNotMatch()">{{ passwordsNotMatchMessage }}</span>
+      </div>
+      <div class="sign-form-elem">
+        <re-captcha (resolved)="resolved($event)"></re-captcha>
+        <label class="validation-error-span centered-span" *ngIf="isCaptchaInvalid()">Please verify that you're not a
+          robot.</label>
+      </div>
+      <div class="separation-line-small"></div>
+      <div class="sign-form-elem">
+        <button class="auth-button" type="submit" name="submit-button">Register</button>
+      </div>
+      <div class="sign-form-elem">
+            <span class="centered-span">By creating an account, you agree to Twitter v2's
+              <button class="href-button" (click)="routeTo('')">Conditions of Use</button>
+              and
+              <button class="href-button" (click)="routeTo('')">Privacy Notice</button>.</span>
+      </div>
+      <div class="sign-form-elem">
+        <span class="centered-span">Already have an account?
+          <button class="href-button" (click)="routeTo('/login')">Login here &rarr;</button>
+        </span>
+      </div>
+    </div>
+  </form>
+  <div class="background">
+    <div class="background-image"></div>
+    <div class="background-gradient"></div>
+  </div>
+</div>
+<app-footer></app-footer>

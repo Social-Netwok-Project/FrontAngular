@@ -1,0 +1,7 @@
+<!--Header doesn't show on selected pages-->
+<app-header *ngIf="isNotExcludedHeaderRoute()"></app-header>
+
+<!--Application contents-->
+<div>
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,245 @@
+@import "../common";
+
+$font-size: 16px;
+$font-weight: bold;
+
+
+.header-body-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  flex-wrap: wrap;
+  background: $colorP12;
+  min-height: 40px;
+}
+
+.logo-img {
+  width: 40px;
+  height: 40px;
+}
+
+.header-elem {
+  min-height: 40px;
+  align-items: center;
+  display: flex;
+  padding: 10px
+}
+
+.logo-title-elem {
+  cursor: pointer;
+}
+
+.title-elem {
+  min-width: 100px;
+  max-width: 100px;
+  text-wrap: wrap;
+  text-align: center;
+}
+
+//.address-elem {
+//  display: flex;
+//  justify-content: space-between;
+//  flex-direction: row;
+//}
+
+.address-elem-text {
+  max-width: 115px;
+  text-wrap: wrap;
+  text-align: start;
+}
+
+.address-elem-img {
+  display: flex;
+  flex-direction: column;
+  padding: 0 5px 0 5px;
+}
+
+.search-elem {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.login-button-elem {
+  min-width: 90px;
+}
+
+.login-button {
+  height: 35px;
+  width: 100%;
+  border-radius: 15px;
+  border: transparent solid 2px;
+  background: transparent;
+
+  font-size: $font-size;
+  font-weight: $font-weight;
+}
+
+.login-button:hover {
+  background: $colorP14;
+  border: $colorP11 solid 2px;
+}
+
+.register-button-elem {
+  min-width: 150px;
+}
+
+.register-button {
+  height: 35px;
+  width: 100%;
+  border-radius: 15px;
+  border: #d9d9d9 solid 2px;
+
+  background: $colorP13;
+  font-size: $font-size;
+  font-weight: $font-weight;
+}
+
+.register-button:hover{
+  background: $colorP14;
+  border: $colorP11 solid 2px;
+}
+
+.burger-menu-elem {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  z-index: 999
+
+}
+
+.burger-menu-icon-elem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  min-width: 45px;
+  min-height: 45px;
+  border-radius: 50px;
+}
+
+.burger-menu-icon-elem:hover {
+  background: $colorP11;
+}
+
+.burger-menu-icon {
+  font-size: 30px;
+}
+
+.chevron-icon {
+
+}
+
+//// DROP DOWN LIST STYLES
+
+.drop-down-menu {
+  position: absolute;
+  z-index: 0;
+  background: $colorP12;
+  border-radius: 5px;
+  min-width: 290px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 15px 0 15px 0;
+}
+
+.dpm-title-elem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+
+  padding: 0 10px 0 10px;
+}
+
+.main-title-span {
+  flex-grow: 1;
+  font-size: $font-size;
+  font-weight: $font-weight;
+  text-wrap: wrap;
+  max-width: 250px;
+}
+
+//// FUNCTION MENU STYLES
+.dpm-func-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+
+  margin-top: 10px;
+}
+
+.dpm-func-elem-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+
+  width: 100%
+}
+
+.dpm-func-elem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  border-radius: 10px;
+  margin: 0 0 0 20px;
+  min-height: 40px;
+  width: 80%;
+}
+
+.dpm-func-elem:hover {
+  background: $colorP11;
+}
+
+.dpm-func-span {
+  font-size: $font-size;
+  flex-grow: 1;
+  padding: 0 0 0 10px;
+}
+
+.dpm-func-icon-elem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50px;
+
+}
+
+.func-icon {
+  font-size: 25px;
+}
+
+// LOGIN ELEMENT STYLES
+
+.dpm-logged-out-elem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logged-out-button-elem {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  padding: 5px 0 5px 0;
+}
+
+.href-button {
+  color: $colorP11;
+  border: transparent;
+  background: transparent;
+  cursor: pointer;
+  font-size: $font-size;
+  font-weight: $font-weight;
+}
+

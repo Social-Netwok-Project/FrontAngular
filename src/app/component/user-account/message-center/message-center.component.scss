@@ -1,0 +1,118 @@
+@import "../../common.scss";
+
+$borderRadius: 10px;
+$height: 500px;
+
+.message-box-body-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.message-box-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  //height: 600px;
+  width: 100%;
+  margin: 20px;
+  border-radius: $borderRadius;
+  border: 2px solid $colorP19;
+}
+
+.header-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  height: 50px;
+  width: 100%;
+  padding: 10px;
+  background-color: $colorP13;
+  border-top-left-radius: $borderRadius;
+  border-top-right-radius: $borderRadius;
+  border-bottom: 1px solid $colorP19;
+}
+
+.container-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.customer-orders-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  height: $height;
+  width: 30%;
+
+  overflow: auto;
+
+  border-right: 1px solid $colorP19;
+}
+
+.customer-order-body-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 5px 10px 5px 10px;
+  width: 100%;
+}
+
+.message-main-area-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  max-height: $height;
+  min-height: $height;
+  width: 70%;
+}
+
+.message-area-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+
+  flex-grow: 1;
+  width: 100%;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.message-list-body-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+}
+
+.message-input-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  border-top: 1px solid $colorP19;
+  padding: 20px;
+  width: 100%;
+}

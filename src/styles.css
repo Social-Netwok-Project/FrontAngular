@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'app/component/common.scss';
+
+body {
+  margin: 0;
+}
+/*SCROLLBAR STUFF*/
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--colorP15);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--colorP11);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--colorP10);
+}

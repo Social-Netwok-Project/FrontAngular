@@ -1,0 +1,43 @@
+<form (onResize)="handleFooterTopMinValue($event, 0)" (ngSubmit)="onSubmit()">
+  <div class="sign-form-body">
+    <div class="sign-form-body-div">
+      <app-logo></app-logo>
+      <div class="sign-form-elem">
+        <h1>Login</h1></div>
+      <div class="sign-form-elem">
+        <label for="email-input">Email:</label>
+        <input type="email" id="email-input" [(ngModel)]="emailInput" name="lgEmail">
+        <span class="validation-error-span" *ngIf="isEmailInvalid()">{{ fieldInvalidMessage }}</span>
+      </div>
+
+      <div class="sign-form-elem">
+        <label for="password-input">Password:</label>
+        <input type="password" id="password-input" [(ngModel)]="passwordInput" name="lgPassword">
+        <span class="validation-error-span" *ngIf="isPasswordInvalid()">{{ fieldInvalidMessage }}</span>
+      </div>
+      <div class="sign-form-elem">
+        <re-captcha (resolved)="resolved($event)"></re-captcha>
+        <span class="validation-error-span centered-span" *ngIf="isCaptchaInvalid()">{{notRobotMessage}}</span>
+      </div>
+      <div class="separation-line-small"></div>
+      <span class="validation-error-span" *ngIf="isLoginInvalid()">Invalid Email / Password</span>
+
+      <div class="sign-form-elem">
+        <button class="auth-button" type="submit">Login</button>
+      </div>
+
+      <div class="sign-form-elem">
+        <button class="href-button" (click)="routeTo('/password-recovery')">Forgot Password</button>
+      </div>
+      <div class="sign-form-elem">
+        <span class="centered-span">Don't have an account?
+          <button class="href-button" (click)="routeTo('/register')"> Register</button>
+        </span>
+      </div>
+    </div>
+  </div>
+</form>
+<app-footer
+  [footerTopMinValue]="footerTopMinValue"
+  [position]="position"
+></app-footer>
