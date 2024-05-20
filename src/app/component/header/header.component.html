@@ -27,7 +27,7 @@
               <div class="dpm-func-icon-elem">
                 <fa-icon [icon]="profileMenuItem.icon" [class]="['func-icon']"></fa-icon>
               </div>
-              <span class="dpm-func-span">{{profileMenuItem.name}}</span>
+              <span class="dpm-func-span">{{ profileMenuItem.name }}</span>
             </div>
           </div>
         </div>
@@ -40,17 +40,22 @@
       <span>Twitter v2</span>
     </div>
   </div>
-  <div class="header-elem search-elem">
-<!--    <p-autoComplete name="auto-complete"-->
-<!--                    [(ngModel)]="selectedBusiness"-->
-<!--                    [placeholder]="'Search Restaurants'"-->
-<!--                    [inputStyleClass]="'default-input-1'"-->
-<!--                    [styleClass]="'default-input-1-container'"-->
-<!--                    [style.width.%]="100"-->
-<!--                    [suggestions]="getFilteredBusinesses()"-->
-<!--                    (completeMethod)="onSearchBusiness($event)"-->
-<!--                    (click)="onClick()"-->
-<!--                    (onKeyUp)="onSubmit($event)"/>-->
+  <div class="navigation-container">
+    <div class="navigation-elem-div" *ngFor="let navigationItem of navigationItems "
+         (click)="routeTo(navigationItem.getLink())">
+      <div class="icon-elem-1">
+        <fa-icon [icon]="navigationItem.getIcon()" [class]="['icon-1']"></fa-icon>
+      </div>
+      <span>{{ navigationItem.getName() }}</span>
+    </div>
+  </div>
+  <div class="header-elem" *ngIf="currentMemberService.isLoggedIn()">
+    <div class="tweet-button" (click)="tweetOnClick()">
+      <div class="icon-elem-1">
+        <fa-icon [icon]="faPlus" [class]="['icon-1']"></fa-icon>
+      </div>
+      <span>Tweeeeeet</span>
+    </div>
   </div>
   <div class="header-elem login-button-elem" *ngIf="!currentMemberService.isLoggedIn()">
     <button class="login-button" type="button" (click)="loginOnClick()">Login</button>

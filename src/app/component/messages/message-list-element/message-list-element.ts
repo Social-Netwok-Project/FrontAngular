@@ -1,4 +1,4 @@
-import {Message} from "../../../../model/message";
+import {Message} from "../../../model/message";
 
 export class MessageListElement {
   message: Message;

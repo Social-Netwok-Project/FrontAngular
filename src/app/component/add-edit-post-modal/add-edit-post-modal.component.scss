@@ -1,0 +1,82 @@
+@import "../../../common.scss";
+
+$imageSize: 60px;
+$borderRadius: 10px;
+$margin: 5px;
+
+.image-preview-elem-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  background-color: $colorP17;
+
+  width: $imageSize;
+  min-width: $imageSize;
+  height: $imageSize;
+  min-height: $imageSize;
+  border-radius: $borderRadius;
+  margin: $margin;
+}
+
+.image-preview-edit-elem {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  background-color: $hoverBackground;
+
+  width: $imageSize;
+  min-width: $imageSize;
+  height: $imageSize;
+  min-height: $imageSize;
+  border-radius: $borderRadius;
+  margin: $margin;
+}
+
+.icon-might-delete-elem {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  background-color: $hoverBackground;
+
+  width: $imageSize;
+  min-width: $imageSize;
+  height: $imageSize;
+  min-height: $imageSize;
+  border-radius: $borderRadius;
+  margin: $margin;
+}
+
+.might-delete-icon {
+  color: red;
+}
+
+.image-preview-elem:hover + .image-preview-edit-elem , .image-preview-edit-elem:hover {
+  display: flex;
+}
+
+.image-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+
+  object-fit: cover;
+}
+
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.trash-icon {
+  color: white;
+}

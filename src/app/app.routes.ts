@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import {HomeComponent} from "./component/home/home.component";
 import {UserAccountComponent} from "./component/user-account/user-account.component";
-import {MessageCenterComponent} from "./component/user-account/message-center/message-center.component";
+import {MessagesComponent} from "./component/messages/messages.component";
 import {ConnectionSecurityComponent} from "./component/user-account/connection-security/connection-security.component";
 import {UserSettingsComponent} from "./component/user-account/user-settings/user-settings.component";
 import {LoginComponent} from "./component/authentication/login/login.component";
@@ -17,9 +17,9 @@ export const routes: Routes = [
   {path: `register`, component: RegisterComponent},
   {path: 'password-recovery', component: PasswordRecoveryComponent},
   {path: `password-reset/:${StorageKeys.USER_TOKEN}`, component: PasswordResetComponent},
+  {path: 'messages', component: MessagesComponent},
   {
     path: 'user-account', component: UserAccountComponent, children: [
-      {path: 'message-center', component: MessageCenterComponent},
       {path: 'connection-security', component: ConnectionSecurityComponent},
       {path: 'user-settings', component: UserSettingsComponent},
     ],

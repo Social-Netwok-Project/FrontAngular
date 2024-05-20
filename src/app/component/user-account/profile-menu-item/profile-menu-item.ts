@@ -24,14 +24,11 @@ export const settings = new ProfileMenuItem(faGear, 'Settings',
   '/user-account/user-settings');
 export const connectionAndSecurity = new ProfileMenuItem(faLock,
   'Connection / Security', '/user-account/connection-security');
-export const messageCenter = new ProfileMenuItem(faMessage, 'Message Center',
-  '/user-account/message-center');
 export const logout = new ProfileMenuItem(faArrowRightFromBracket, 'Logout',
   '');
 
 export const profileMenuItems: ProfileMenuItem[] = [
   settings,
   connectionAndSecurity,
-  messageCenter,
   logout
 ];

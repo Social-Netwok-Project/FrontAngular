@@ -391,6 +391,31 @@ $hoverBackground: rgba(0, 0, 0, 0.3);
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  min-width: 30px;
+  max-width: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  border-radius: 50%;
+}
+
+.icon-elem-1-static-clicked {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 30px;
+  max-width: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  border-radius: 50%;
+
+  background: $colorP11;
+}
+
+.icon-1 {
+  font-size: 20px;
 }
 
 .clickable-icon-elem-1, .clickable-icon-elem-1-clicked, .clickable-icon-elem-1-static {

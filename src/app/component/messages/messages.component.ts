@@ -1,19 +1,19 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {faMessage} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {CurrentMemberService} from "../../../service/current-member.service";
+import {CurrentMemberService} from "../../service/current-member.service";
 import {CookieService} from "ngx-cookie-service";
 import {ActivatedRoute, Router} from "@angular/router";
 
-import {CookieComponent} from "../../misc/cookie-component";
+import {CookieComponent} from "../misc/cookie-component";
 import {NgForOf, NgIf} from "@angular/common";
 import {MessageListElementComponent} from "./message-list-element/message-list-element.component";
 import {MessageListElement} from "./message-list-element/message-list-element";
 import {FormsModule} from "@angular/forms";
-import {MemberService} from "../../../service/member.service";
+import {MemberService} from "../../service/member.service";
 
 @Component({
-  selector: 'app-message-center',
+  selector: 'app-messages',
   standalone: true,
   imports: [
     FaIconComponent,
@@ -22,10 +22,10 @@ import {MemberService} from "../../../service/member.service";
     FormsModule,
     NgIf
   ],
-  templateUrl: './message-center.component.html',
-  styleUrl: './message-center.component.scss'
+  templateUrl: './messages.component.html',
+  styleUrl: './messages.component.scss'
 })
-export class MessageCenterComponent extends CookieComponent implements OnInit {
+export class MessagesComponent extends CookieComponent implements OnInit {
   faMessage = faMessage;
   messageListElements: MessageListElement[] = [];
   messageTyped: string = "";

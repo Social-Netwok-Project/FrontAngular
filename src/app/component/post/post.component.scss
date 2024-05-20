@@ -1,0 +1,263 @@
+@import "../common.scss";
+
+$header-div-height: 65px;
+$images-container-height: 200px;
+$video-container-height: 300px;
+$tags-container-height: 50px;
+$post-elem-padding: 15px;
+
+.post-elem {
+  padding: 15px 15px 0 15px;
+}
+
+.post-elem-2 {
+  padding: 15px;
+}
+
+.post-main-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+}
+
+.post-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 40%;
+  border-radius: 15px;
+  box-shadow: $boxShadowDefault;
+}
+
+.post-header-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: $header-div-height;
+}
+
+.post-user-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+
+  width: 50%;
+}
+
+.user-pfp-img-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 10px;
+}
+
+.pfp-img {
+  width: $header-div-height - $post-elem-padding;
+  height: $header-div-height - $post-elem-padding;
+
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.user-info-div {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+}
+
+.post-title-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+
+  width: 50%;
+  height: 100%;
+}
+
+.post-body-div {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: start;
+
+  width: 100%;
+}
+
+.post-images-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  border-radius: 15px;
+}
+
+.post-images-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  width: 100%;
+}
+
+.post-image-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  margin: 12px 7px 12px 7px;
+  border-radius: 10px;
+  box-shadow: $boxShadowDefault;
+}
+
+.post-image {
+  width: $images-container-height - $post-elem-padding;
+  height: $images-container-height - $post-elem-padding;
+
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.post-videos-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  border-radius: 15px;
+}
+
+.post-videos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  height: $video-container-height;
+  width: 100%;
+}
+
+.post-video-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  width: calc(100% - 20px);
+  height: $video-container-height - 28px;
+  margin: 12px 7px 12px 7px;
+  border-radius: 10px;
+  box-shadow: $boxShadowDefault;
+}
+
+.post-video {
+  width: 100%;
+  height: $video-container-height - $post-elem-padding;
+
+  border-radius: 10px;
+}
+
+.post-likes-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+}
+
+.likes-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.likes-count-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: 15px;
+}
+
+.tags-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+}
+
+.tags-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.tag-element {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  margin: 5px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 15px;
+  background-color: $colorP13;
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+
+/*SCROLLBAR STUFF*/
+/* width */
+::-webkit-scrollbar {
+  height: 10px;
+  border-radius: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 15px;
+}

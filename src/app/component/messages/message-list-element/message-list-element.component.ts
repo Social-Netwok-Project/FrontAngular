@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MessageListElement} from "./message-list-element";
-import {getDateTime} from "../../../misc/functions";
+import {getDateTime} from "../../misc/functions";
 
 @Component({
   selector: 'app-message-list-element',

@@ -54,9 +54,30 @@ $font-weight: bold;
   padding: 0 5px 0 5px;
 }
 
-.search-elem {
+.navigation-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
   flex-grow: 1;
   min-width: 200px;
+}
+
+.navigation-elem-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px 0 20px;
+
+  cursor: pointer;
+  border-radius: 15px
+}
+
+.navigation-elem-div:hover {
+  background: $colorP11;
 }
 
 .login-button-elem {
@@ -95,6 +116,31 @@ $font-weight: bold;
 }
 
 .register-button:hover{
+  background: $colorP14;
+  border: $colorP11 solid 2px;
+}
+
+
+.tweet-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+  cursor: pointer;
+
+  height: 35px;
+  width: 100%;
+  border-radius: 15px;
+  border: #d9d9d9 solid 2px;
+  padding-right: 10px;
+
+  background: $colorP13;
+  font-size: $font-size;
+  font-weight: $font-weight;
+}
+
+.tweet-button:hover{
   background: $colorP14;
   border: $colorP11 solid 2px;
 }

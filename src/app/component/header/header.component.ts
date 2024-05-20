@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
 import {CookieComponent} from "../misc/cookie-component";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {faBars, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faPlus, faXmark} from '@fortawesome/free-solid-svg-icons';
 import 'resize-observer-polyfill/dist/ResizeObserver.global'
 import {CurrentMemberService} from "../../service/current-member.service";
 import {FormsModule} from "@angular/forms";
@@ -13,6 +13,7 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import {NgxResizeObserverModule} from "ngx-resize-observer";
 import {logout, ProfileMenuItem, profileMenuItems} from "../user-account/profile-menu-item/profile-menu-item";
 import {MemberService} from "../../service/member.service";
+import {navigationItems} from "./navigation-item";
 
 @Component({
   selector: 'app-header',
@@ -39,6 +40,8 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   faBars = faBars;
 
   faXmark = faXmark;
+  navigationItems = navigationItems;
+
   // DOM Elements
 
   @ViewChild('headerBody') headerBody!: ElementRef;
@@ -57,6 +60,7 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   routeToAndCloseBurgerMenu(profileMenuItem: ProfileMenuItem) {
     if (profileMenuItem != logout) {
       this.routeTo(profileMenuItem.link)
+      this.currentMemberService.setUserToNull();
     } else {
       this.loginOnClick();
     }
@@ -83,4 +87,10 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   registerOnClick() {
     this.routeTo("register");
   }
+
+  tweetOnClick() {
+
+  }
+
+  protected readonly faPlus = faPlus;
 }
