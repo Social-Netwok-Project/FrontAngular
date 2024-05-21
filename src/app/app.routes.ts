@@ -10,6 +10,7 @@ import {RegisterComponent} from "./component/authentication/register/register.co
 import {PasswordRecoveryComponent} from "./component/authentication/password-recovery/password-recovery.component";
 import {PasswordResetComponent} from "./component/authentication/password-reset/password-reset.component";
 import {SwitchUsersComponent} from "./component/switch-users/switch-users.component";
+import {SiteGraphComponent} from "./component/site-graph/site-graph.component";
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -20,6 +21,7 @@ export const routes: Routes = [
   {path: `password-reset/:${StorageKeys.USER_TOKEN}`, component: PasswordResetComponent},
   {path: 'messages', component: MessagesComponent},
   {path: 'switch-users', component: SwitchUsersComponent},
+  {path: 'site-graph', component: SiteGraphComponent},
   {
     path: 'user-account', component: UserAccountComponent, children: [
       {path: 'connection-security', component: ConnectionSecurityComponent},
