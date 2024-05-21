@@ -2,7 +2,7 @@ import {StorageKeys} from "./storage-keys";
 import {CookieService} from "ngx-cookie-service";
 import {MemberService} from "../../service/member.service";
 import {generateRandomToken} from "./functions";
-import {HttpErrorResponse, HttpEvent, HttpEventType} from "@angular/common/http";
+import {HttpErrorResponse, HttpEvent, HttpEventType, HttpResponse} from "@angular/common/http";
 import {TokenByEmail} from "../../model/query/update/token-by-email";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Member} from "../../model/member";
@@ -11,6 +11,9 @@ import {Observable} from "rxjs";
 import {PostService} from "../../service/post.service";
 import {PostImageService} from "../../service/post-image.service";
 import {PostVideoService} from "../../service/post-video.service";
+import {Post} from "../../model/post";
+import {PostImage} from "../../model/post-image";
+import {PostVideo} from "../../model/post-video";
 
 export abstract class CookieComponent {
   // Services
@@ -102,7 +105,7 @@ export abstract class CookieComponent {
 
   initializeUser(jsonUser: Member) {
     this.currentMemberService.user = Member.fromJson(jsonUser);
-    this.initializeUserPfpImgUrl().then();
+    this.initializeMemberPfpImgUrl().then();
 
     console.log(this.currentMemberService.user!)
   }
@@ -181,14 +184,13 @@ export abstract class CookieComponent {
     }
   }
 
-  private initializeUserPfpImgUrl(): Promise<boolean> {
+  private initializeMemberPfpImgUrl(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (this.currentMemberService.user?.hasPfpImg()) {
         this.memberService.downloadFiles(this.currentMemberService.user?.pfpImageName!).subscribe({
           next: (httpEvent: HttpEvent<Blob>) => {
             if (httpEvent.type === HttpEventType.Response) {
-              const file: File = new File([httpEvent.body!], httpEvent.headers.get('File-Name')!,
-                {type: `${httpEvent.headers.get('Content-Type')};charset=utf-8`});
+              const file: File = this.getFile(httpEvent);
               this.currentMemberService.user?.setPfpImgUrl(URL.createObjectURL(file));
               resolve(true);
             }
@@ -205,10 +207,10 @@ export abstract class CookieComponent {
     });
   }
 
-  initializeUsersPfpImgUrl(users: Member[] | undefined): Promise<boolean> {
+  initializeMembersPfpImgUrl(users: Member[] | undefined): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
+      let count = 0;
       new Observable<number>((observer) => {
-        let count = 0;
         if (users == undefined || users.length == 0) observer.next(count)
 
         for (let user of users!) {
@@ -216,20 +218,19 @@ export abstract class CookieComponent {
             this.memberService.downloadFiles(user.pfpImageName).subscribe({
               next: (httpEvent: HttpEvent<Blob>) => {
                 if (httpEvent.type === HttpEventType.Response) {
-                  const file: File = new File([httpEvent.body!], httpEvent.headers.get('File-Name')!,
-                    {type: `${httpEvent.headers.get('Content-Type')};charset=utf-8`});
+                  const file: File = this.getFile(httpEvent);
                   user.setPfpImgUrl(URL.createObjectURL(file));
-                  observer.next(count++);
+                  observer.next(++count);
                 }
               },
               error: (error: HttpErrorResponse) => {
                 console.log("Error downloading file");
-                observer.next(count++);
+                observer.next(++count);
               }
             });
           } else {
             console.log("User does not have pfp img");
-            observer.next(count++);
+            observer.next(++count);
           }
         }
       }).subscribe({
@@ -242,11 +243,85 @@ export abstract class CookieComponent {
     });
   }
 
+  initializerMemberFriends() {
+    return new Promise<boolean>((resolve, reject) => {
+      this.memberService.findFriends(this.currentMemberService.user!.getMemberId()).subscribe({
+        next: (jsonFriends: Member[]) => {
+          let friends: Member[] = Member.initializeMembers(jsonFriends);
+          this.currentMemberService.user?.setFriends(friends)
+          this.initializeMembersPfpImgUrl(this.currentMemberService.user?.friends).then((success) => {
+            resolve(success);
+          });
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          resolve(false);
+        }
+      })
+    });
+  }
+
+  initializeMembersPostsMedia(members: Member[]) {
+    console.log(members)
+
+    if(members != undefined) {
+      for (let member of members) {
+        if(member.posts != undefined) {
+          for (let post of member.posts) {
+            this.initializePostImages(post.postImageList);
+            this.initializePostVideos(post.postVideoList);
+          }
+        }
+      }
+    }
+  }
+
+  private initializePostImages(postImages: PostImage[]) {
+    if(postImages != undefined) {
+      for (let postImage of postImages) {
+        this.postImageService.downloadFiles(postImage.name).subscribe({
+          next: (httpEvent: HttpEvent<Blob>) => {
+            if (httpEvent.type === HttpEventType.Response) {
+              const file: File = this.getFile(httpEvent);
+              postImage.setImageUrl(URL.createObjectURL(file));
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+          }
+        });
+      }
+    }
+  }
+
+  private initializePostVideos(postVideos: PostVideo[]) {
+    if (postVideos != undefined) {
+      for (let postVideo of postVideos) {
+        this.postVideoService.downloadFiles(postVideo.name).subscribe({
+          next: (httpEvent: HttpEvent<Blob>) => {
+            if (httpEvent.type === HttpEventType.Response) {
+              const file: File = this.getFile(httpEvent);
+              postVideo.setVideoUrl(URL.createObjectURL(file));
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+          }
+        });
+      }
+    }
+  }
+
   logoutOnClick() {
     this.deleteUserToken();
     this.currentMemberService.setUserToNull();
     this.routeToHome().then(() => {
       window.location.reload();
     });
+  }
+
+  private getFile(httpEvent: HttpResponse<Blob>) {
+    return new File([httpEvent.body!], httpEvent.headers.get('File-Name')!,
+      {type: `${httpEvent.headers.get('Content-Type')};charset=utf-8`});
   }
 }

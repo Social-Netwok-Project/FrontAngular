@@ -18,4 +18,18 @@ export class PostImage {
   public static fromJson(jsonPostImage: PostImage): PostImage {
     return new PostImage(jsonPostImage.name, jsonPostImage.fileName, jsonPostImage.postId, jsonPostImage.postImageId);
   }
+
+  setImageUrl(imageUrl: string) {
+    this.imageUrl = imageUrl;
+  }
+
+  static initializePostImages(postImageList: PostImage[]) {
+    let postImages: PostImage[] = [];
+    if (postImageList != undefined) {
+      for (let postImage of postImageList) {
+        postImages.push(PostImage.fromJson(postImage));
+      }
+    }
+    return postImages;
+  }
 }

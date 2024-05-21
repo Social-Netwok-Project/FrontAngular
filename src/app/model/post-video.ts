@@ -24,4 +24,18 @@ export class PostVideo {
   public static fromJson(jsonPostVideo: PostVideo): PostVideo {
     return new PostVideo(jsonPostVideo.name, jsonPostVideo.fileName, jsonPostVideo.length, jsonPostVideo.size, jsonPostVideo.postId, jsonPostVideo.postVideoId);
   }
+
+  setVideoUrl(videoUrl: string) {
+    this.videoUrl = videoUrl;
+  }
+
+  static initializePostVideos(postVideoList: PostVideo[]) {
+    let postVideos: PostVideo[] = [];
+    if (postVideoList != undefined) {
+      for (let postVideo of postVideoList) {
+        postVideos.push(PostVideo.fromJson(postVideo));
+      }
+    }
+    return postVideos;
+  }
 }

@@ -18,6 +18,14 @@ export abstract class MemberService extends EntityService<Member> {
     super(http, "member");
   }
 
+  public findFriendsOfFriend(memberId: number): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiBackendUrl}/${this.entityName}/foaf/${memberId}`);
+  }
+
+  public findFriends(memberId: number): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiBackendUrl}/${this.entityName}/friends/${memberId}`);
+  }
+
   public findMemberByEmail(email: String): Observable<Member> {
     return this.http.get<Member>(`${this.apiBackendUrl}/${this.entityName}/select-member-by-email/${email}`);
   }

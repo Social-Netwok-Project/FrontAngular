@@ -1,6 +1,12 @@
-<div class="main-page-body-div">
-  <div class="posts-container">
-    <app-post></app-post>
+<div (onResize)="handleFooterTopMinValue($event, 80)" class="main-page-body-div">
+  <div class="friends-container" *ngFor="let friend of this.currentMemberService.user?.friends">
+    <div class="posts-container" *ngFor="let post of friend.posts">
+      <app-post
+        [style.width.%]="100"
+        [member]="friend"
+        [post]="post">
+      </app-post>
+    </div>
   </div>
 </div>
 <app-footer

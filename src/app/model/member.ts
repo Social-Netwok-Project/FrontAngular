@@ -16,6 +16,7 @@ export class Member {
   pfpImgUrl: string | undefined;
 
   posts: Post[] = [];
+  friends: Member[] = [];
 
   constructor(username: string, email: string, password: string, birthdate: string,
               creationDate?: string, userId?: number,
@@ -33,10 +34,13 @@ export class Member {
   }
 
   static fromJson(jsonMember: Member): Member {
-    return new Member(jsonMember.username, jsonMember.email, jsonMember.password, jsonMember.birthdate, jsonMember.creationDate, jsonMember.memberId, jsonMember.token, jsonMember.pfpImageName);
+    let member = new Member(jsonMember.username, jsonMember.email, jsonMember.password, jsonMember.birthdate, jsonMember.creationDate, jsonMember.memberId, jsonMember.token, jsonMember.pfpImageName);
+    member.setPosts(Post.initializePosts(jsonMember.posts));
+
+    return member;
   }
 
-  getUserId(): number {
+  getMemberId(): number {
     return this.memberId!;
   }
 
@@ -82,6 +86,14 @@ export class Member {
     return this.memberId + "-";
   }
 
+  setFriends(friends: Member[]) {
+    this.friends = friends;
+  }
+
+  setPosts(posts: Post[]) {
+    this.posts = posts;
+  }
+
   clearLists() {
 
   }
@@ -92,5 +104,15 @@ export class Member {
 
   setBirthDate(birthdate: string) {
     this.birthdate = birthdate;
+  }
+
+  static initializeMembers(jsonFriends: Member[]) {
+    let friends: Member[] = [];
+    if(jsonFriends != undefined) {
+      for (let jsonFriend of jsonFriends) {
+        friends.push(Member.fromJson(jsonFriend));
+      }
+    }
+    return friends;
   }
 }

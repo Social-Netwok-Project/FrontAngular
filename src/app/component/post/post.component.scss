@@ -21,6 +21,7 @@ $post-elem-padding: 15px;
   justify-content: center;
 
   width: 100%;
+  padding: 20px;
 }
 
 .post-div {
@@ -110,7 +111,7 @@ $post-elem-padding: 15px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
 
   overflow-x: auto;
   overflow-y: hidden;
@@ -166,7 +167,7 @@ $post-elem-padding: 15px;
   align-items: center;
   justify-content: center;
 
-  width: calc(100% - 20px);
+  //width: calc(100% - 20px);
   height: $video-container-height - 28px;
   margin: 12px 7px 12px 7px;
   border-radius: 10px;

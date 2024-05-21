@@ -96,7 +96,7 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   tweetOnClick() {
     this.isAddEditTweetModalOpen = true;
     this.modalOpenType = ModalOpenType.ADD;
-    this.editingPost = new Post("", "", "", this.currentMemberService.user?.getUserId()!)
+    this.editingPost = new Post("", "", "", this.currentMemberService.user?.getMemberId()!)
   }
 
   onAddEditTweetModalChange(newVal: boolean) {

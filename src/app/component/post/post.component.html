@@ -3,54 +3,38 @@
     <div class="post-header-div post-elem">
       <div class="post-user-div">
         <div class="user-pfp-img-div">
-          <img class="pfp-img" src="assets/logo.png" alt="user-pfp-img">
+          <img class="pfp-img" src="{{member.pfpImgUrl}}" alt="user-pfp-img">
         </div>
         <div class="user-info-div">
-          <span>Username</span>
-          <span>Join Date</span>
+          <span>{{member.username}}</span>
+          <span>{{member.creationDate}}</span>
         </div>
       </div>
       <div class="post-title-div">
-        <span class="text-font-700">TITLE TITLE TITLE TITLE TITLE</span>
+        <span class="text-font-700">{{ post.title }}</span>
       </div>
     </div>
     <div class="post-body-div post-elem">
-      <span>Content Content Content Content Content Content Content Content Content
-        Content Content Content Content Content Content Content Content Content
-        Content Content Content Content Content Content Content Content Content</span>
+      <span>{{post.body}}</span>
     </div>
-    <div class="post-images-div post-elem">
-      <div class="post-images-container">
-        <div class="post-image-div">
-          <img class="post-image" src="assets/logo.png" alt="user-pfp-img">
-        </div>
-        <div class="post-image-div">
-          <img class="post-image" src="assets/logo.png" alt="user-pfp-img">
-        </div>
-        <div class="post-image-div">
-          <img class="post-image" src="assets/logo.png" alt="user-pfp-img">
-        </div>
-        <div class="post-image-div">
-          <img class="post-image" src="assets/logo.png" alt="user-pfp-img">
+    <div class="post-images-div post-elem" *ngIf="hasImages">
+      <div (onResize)="onResize($event)" [style.justify-content]="justify" class="post-images-container">
+        <div class="post-image-div" *ngFor="let postImage of post.postImageList">
+          <img class="post-image" src="{{postImage.imageUrl}}" alt="{{postImage.name}}">
         </div>
       </div>
     </div>
-    <div class="post-videos-div post-elem">
+    <div class="post-videos-div post-elem" *ngIf="hasVideos">
       <div class="post-videos-container">
-        <div class="post-video-div">
-          <video class="post-video" controls>
-            <source src="assets/logo.png" type="video/mp4">
-          </video>
-        </div>
-        <div class="post-video-div">
-          <video class="post-video" controls>
-            <source src="assets/logo.png" type="video/mp4">
+        <div class="post-video-div" *ngFor="let postVideo of post.postVideoList">
+          <video class="post-video" controls *ngIf="postVideo.videoUrl != undefined">
+            <source src="{{postVideo.videoUrl}}" type="video/mp4">
           </video>
         </div>
       </div>
     </div>
     <div class="post-likes-div post-elem">
-      <span>Post Date</span>
+      <span>{{post.creationDate}}</span>
       <div class="likes-div">
         <div class="icon-elem-1-static-clicked">
           <fa-icon [icon]="faThumbsUp" [class]="['icon-1']"></fa-icon>
@@ -62,17 +46,7 @@
     </div>
     <div class="tags-div post-elem-2">
       <div class="tags-container">
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
-        <div class="tag-element">Tag 1</div>
+        <div class="tag-element" *ngFor="let tag of post.tagsPerPostList">Tag 1</div>
       </div>
     </div>
   </div>

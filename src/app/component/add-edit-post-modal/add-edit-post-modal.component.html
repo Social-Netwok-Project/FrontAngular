@@ -29,11 +29,11 @@
                      class="drag-and-drop-input" (change)="onImageSelected($event)">
             </div>
           </div>
-          <div class="add-form-elem-1" *ngIf="editingPost.postImages!.length > 0">
+          <div class="add-form-elem-1" *ngIf="editingPost.postImageList!.length > 0">
             <span>Post Images:</span>
           </div>
           <div class="image-preview-container">
-            <div *ngFor="let postImage of editingPost.postImages">
+            <div *ngFor="let postImage of editingPost.postImageList">
               <div class="image-preview-elem-main">
                 <div class="image-preview-elem">
                   <img class="image-preview" src="{{postImage.imageUrl}}" alt="img">
@@ -62,11 +62,11 @@
                      class="drag-and-drop-input" (change)="onVideoSelected($event)">
             </div>
           </div>
-          <div class="add-form-elem-1" *ngIf="editingPost.postVideos!.length > 0">
+          <div class="add-form-elem-1" *ngIf="editingPost.postVideoList!.length > 0">
             <span>Post Videos:</span>
           </div>
           <div class="video-preview-container">
-            <div *ngFor="let postVideo of editingPost.postVideos">
+            <div *ngFor="let postVideo of editingPost.postVideoList">
               <div class="video-preview-elem-main">
                 <div class="video-preview-elem">
                   <span>{{postVideo.fileName}}</span>

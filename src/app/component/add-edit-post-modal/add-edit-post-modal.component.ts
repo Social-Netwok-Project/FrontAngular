@@ -106,7 +106,7 @@ export class AddEditPostModalComponent extends ModalComponent {
         let postImage = new PostImage(name, this.images[i].name, this.editingPost.postId!);
         postImage.imageUrl = URL.createObjectURL(event.target.files[i]);
 
-        this.editingPost.postImages.push(postImage);
+        this.editingPost.postImageList.push(postImage);
       }
     }
 
@@ -128,7 +128,7 @@ export class AddEditPostModalComponent extends ModalComponent {
         let postVideo = new PostVideo(name, this.videos[i].name, this.videos[i].size, this.videos[i].size, this.editingPost.postId!);
         postVideo.videoUrl = URL.createObjectURL(event.target.files[i]);
 
-        this.editingPost.postVideos.push(postVideo);
+        this.editingPost.postVideoList.push(postVideo);
       }
     }
 
@@ -142,12 +142,14 @@ export class AddEditPostModalComponent extends ModalComponent {
     }
 
     if (this.modalOpenType == ModalOpenType.ADD) {
-      let postImagesToAdd = this.editingPost.postImages
-      let postVideosToAdd = this.editingPost.postVideos
-      this.editingPost.postImages = [];
-      this.editingPost.postVideos = [];
+      let postImagesToAdd = this.editingPost.postImageList
+      let postVideosToAdd = this.editingPost.postVideoList
+      this.editingPost.postImageList = [];
+      this.editingPost.postVideoList = [];
 
-      this.editingPost.creation_date = getCurrentDate();
+      this.editingPost.creationDate = getCurrentDate();
+
+      console.log(this.editingPost)
 
       let successCount = 0;
       new Observable<boolean>(observer => {
@@ -166,7 +168,7 @@ export class AddEditPostModalComponent extends ModalComponent {
                   next: (jsonPostImage: PostImage) => {
                     let postImage = PostImage.fromJson(jsonPostImage);
                     console.log("Added post image with id: " + postImage.postImageId);
-                    post.postImages.push(postImage);
+                    post.postImageList.push(postImage);
                     observer.next(count++);
                   },
                   error: (error: HttpErrorResponse) => {
@@ -179,7 +181,7 @@ export class AddEditPostModalComponent extends ModalComponent {
               next: (count: number) => {
                 if (count === postImagesToAdd.length) {
                   console.log("Added all post images")
-                  this.editingPost.postImages = postImagesToAdd;
+                  this.editingPost.postImageList = postImagesToAdd;
                   this.uploadPostImages(post).then((isSuccess: boolean) => {
                     this.isImagesSuccess = isSuccess;
                     observer.next(isSuccess);
@@ -202,7 +204,7 @@ export class AddEditPostModalComponent extends ModalComponent {
                   next: (jsonPostVideo: PostVideo) => {
                     let postVideo = PostVideo.fromJson(jsonPostVideo);
                     console.log("Added post video with id: " + postVideo.postVideoId);
-                    post.postVideos.push(postVideo);
+                    post.postVideoList.push(postVideo);
                     observer.next(count++);
                   },
                   error: (error: HttpErrorResponse) => {
@@ -215,7 +217,7 @@ export class AddEditPostModalComponent extends ModalComponent {
               next: (count: number) => {
                 if (count === postVideosToAdd.length) {
                   console.log("Added all post videos")
-                  this.editingPost.postVideos = postVideosToAdd;
+                  this.editingPost.postVideoList = postVideosToAdd;
                   this.uploadPostVideos(post).then((isSuccess: boolean) => {
                     this.isVideosSuccess = isSuccess;
                     observer.next(isSuccess);
@@ -260,10 +262,10 @@ export class AddEditPostModalComponent extends ModalComponent {
         this.postImageService.deleteEntity(postImageId).subscribe({
           next: () => {
             console.log("Deleted post image with id: " + postImageId);
-            let postImageToRemove = this.editingPost.postImages
+            let postImageToRemove = this.editingPost.postImageList
               .find((postImage: PostImage) => postImage.postImageId === postImageId);
 
-            this.editingPost.postImages.splice(this.editingPost.postImages.indexOf(postImageToRemove!), 1)
+            this.editingPost.postImageList.splice(this.editingPost.postImageList.indexOf(postImageToRemove!), 1)
 
             this.postImageService.deleteFile(postImageToRemove!.name).subscribe({
               next: () => {
@@ -283,10 +285,10 @@ export class AddEditPostModalComponent extends ModalComponent {
         this.postVideoService.deleteEntity(postVideoId).subscribe({
           next: () => {
             console.log("Deleted post video with id: " + postVideoId);
-            let postVideoToRemove = this.editingPost.postVideos
+            let postVideoToRemove = this.editingPost.postVideoList
               .find((postVideo: PostVideo) => postVideo.postVideoId === postVideoId);
 
-            this.editingPost.postVideos.splice(this.editingPost.postVideos.indexOf(postVideoToRemove!), 1)
+            this.editingPost.postVideoList.splice(this.editingPost.postVideoList.indexOf(postVideoToRemove!), 1)
 
             this.postVideoService.deleteFile(postVideoToRemove!.name).subscribe({
               next: () => {
@@ -310,10 +312,10 @@ export class AddEditPostModalComponent extends ModalComponent {
       let formData = new FormData();
 
       for (let i = 0; i < this.images.length; i++) {
-        let currentPostImage = this.editingPost.postImages
+        let currentPostImage = this.editingPost.postImageList
           .find((postImage: PostImage) => postImage.fileName === this.images[i].name)!;
 
-        let newPostImage = post.postImages
+        let newPostImage = post.postImageList
           .find((postImage: PostImage) => postImage.name === currentPostImage.name)!;
 
         currentPostImage.postImageId = newPostImage.postImageId;
@@ -349,10 +351,10 @@ export class AddEditPostModalComponent extends ModalComponent {
       let formData = new FormData();
 
       for (let i = 0; i < this.videos.length; i++) {
-        let currentPostVideo = this.editingPost.postVideos
+        let currentPostVideo = this.editingPost.postVideoList
           .find((postVideo: PostVideo) => postVideo.fileName === this.videos[i].name)!;
 
-        let newPostVideo = post.postVideos
+        let newPostVideo = post.postVideoList
           .find((postVideo: PostVideo) => postVideo.name === currentPostVideo.name)!;
 
         currentPostVideo.postVideoId = newPostVideo.postVideoId;
@@ -385,16 +387,16 @@ export class AddEditPostModalComponent extends ModalComponent {
 
   private resetValues() {
     if (this.modalOpenType == ModalOpenType.ADD) {
-      this.editingPost = new Post("", "", "", this.currentMemberService.user?.getUserId()!);
+      this.editingPost = new Post("", "", "", this.currentMemberService.user?.getMemberId()!);
     }
 
-    for (let i = this.editingPost.postImages.length - 1; i >= 0; i--) {
-      if (this.editingPost.postImages[i].postImageId == undefined) {
-        this.editingPost.postImages.splice(i, 1);
-        this.editingPost.postVideos.splice(i, 1);
-      } else if (this.editingPost.postImages[i].mightDelete) {
-        this.editingPost.postImages[i].mightDelete = false;
-        this.editingPost.postVideos[i].mightDelete = false;
+    for (let i = this.editingPost.postImageList.length - 1; i >= 0; i--) {
+      if (this.editingPost.postImageList[i].postImageId == undefined) {
+        this.editingPost.postImageList.splice(i, 1);
+        this.editingPost.postVideoList.splice(i, 1);
+      } else if (this.editingPost.postImageList[i].mightDelete) {
+        this.editingPost.postImageList[i].mightDelete = false;
+        this.editingPost.postVideoList[i].mightDelete = false;
       }
     }
 
@@ -412,7 +414,7 @@ export class AddEditPostModalComponent extends ModalComponent {
     if (!isInDeletingList && postImage.postImageId == undefined) {
       console.log("removed from potential list")
       // REMOVE FROM POST IMAGES
-      this.editingPost?.postImages.splice(this.editingPost?.postImages
+      this.editingPost?.postImageList.splice(this.editingPost?.postImageList
         .findIndex((postImage1: PostImage) => postImage1.imageUrl == postImage.imageUrl), 1);
 
       // REMOVE FROM FILES
@@ -448,7 +450,7 @@ export class AddEditPostModalComponent extends ModalComponent {
     if (!isInDeletingList && postVideo.postVideoId == undefined) {
       console.log("removed from potential list")
       // REMOVE FROM POST IMAGES
-      this.editingPost?.postVideos.splice(this.editingPost?.postVideos
+      this.editingPost?.postVideoList.splice(this.editingPost?.postVideoList
         .findIndex((postVideo1: PostVideo) => postVideo1.videoUrl == postVideo.videoUrl), 1);
 
       // REMOVE FROM FILES
