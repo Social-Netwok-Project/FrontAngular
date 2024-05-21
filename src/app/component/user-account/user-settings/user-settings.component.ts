@@ -46,7 +46,7 @@ export class UserSettingsComponent extends CookieComponent implements OnInit {
     this.initializeUserByToken().then(() => {
       this.loggedInPage();
 
-      this.user = this.currentMemberService.user!;
+      this.user = this.currentMemberService.member!;
     });
   }
 

@@ -45,13 +45,14 @@ $post-elem-padding: 15px;
   height: $header-div-height;
 }
 
-.post-user-div {
+.post-member-div {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: start;
 
   width: 50%;
+  cursor: pointer;
 }
 
 .user-pfp-img-div {
@@ -224,22 +225,6 @@ $post-elem-padding: 15px;
   overflow-x: auto;
   overflow-y: hidden;
 }
-
-.tag-element {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-  margin: 5px;
-  padding: 5px 10px 5px 10px;
-  border-radius: 15px;
-  background-color: $colorP13;
-  font-size: 12px;
-
-  white-space: nowrap;
-}
-
 
 /*SCROLLBAR STUFF*/
 /* width */

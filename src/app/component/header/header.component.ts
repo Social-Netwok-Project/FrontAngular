@@ -66,7 +66,7 @@ export class HeaderComponent extends CookieComponent implements OnInit {
     if (profileMenuItem != logout) {
       this.routeTo(profileMenuItem.link)
     } else {
-      this.currentMemberService.setUserToNull();
+      this.currentMemberService.setMemberToNull();
       this.loginOnClick();
     }
 
@@ -96,7 +96,7 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   tweetOnClick() {
     this.isAddEditTweetModalOpen = true;
     this.modalOpenType = ModalOpenType.ADD;
-    this.editingPost = new Post("", "", "", this.currentMemberService.user?.getMemberId()!)
+    this.editingPost = new Post("", "", "", this.currentMemberService.member?.getMemberId()!)
   }
 
   onAddEditTweetModalChange(newVal: boolean) {

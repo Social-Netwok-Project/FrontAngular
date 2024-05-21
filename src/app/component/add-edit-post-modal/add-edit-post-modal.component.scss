@@ -139,3 +139,11 @@ $padding: 8px;
 .trash-icon {
   color: white;
 }
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

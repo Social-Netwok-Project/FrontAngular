@@ -11,6 +11,7 @@ import {MessageListElementComponent} from "./message-list-element/message-list-e
 import {MessageListElement} from "./message-list-element/message-list-element";
 import {FormsModule} from "@angular/forms";
 import {MemberService} from "../../service/member.service";
+import {messagesNavigationItem} from "../header/navigation-item";
 
 @Component({
   selector: 'app-messages',
@@ -122,4 +123,6 @@ export class MessagesComponent extends CookieComponent implements OnInit {
     //
     // return filteredCustomerOrderElements;
   }
+
+    protected readonly messagesNavigationItem = messagesNavigationItem;
 }

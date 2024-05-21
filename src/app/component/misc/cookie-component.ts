@@ -14,6 +14,9 @@ import {PostVideoService} from "../../service/post-video.service";
 import {Post} from "../../model/post";
 import {PostImage} from "../../model/post-image";
 import {PostVideo} from "../../model/post-video";
+import {TagService} from "../../service/tag.service";
+import {TagPerPostService} from "../../service/tag-per-post.service";
+import {EdgeService} from "../../service/edge.service";
 
 export abstract class CookieComponent {
   // Services
@@ -23,6 +26,9 @@ export abstract class CookieComponent {
   protected postService!: PostService;
   protected postImageService!: PostImageService;
   protected postVideoService!: PostVideoService;
+  protected tagService!: TagService;
+  protected tagPerPostService!: TagPerPostService;
+  protected edgeService!: EdgeService;
 
   protected router!: Router;
   protected route!: ActivatedRoute;
@@ -68,15 +74,14 @@ export abstract class CookieComponent {
   initializeUserByToken(): Promise<boolean> {
     this.currentMemberService.incrementCounter();
     return new Promise<boolean>((resolve, reject) => {
-      if (this.currentMemberService.user != undefined) {
-        resolve(true)
-      } else if (this.hasUserToken() && this.currentMemberService.getCounter() == 1) {
+      if (this.hasUserToken() && this.currentMemberService.getCounter() == 1) {
         this.currentMemberService.setMainPromise(new Promise<boolean>((resolve_sub, reject) => {
           this.memberService.findMemberByToken({token: this.getUserToken()})
             .subscribe({
               next: (jsonUser: Member) => {
                 if (jsonUser != null) {
                   this.initializeUser(jsonUser);
+                  this.currentMemberService.setCounter(0);
 
                   resolve_sub(true);
                   resolve(true);
@@ -104,10 +109,10 @@ export abstract class CookieComponent {
   }
 
   initializeUser(jsonUser: Member) {
-    this.currentMemberService.user = Member.fromJson(jsonUser);
+    this.currentMemberService.member = Member.fromJson(jsonUser);
     this.initializeMemberPfpImgUrl().then();
 
-    console.log(this.currentMemberService.user!)
+    console.log(this.currentMemberService.member!)
   }
 
   resetTokenByOldToken(): Promise<boolean> {
@@ -186,12 +191,12 @@ export abstract class CookieComponent {
 
   private initializeMemberPfpImgUrl(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      if (this.currentMemberService.user?.hasPfpImg()) {
-        this.memberService.downloadFiles(this.currentMemberService.user?.pfpImageName!).subscribe({
+      if (this.currentMemberService.member?.hasPfpImg()) {
+        this.memberService.downloadFiles(this.currentMemberService.member?.pfpImageName!).subscribe({
           next: (httpEvent: HttpEvent<Blob>) => {
             if (httpEvent.type === HttpEventType.Response) {
               const file: File = this.getFile(httpEvent);
-              this.currentMemberService.user?.setPfpImgUrl(URL.createObjectURL(file));
+              this.currentMemberService.member?.setPfpImgUrl(URL.createObjectURL(file));
               resolve(true);
             }
           },
@@ -245,11 +250,11 @@ export abstract class CookieComponent {
 
   initializerMemberFriends() {
     return new Promise<boolean>((resolve, reject) => {
-      this.memberService.findFriends(this.currentMemberService.user!.getMemberId()).subscribe({
+      this.memberService.findFriends(this.currentMemberService.member!.getMemberId()).subscribe({
         next: (jsonFriends: Member[]) => {
           let friends: Member[] = Member.initializeMembers(jsonFriends);
-          this.currentMemberService.user?.setFriends(friends)
-          this.initializeMembersPfpImgUrl(this.currentMemberService.user?.friends).then((success) => {
+          this.currentMemberService.member?.setFriends(friends)
+          this.initializeMembersPfpImgUrl(this.currentMemberService.member?.friends).then((success) => {
             resolve(success);
           });
         },
@@ -262,8 +267,6 @@ export abstract class CookieComponent {
   }
 
   initializeMembersPostsMedia(members: Member[]) {
-    console.log(members)
-
     if(members != undefined) {
       for (let member of members) {
         if(member.posts != undefined) {
@@ -314,7 +317,7 @@ export abstract class CookieComponent {
 
   logoutOnClick() {
     this.deleteUserToken();
-    this.currentMemberService.setUserToNull();
+    this.currentMemberService.setMemberToNull();
     this.routeToHome().then(() => {
       window.location.reload();
     });

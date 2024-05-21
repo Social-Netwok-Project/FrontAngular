@@ -8,9 +8,9 @@
       <div class="profile-card">
         <div class="pfp-image-elem-main">
           <div class="pfp-image-elem">
-            <img class="image-frame" src="{{currentMemberService.user?.pfpImgUrl}}" alt="pfp"
-                 *ngIf="currentMemberService.user?.hasPfpImg()">
-            <fa-icon [class]="['user-icon']" [icon]="faUser" *ngIf="!currentMemberService.user?.hasPfpImg()"></fa-icon>
+            <img class="image-frame" src="{{currentMemberService.member?.pfpImgUrl}}" alt="pfp"
+                 *ngIf="currentMemberService.member?.hasPfpImg()">
+            <fa-icon [class]="['user-icon']" [icon]="faUser" *ngIf="!currentMemberService.member?.hasPfpImg()"></fa-icon>
           </div>
 
           <div class="pfp-edit-elem" (click)="openModal()">
@@ -18,9 +18,9 @@
           </div>
         </div>
         <div class="profile-top-div-info">
-          <span class="text-font-700">{{ currentMemberService.user?.username }}</span>
-          <span>{{ currentMemberService.user?.username }}</span>
-          <span>{{ currentMemberService.user?.email }}</span>
+          <span class="text-font-700">{{ currentMemberService.member?.username }}</span>
+          <span>{{ currentMemberService.member?.username }}</span>
+          <span>{{ currentMemberService.member?.email }}</span>
         </div>
       </div>
       <div class="profile-edit-elem">

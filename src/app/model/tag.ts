@@ -1,6 +1,7 @@
 export class Tag {
   tagId: number;
   name: string;
+  mightDelete: boolean = false;
 
   constructor(tagId: number, name: string) {
     this.tagId = tagId;
@@ -19,5 +20,9 @@ export class Tag {
       }
     }
     return tags;
+  }
+
+  public toString() {
+    return this.name;
   }
 }

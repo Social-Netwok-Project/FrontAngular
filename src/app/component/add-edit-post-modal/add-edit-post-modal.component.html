@@ -22,6 +22,25 @@
         </div>
         <div class="my-modal-element">
           <div class="add-form-elem-1">
+            <label for="body-input">Tags:</label>
+            <select class="default-input-3" [(ngModel)]="selectedTagId" (click)="onTagSelected()">
+              <option *ngFor="let tag of availableTags"
+                      [value]="tag.tagId">
+                {{ tag.name }}
+              </option>
+            </select>
+          </div>
+          <div class="tags-container">
+            <div class="tag-element" *ngFor="let tag of getSelectedTags()">
+              <span>{{tag.name}}</span>
+              <div class="clickable-icon-elem-4" (click)="onDeleteTag(tag)">
+                <fa-icon [icon]="faXmark" [class]="['clickable-icon-4']"></fa-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="my-modal-element">
+          <div class="add-form-elem-1">
             <span>Select Images:</span>
             <div class="drag-and-drop-elem">
               <span>Click Or Drag</span>

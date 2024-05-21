@@ -5,16 +5,17 @@ import {Injectable} from "@angular/core";
 })
 export class CurrentMemberService {
   private counter: number = 0;
-
-  private _user!: Member | undefined;
-
+  private _member!: Member | undefined;
   private mainPromise!: Promise<boolean>;
 
-  constructor() {
-  }
+  constructor() {}
 
   public getCounter(): number {
     return this.counter;
+  }
+
+  public setCounter(counter: number): void {
+    this.counter = counter;
   }
 
   public incrementCounter(): void {
@@ -22,7 +23,7 @@ export class CurrentMemberService {
   }
 
   isLoggedIn(): boolean {
-    return this._user !== undefined && this._user !== null;
+    return this._member !== undefined && this._member !== null;
   }
 
   getMainPromise(): Promise<boolean> {
@@ -33,15 +34,15 @@ export class CurrentMemberService {
     this.mainPromise = mainPromise;
   }
 
-  get user(): Member | undefined {
-    return this._user;
+  get member(): Member | undefined {
+    return this._member;
   }
 
-  set user(user: Member | undefined) {
-    this._user = user;
+  set member(member: Member | undefined) {
+    this._member = member;
   }
 
-  setUserToNull() {
-    this.user = undefined;
+  setMemberToNull() {
+    this.member = undefined;
   }
 }

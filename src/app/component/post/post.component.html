@@ -1,13 +1,13 @@
 <div class="post-main-div">
   <div class="post-div">
     <div class="post-header-div post-elem">
-      <div class="post-user-div">
+      <div class="post-member-div" (click)="sendToMemberPage()">
         <div class="user-pfp-img-div">
-          <img class="pfp-img" src="{{member.pfpImgUrl}}" alt="user-pfp-img">
+          <img class="pfp-img" src="{{member?.pfpImgUrl!}}" alt="user-pfp-img">
         </div>
         <div class="user-info-div">
-          <span>{{member.username}}</span>
-          <span>{{member.creationDate}}</span>
+          <span>{{member?.username}}</span>
+          <span>{{member?.creationDate}}</span>
         </div>
       </div>
       <div class="post-title-div">
@@ -46,7 +46,9 @@
     </div>
     <div class="tags-div post-elem-2">
       <div class="tags-container">
-        <div class="tag-element" *ngFor="let tag of post.tagsPerPostList">Tag 1</div>
+        <div class="tag-element" *ngFor="let tagPerPostList of post.tagPerPostList">
+          {{tagPerPostList.tag.name}}
+        </div>
       </div>
     </div>
   </div>

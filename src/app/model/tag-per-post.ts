@@ -1,32 +1,36 @@
 import {Tag} from "./tag";
 
 export class TagPerPost {
-  tagPerPostId!: number;
-  postId!: number;
-  tagId!: number;
+  postId: number;
+  tagId: number;
 
-  tagList: Tag[] = [];
+  tagPerPostId!: number | undefined;
 
-  constructor(tagPerPostId: number, postId: number, tagId: number) {
+  tag!: Tag;
+
+  constructor(postId: number, tagId: number, tagPerPostId?: number) {
     this.tagPerPostId = tagPerPostId;
     this.postId = postId;
     this.tagId = tagId;
   }
 
   public static fromJson(jsonTagPerPost: TagPerPost): TagPerPost {
-    let tagPerPost = new TagPerPost(jsonTagPerPost.tagPerPostId, jsonTagPerPost.postId, jsonTagPerPost.tagId);
-    tagPerPost.tagList = Tag.initializeTags(jsonTagPerPost.tagList);
+    let tagPerPost = new TagPerPost(jsonTagPerPost.postId, jsonTagPerPost.tagId, jsonTagPerPost.tagPerPostId);
+
+    if(jsonTagPerPost.tag != undefined) {
+      tagPerPost.tag = Tag.fromJson(jsonTagPerPost.tag)
+    }
 
     return tagPerPost;
   }
 
-  static initializeTagsPerPost(tagsPerPostList: TagPerPost[]) {
-    let tagsPerPost: TagPerPost[] = [];
-    if (tagsPerPostList != undefined) {
-      for (let jsonTagPerPost of tagsPerPostList) {
-        tagsPerPost.push(TagPerPost.fromJson(jsonTagPerPost));
+  static initializeTagPerPostList(jsonTagPerPostList: TagPerPost[]) {
+    let tagsPerPostList: TagPerPost[] = [];
+    if (jsonTagPerPostList != undefined) {
+      for (let jsonTagPerPost of jsonTagPerPostList) {
+        tagsPerPostList.push(TagPerPost.fromJson(jsonTagPerPost));
       }
     }
-    return tagsPerPost;
+    return tagsPerPostList;
   }
 }

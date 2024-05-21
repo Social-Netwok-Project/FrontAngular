@@ -44,6 +44,6 @@ export class ConnectionSecurityComponent extends CookieComponent implements OnIn
       this.loggedInPage();
     });
 
-    this.user = this.currentMemberService.user!;
+    this.user = this.currentMemberService.member!;
   }
 }

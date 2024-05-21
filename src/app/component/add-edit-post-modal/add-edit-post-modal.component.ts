@@ -1,5 +1,5 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {faCheck, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {faCheck, faCross, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -17,6 +17,10 @@ import {PostVideoService} from "../../service/post-video.service";
 import {PostImageService} from "../../service/post-image.service";
 import {UploadStatus} from "../misc/form-component";
 import {PostVideo} from "../../model/post-video";
+import {TagService} from "../../service/tag.service";
+import {Tag} from "../../model/tag";
+import {TagPerPost} from "../../model/tag-per-post";
+import {TagPerPostService} from "../../service/tag-per-post.service";
 
 @Component({
   selector: 'app-add-edit-tweet-modal',
@@ -30,7 +34,7 @@ import {PostVideo} from "../../model/post-video";
   templateUrl: './add-edit-post-modal.component.html',
   styleUrl: './add-edit-post-modal.component.scss'
 })
-export class AddEditPostModalComponent extends ModalComponent {
+export class AddEditPostModalComponent extends ModalComponent implements OnInit {
   @Input() override isModalOpen = false
   @Output() override onModalChangeEmitter = new EventEmitter<boolean>();
 
@@ -43,11 +47,15 @@ export class AddEditPostModalComponent extends ModalComponent {
 
   images: File[] = [];
   videos: File[] = [];
+  availableTags: Tag[] = [];
+  selectedTagId!: string;
+
   imagesStatusMsg: string = "";
   videosStatusMsg: string = "";
 
   postImagesIdsToDelete: number[] = [];
   postVideosIdsToDelete: number[] = [];
+  tagsIdsToDelete: number[] = [];
 
   isImagesSuccess: boolean = false;
   isVideosSuccess: boolean = false;
@@ -66,8 +74,21 @@ export class AddEditPostModalComponent extends ModalComponent {
               protected override postImageService: PostImageService,
               protected override postVideoService: PostVideoService,
               protected override currentMemberService: CurrentMemberService,
+              protected override tagService: TagService,
+              protected override tagPerPostService: TagPerPostService,
               protected override router: Router, protected override route: ActivatedRoute) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.tagService.getAllEntities().subscribe({
+      next: (jsonTags: Tag[]) => {
+        this.availableTags = Tag.initializeTags(jsonTags);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error(error);
+      }
+    })
   }
 
   override isFormValid(): boolean {
@@ -94,9 +115,9 @@ export class AddEditPostModalComponent extends ModalComponent {
   }
 
   onImageSelected(event: any) {
-    if((this.images.length + event.target.files.length) > this.maxImages) {
+    if ((this.images.length + event.target.files.length) > this.maxImages) {
       this.imagesStatusMsg = `You can only upload ${this.maxImages} images!`;
-    } else if(this.getFilesSize(this.images) + this.getFilesSize(event.target.files) > this.maxSize) {
+    } else if (this.getFilesSize(this.images) + this.getFilesSize(event.target.files) > this.maxSize) {
       this.imagesStatusMsg = `Image size is too big! Max is 100MB`;
     } else {
       for (let i = 0; i < event.target.files.length; i++) {
@@ -114,9 +135,9 @@ export class AddEditPostModalComponent extends ModalComponent {
   }
 
   onVideoSelected(event: any) {
-    if(this.videos.length + event.target.files.length > this.maxVideos) {
+    if (this.videos.length + event.target.files.length > this.maxVideos) {
       this.videosStatusMsg = `You can only upload ${this.maxVideos} videos!`;
-    } else if(this.getFilesSize(this.videos) + this.getFilesSize(event.target.files) > this.maxSize) {
+    } else if (this.getFilesSize(this.videos) + this.getFilesSize(event.target.files) > this.maxSize) {
       this.videosStatusMsg = `Video size is too big! Max is 100MB`;
     } else {
       for (let i = 0; i < event.target.files.length; i++) {
@@ -135,6 +156,20 @@ export class AddEditPostModalComponent extends ModalComponent {
     this.videoInput.nativeElement.value = "";
   }
 
+  onTagSelected() {
+    let selectedTagId = parseInt(this.selectedTagId);
+    if(!this.editingPost.tagPerPostList.find(tagPerPost => tagPerPost.tagId == selectedTagId) && this.selectedTagId != undefined) {
+      let tagPerPost = new TagPerPost(this.editingPost.postId!, selectedTagId);
+      this.editingPost.tagPerPostList.push(tagPerPost);
+    }
+  }
+
+  getSelectedTags() {
+    return this.availableTags.filter(tag => {
+      return this.editingPost.tagPerPostList.find(tagPerPost => tag.tagId == tagPerPost.tagId) != undefined;
+    })
+  }
+
   onAcceptClick() {
     if (!this.isFormValid()) {
       this.imagesStatusMsg = "Invalid form data!";
@@ -144,12 +179,13 @@ export class AddEditPostModalComponent extends ModalComponent {
     if (this.modalOpenType == ModalOpenType.ADD) {
       let postImagesToAdd = this.editingPost.postImageList
       let postVideosToAdd = this.editingPost.postVideoList
+      let tagPerPostListToAdd = this.editingPost.tagPerPostList
+
       this.editingPost.postImageList = [];
       this.editingPost.postVideoList = [];
+      this.editingPost.tagPerPostList = [];
 
       this.editingPost.creationDate = getCurrentDate();
-
-      console.log(this.editingPost)
 
       let successCount = 0;
       new Observable<boolean>(observer => {
@@ -229,6 +265,39 @@ export class AddEditPostModalComponent extends ModalComponent {
                 observer.next(false);
               }
             });
+
+            new Observable<number>((observer) => {
+              let count = 1;
+              if (tagPerPostListToAdd.length == 0) observer.next(0);
+
+              tagPerPostListToAdd.forEach((tagPerPost: TagPerPost) => {
+                tagPerPost.postId = post.postId!;
+                this.tagPerPostService.addEntity(tagPerPost).subscribe({
+                  next: (jsonTagPerPost: TagPerPost) => {
+                    let tagPerPost = TagPerPost.fromJson(jsonTagPerPost);
+                    console.log("Added tag per post with id: " + tagPerPost.tagPerPostId);
+                    post.tagPerPostList.push(tagPerPost);
+                    observer.next(count++);
+                  },
+                  error: (error: HttpErrorResponse) => {
+                    observer.error(error);
+                    console.error(error);
+                  }
+                });
+              });
+            }).subscribe({
+              next: (count: number) => {
+                if (count === tagPerPostListToAdd.length) {
+                  console.log("Added all tag per posts")
+                  this.editingPost.tagPerPostList = tagPerPostListToAdd;
+                  observer.next(true);
+                }
+              },
+              error: (error: HttpErrorResponse) => {
+                console.error(error);
+                observer.next(false);
+              }
+            });
           },
           error: (error: HttpErrorResponse) => {
             console.error(error);
@@ -237,21 +306,21 @@ export class AddEditPostModalComponent extends ModalComponent {
         });
       }).subscribe({
         next: (isSuccess: boolean) => {
-          if(isSuccess) {
+          if (isSuccess) {
             successCount++;
-            if(successCount == 2) {
+            if (successCount == 3) {
+              this.currentMemberService.member?.posts.push(this.editingPost);
               this.resetValues();
               this.isPostAdded = true;
             }
           }
         }
       });
-    }
-    else if (this.modalOpenType == ModalOpenType.EDIT) {
+    } else if (this.modalOpenType == ModalOpenType.EDIT) {
       this.postService.updateEntity(this.editingPost).subscribe({
         next: (post: Post) => {
-          this.uploadPostImages(Post.fromJson(post));
-          this.uploadPostVideos(Post.fromJson(post));
+          this.uploadPostImages(Post.fromJson(post)).then();
+          this.uploadPostVideos(Post.fromJson(post)).then();
         },
         error: (error: HttpErrorResponse) => {
           console.error(error);
@@ -259,7 +328,7 @@ export class AddEditPostModalComponent extends ModalComponent {
       });
 
       this.postImagesIdsToDelete.forEach((postImageId: number) => {
-        this.postImageService.deleteEntity(postImageId).subscribe({
+        this.postImageService.deleteEntityById(postImageId).subscribe({
           next: () => {
             console.log("Deleted post image with id: " + postImageId);
             let postImageToRemove = this.editingPost.postImageList
@@ -282,7 +351,7 @@ export class AddEditPostModalComponent extends ModalComponent {
         });
       });
       this.postVideosIdsToDelete.forEach((postVideoId: number) => {
-        this.postVideoService.deleteEntity(postVideoId).subscribe({
+        this.postVideoService.deleteEntityById(postVideoId).subscribe({
           next: () => {
             console.log("Deleted post video with id: " + postVideoId);
             let postVideoToRemove = this.editingPost.postVideoList
@@ -330,7 +399,7 @@ export class AddEditPostModalComponent extends ModalComponent {
             if (uploadStatus.isSuccessful && uploadStatus.isDone) {
               console.log("Successfully uploaded post images")
               resolve(true);
-            } else if(!uploadStatus.isSuccessful && uploadStatus.isDone) {
+            } else if (!uploadStatus.isSuccessful && uploadStatus.isDone) {
               console.log("Failed to upload post images")
               resolve(false);
             }
@@ -369,7 +438,7 @@ export class AddEditPostModalComponent extends ModalComponent {
             if (uploadStatus.isSuccessful && uploadStatus.isDone) {
               resolve(true);
               console.log("Successfully uploaded post videos")
-            } else if(!uploadStatus.isSuccessful && uploadStatus.isDone){
+            } else if (!uploadStatus.isSuccessful && uploadStatus.isDone) {
               resolve(false);
               console.log("Failed to upload post videos")
             }
@@ -385,25 +454,35 @@ export class AddEditPostModalComponent extends ModalComponent {
     });
   }
 
-  private resetValues() {
-    if (this.modalOpenType == ModalOpenType.ADD) {
-      this.editingPost = new Post("", "", "", this.currentMemberService.user?.getMemberId()!);
-    }
 
-    for (let i = this.editingPost.postImageList.length - 1; i >= 0; i--) {
-      if (this.editingPost.postImageList[i].postImageId == undefined) {
-        this.editingPost.postImageList.splice(i, 1);
-        this.editingPost.postVideoList.splice(i, 1);
-      } else if (this.editingPost.postImageList[i].mightDelete) {
-        this.editingPost.postImageList[i].mightDelete = false;
-        this.editingPost.postVideoList[i].mightDelete = false;
-      }
-    }
+  onDeleteTag(tag: Tag) {
+    this.selectedTagId = "";
 
-    this.images = [];
-    this.videos = [];
-    this.postImagesIdsToDelete = [];
-    this.postVideosIdsToDelete = [];
+    let isInDeletingList: boolean = tag.tagId != undefined &&
+      this.tagsIdsToDelete.includes(tag.tagId!);
+
+    let isOriginalTag: boolean = this.editingPost.tagPerPostList.find((tagPerPost: TagPerPost) => tagPerPost.tagId == tag.tagId) == undefined;
+
+    // IF NOT IN POST TAGS TO DELETE AND NOT ORIGINAL TAG
+    if (!isInDeletingList && !isOriginalTag) {
+      console.log("removed from potential list")
+      // REMOVE FROM TAG PER POST LIST
+      this.editingPost.tagPerPostList.splice(this.editingPost.tagPerPostList
+        .findIndex((tagPersonPost: TagPerPost) => tagPersonPost.tagId == tag.tagId), 1);
+    }
+    // IF NOT IN DELETING BUT ORIGINAL TAG PER POST
+    else if (!isInDeletingList && tag.tagId != undefined) {
+      // ADD TO POST IMAGES TO DELETE
+      tag.mightDelete = true;
+      this.tagsIdsToDelete.push(tag.tagId!);
+    }
+    // IF ALREADY IN DELETING AND ORIGINAL POST IMAGE
+    else if (isInDeletingList && tag.tagId != undefined) {
+      // REMOVE FROM POST IMAGES TO DELETE
+      tag.mightDelete = false;
+      this.tagsIdsToDelete.splice(this.tagsIdsToDelete
+        .findIndex((tagId: number) => tagId === tag.tagId), 1);
+    }
   }
 
   onDeleteImage(postImage: PostImage) {
@@ -436,12 +515,6 @@ export class AddEditPostModalComponent extends ModalComponent {
     }
   }
 
-  override closeModal() {
-    this.resetMessages();
-    this.resetValues();
-    super.closeModal();
-  }
-
   onDeleteVideo(postVideo: PostVideo) {
     let isInDeletingList: boolean = postVideo.postVideoId != undefined &&
       this.postVideosIdsToDelete.includes(postVideo.postVideoId!);
@@ -472,12 +545,41 @@ export class AddEditPostModalComponent extends ModalComponent {
     }
   }
 
+  private resetValues() {
+    if (this.modalOpenType == ModalOpenType.ADD) {
+      this.editingPost = new Post("", "", "", this.currentMemberService.member?.getMemberId()!);
+    }
+
+    for (let i = this.editingPost.postImageList.length - 1; i >= 0; i--) {
+      if (this.editingPost.postImageList[i].postImageId == undefined) {
+        this.editingPost.postImageList.splice(i, 1);
+        this.editingPost.postVideoList.splice(i, 1);
+      } else if (this.editingPost.postImageList[i].mightDelete) {
+        this.editingPost.postImageList[i].mightDelete = false;
+        this.editingPost.postVideoList[i].mightDelete = false;
+      }
+    }
+
+    this.images = [];
+    this.videos = [];
+    this.postImagesIdsToDelete = [];
+    this.postVideosIdsToDelete = [];
+    this.tagsIdsToDelete = [];
+    this.selectedTagId = "";
+  }
+
+  override closeModal() {
+    this.resetMessages();
+    this.resetValues();
+    super.closeModal();
+  }
+
   isSuccess() {
     return this.isImagesSuccess && this.isVideosSuccess;
   }
 
   checkIfPostAdded() {
-    if(this.isPostAdded) {
+    if (this.isPostAdded) {
       this.resetMessages()
       this.isPostAdded = false;
     }

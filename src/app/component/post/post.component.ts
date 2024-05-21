@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faThumbsUp} from "@fortawesome/free-solid-svg-icons";
 import {CookieComponent} from "../misc/cookie-component";
@@ -6,6 +6,8 @@ import {Post} from "../../model/post";
 import {Member} from "../../model/member";
 import {NgForOf, NgIf} from "@angular/common";
 import {NgxResizeObserverModule} from "ngx-resize-observer";
+import {ActivatedRoute, Router} from "@angular/router";
+import {CurrentMemberService} from "../../service/current-member.service";
 
 @Component({
   selector: 'app-post',
@@ -23,7 +25,7 @@ export class PostComponent extends CookieComponent implements OnInit {
 
   faThumbsUp = faThumbsUp;
 
-  @Input() member!: Member;
+  @Input() member!: Member | undefined;
   @Input() post!: Post;
 
   hasImages: boolean = false;
@@ -31,7 +33,8 @@ export class PostComponent extends CookieComponent implements OnInit {
 
   justify: string = 'center';
 
-  constructor() {
+  constructor(protected override currentMemberService: CurrentMemberService,
+              protected override route: ActivatedRoute, protected override router: Router) {
     super();
   }
 
@@ -44,10 +47,17 @@ export class PostComponent extends CookieComponent implements OnInit {
     let height = entry.contentRect.height;
     let width = entry.contentRect.width;
 
-    if((width / 2) < height) {
+    if ((width / 2) < height) {
       this.justify = 'start';
     } else {
       this.justify = 'center';
+    }
+  }
+
+  sendToMemberPage() {
+    if (this.member != undefined && this.currentMemberService.member != undefined &&
+      this.member.getMemberId() != this.currentMemberService.member?.getMemberId()) {
+      this.routeTo(`/my-posts/${this.member.getMemberId()}`);
     }
   }
 }

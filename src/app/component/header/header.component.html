@@ -7,7 +7,7 @@
       <div class="drop-down-menu" [style.top.px]="dropDownMenuTop" *ngIf="showMenu">
         <div class="dpm-title-elem">
           <span *ngIf="currentMemberService.isLoggedIn()"
-                class="main-title-span">Welcome, {{ currentMemberService.user?.username }}!</span>
+                class="main-title-span">Welcome, {{ currentMemberService.member?.username }}!</span>
           <span *ngIf="!currentMemberService.isLoggedIn()" class="main-title-span">Welcome To Twitter v2!</span>
           <div class="clickable-icon-elem-1" (click)="xMarkOnClick()">
             <fa-icon [icon]="faXmark" [class]="['clickable-icon-1']"></fa-icon>
@@ -41,12 +41,14 @@
     </div>
   </div>
   <div class="navigation-container">
-    <div class="navigation-elem-div" *ngFor="let navigationItem of navigationItems "
-         (click)="routeTo(navigationItem.getLink())">
-      <div class="icon-elem-1">
-        <fa-icon [icon]="navigationItem.getIcon()" [class]="['icon-1']"></fa-icon>
+    <div *ngFor="let navigationItem of navigationItems">
+      <div class="navigation-elem-div" *ngIf="!navigationItem.getIsLoggedIn() || currentMemberService.isLoggedIn()"
+           (click)="routeTo(navigationItem.getLink())">
+        <div class="icon-elem-1">
+          <fa-icon [icon]="navigationItem.getIcon()" [class]="['icon-1']"></fa-icon>
+        </div>
+        <span>{{ navigationItem.getName() }}</span>
       </div>
-      <span>{{ navigationItem.getName() }}</span>
     </div>
   </div>
   <div class="header-elem" *ngIf="currentMemberService.isLoggedIn()">

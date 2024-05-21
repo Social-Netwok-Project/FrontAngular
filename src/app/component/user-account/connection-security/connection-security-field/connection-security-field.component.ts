@@ -59,7 +59,7 @@ export class ConnectionSecurityFieldComponent extends AuthenticationComponent im
         }
 
         // COMPARE OLD PASSWORD WITH STORED HASH
-        bcrypt.compare(this.oldPassword, this.currentMemberService.user?.password!, (err, success) => {
+        bcrypt.compare(this.oldPassword, this.currentMemberService.member?.password!, (err, success) => {
           if (success) {
             // HASH NEW PASSWORD
             bcrypt.hash(this.newValue, this.hashSalt, (err, hash) => {

@@ -13,7 +13,7 @@ export class Post {
   postImageList: PostImage[] = [];
   postVideoList: PostVideo[] = [];
 
-  tagsPerPostList: TagPerPost[] = [];
+  tagPerPostList: TagPerPost[] = [];
 
   constructor(title: string, creationDate: string, body: string, memberId: number, postId?: number) {
     this.postId = postId;
@@ -25,7 +25,7 @@ export class Post {
 
   static fromJson(jsonPost: Post): Post {
     let post = new Post(jsonPost.title, jsonPost.creationDate, jsonPost.body, jsonPost.memberId, jsonPost.postId);
-    post.tagsPerPostList = TagPerPost.initializeTagsPerPost(jsonPost.tagsPerPostList);
+    post.tagPerPostList = TagPerPost.initializeTagPerPostList(jsonPost.tagPerPostList);
     post.postImageList = PostImage.initializePostImages(jsonPost.postImageList);
     post.postVideoList = PostVideo.initializePostVideos(jsonPost.postVideoList);
 

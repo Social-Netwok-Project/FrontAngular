@@ -11,6 +11,10 @@ import {PasswordRecoveryComponent} from "./component/authentication/password-rec
 import {PasswordResetComponent} from "./component/authentication/password-reset/password-reset.component";
 import {SwitchUsersComponent} from "./component/switch-users/switch-users.component";
 import {SiteGraphComponent} from "./component/site-graph/site-graph.component";
+import {ResearchComponent} from "./component/research/research.component";
+import {MyPostsComponent} from "./component/my-posts/my-posts.component";
+import {InterestsComponent} from "./component/interests/interests.component";
+import {DiscoverComponent} from "./component/discover/discover.component";
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -20,6 +24,11 @@ export const routes: Routes = [
   {path: 'password-recovery', component: PasswordRecoveryComponent},
   {path: `password-reset/:${StorageKeys.USER_TOKEN}`, component: PasswordResetComponent},
   {path: 'messages', component: MessagesComponent},
+  {path: 'my-posts', component: MyPostsComponent},
+  {path: 'my-posts/:id', component: MyPostsComponent},
+  {path: 'interests', component: InterestsComponent},
+  {path: 'discover', component: DiscoverComponent},
+  {path: 'research', component: ResearchComponent},
   {path: 'switch-users', component: SwitchUsersComponent},
   {path: 'site-graph', component: SiteGraphComponent},
   {

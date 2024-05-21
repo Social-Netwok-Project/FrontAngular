@@ -38,7 +38,7 @@ export class HomeComponent extends CookieComponent implements OnInit {
       if(success) {
         this.initializerMemberFriends().then((success) => {
           if(success) {
-            this.initializeMembersPostsMedia(this.currentMemberService.user?.friends!)
+            this.initializeMembersPostsMedia(this.currentMemberService.member?.friends!)
           }
         });
       }

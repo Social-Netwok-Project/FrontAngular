@@ -6,6 +6,7 @@ import {NgForOf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {CookieComponent} from "../misc/cookie-component";
 import {faArrowRightToBracket} from "@fortawesome/free-solid-svg-icons";
+import {switchUsersNavigationItem} from "../header/navigation-item";
 
 @Component({
   selector: 'app-switch-users',
@@ -31,4 +32,5 @@ export class SwitchUsersComponent extends CookieComponent implements OnInit {
     this.el.nativeElement.style.width = `100%`;
   }
 
+  protected readonly switchUsersNavigationItem = switchUsersNavigationItem;
 }

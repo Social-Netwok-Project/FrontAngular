@@ -26,7 +26,7 @@ export abstract class EntityService<T> {
     return this.http.put<T>(`${this.apiBackendUrl}/${this.entityName}/update`, entity);
   }
 
-  public deleteEntity(entityId: number): Observable<void> {
+  public deleteEntityById(entityId: number): Observable<void> {
     return this.http.get<void>(`${this.apiBackendUrl}/${this.entityName}/delete/${entityId}`);
   }
 
