@@ -1,18 +1,71 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {discoverNavigationItem, myPostsNavigationItem} from "../header/navigation-item";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {FooterComponent} from "../footer/footer.component";
+import {NgForOf, NgIf} from "@angular/common";
+import {PostComponent} from "../post/post.component";
+import {Post} from "../../model/post";
+import {PostService} from "../../service/post.service";
+import {CookieService} from "ngx-cookie-service";
+import {PostImageService} from "../../service/post-image.service";
+import {PostVideoService} from "../../service/post-video.service";
+import {MemberService} from "../../service/member.service";
+import {CurrentMemberService} from "../../service/current-member.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {CookieComponent} from "../misc/cookie-component";
+import {NgxResizeObserverModule} from "ngx-resize-observer";
 
 @Component({
   selector: 'app-discover',
   standalone: true,
   imports: [
-    FaIconComponent
+    FaIconComponent,
+    FooterComponent,
+    NgForOf,
+    PostComponent,
+    NgxResizeObserverModule,
+    NgIf
   ],
   templateUrl: './discover.component.html',
   styleUrl: './discover.component.scss'
 })
-export class DiscoverComponent {
+export class DiscoverComponent extends CookieComponent implements OnInit {
 
-  protected readonly myPostsNavigationItem = myPostsNavigationItem;
+  recommendPostsByLikes: Post[] = [];
+  allPosts: Post[] = [];
+
+  constructor(protected override postService: PostService,
+              protected override cookieService: CookieService,
+              protected override postImageService: PostImageService,
+              protected override postVideoService: PostVideoService,
+              protected override memberService: MemberService,
+              protected override currentMemberService: CurrentMemberService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.initializeMemberByToken().then((success) => {
+      if(success) {
+        this.postService.getRecommendedPostsByLikes(this.currentMemberService.member?.getMemberId()!).subscribe({
+          next: (jsonPosts: Post[]) => {
+            this.recommendPostsByLikes = Post.initializePosts(jsonPosts);
+            this.initializePostsMedia(this.recommendPostsByLikes);
+
+            if(this.recommendPostsByLikes.length == 0) {
+              this.postService.getAllEntities().subscribe({
+                next: (jsonPosts: Post[]) => {
+                  this.allPosts = Post.initializePosts(jsonPosts);
+                  this.initializePostsMedia(this.allPosts);
+                },
+                error: (error: HttpErrorResponse) => console.error(error)
+              });
+            }
+          },
+          error: (error: HttpErrorResponse) => console.error(error)
+        });
+      }
+    });
+  }
+
   protected readonly discoverNavigationItem = discoverNavigationItem;
 }

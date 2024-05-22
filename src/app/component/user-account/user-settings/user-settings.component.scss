@@ -29,7 +29,6 @@ $pfpImageWidthBusiness: 266px;
   box-shadow: $boxShadowDefault;
   width: 70%;
   min-width: 500px;
-  height: 250px;
 }
 
 .profile-card {
@@ -38,6 +37,30 @@ $pfpImageWidthBusiness: 266px;
   align-items: center;
   justify-content: center;
   margin-top: 30px;
+}
+
+.profile-tags-elem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+
+  width: 100%
+}
+
+.tags-select-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+}
+
+.select-div {
+  width: 60%;
 }
 
 .profile-edit-elem {

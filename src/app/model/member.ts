@@ -1,5 +1,8 @@
 import {Post} from "./post";
 import {join} from "@angular/compiler-cli";
+import {TagPerPost} from "./tag-per-post";
+import {TagPerMember} from "./tag-per-member";
+import {Message} from "./message";
 
 export class Member {
   protected memberId: number | undefined;
@@ -18,6 +21,8 @@ export class Member {
 
   posts: Post[] = [];
   friends: Member[] = [];
+  tagPerMemberList: TagPerMember[] = [];
+  messages: Message[] = [];
 
   followersCount: number | undefined;
   followingCount: number | undefined;
@@ -41,7 +46,9 @@ export class Member {
     let member = new Member(jsonMember.username, jsonMember.email, jsonMember.password,
       jsonMember.birthdate, jsonMember.creationDate, jsonMember.memberId, jsonMember.token,
       jsonMember.pfpImageName);
-    member.setPosts(Post.initializePosts(jsonMember.posts));
+    member.posts = Post.initializePosts(jsonMember.posts);
+    member.tagPerMemberList = TagPerMember.initializeTagPerMembers(jsonMember.tagPerMemberList);
+
 
     return member;
   }
@@ -126,6 +133,14 @@ export class Member {
 
   setFollowingCount(followingCount: number) {
     this.followingCount = followingCount;
+  }
+
+  setTagPerMemberList(tagPerMemberList: TagPerMember[]) {
+    this.tagPerMemberList = tagPerMemberList;
+  }
+
+  setMessages(messages: Message[]) {
+    this.messages = messages;
   }
 
   static initializeMembers(jsonFriends: Member[]) {

@@ -18,6 +18,11 @@ import {TagService} from "../../service/tag.service";
 import {TagPerPostService} from "../../service/tag-per-post.service";
 import {EdgeService} from "../../service/edge.service";
 import {FollowersInfo} from "../../model/query/get/followers-info";
+import {LikedPostService} from "../../service/liked-post.service";
+import {TagPerMemberService} from "../../service/tag-per-member.service";
+import {TwoIds} from "../../model/query/delete/two-ids";
+import {MessageService} from "../../service/message.service";
+import {Message} from "../../model/message";
 
 export abstract class CookieComponent {
   // Services
@@ -29,7 +34,10 @@ export abstract class CookieComponent {
   protected postVideoService!: PostVideoService;
   protected tagService!: TagService;
   protected tagPerPostService!: TagPerPostService;
+  protected tagPerMemberService!: TagPerMemberService;
   protected edgeService!: EdgeService;
+  protected likedPostService!: LikedPostService;
+  protected messageService!: MessageService;
 
   protected router!: Router;
   protected route!: ActivatedRoute;
@@ -80,8 +88,6 @@ export abstract class CookieComponent {
           this.memberService.findMemberByToken({token: this.getUserToken()})
             .subscribe({
               next: (jsonUser: Member) => {
-                console.log(jsonUser)
-
                 if (jsonUser != null) {
                   this.initializeMember(jsonUser);
                   this.currentMemberService.setCounter(0);
@@ -253,7 +259,7 @@ export abstract class CookieComponent {
 
   initializerMemberFriends() {
     return new Promise<boolean>((resolve, reject) => {
-      this.memberService.findFriends(this.currentMemberService.member!.getMemberId()).subscribe({
+      this.memberService.getFriends(this.currentMemberService.member!.getMemberId()).subscribe({
         next: (jsonFriends: Member[]) => {
           let friends: Member[] = Member.initializeMembers(jsonFriends);
           this.currentMemberService.member?.setFriends(friends)
@@ -270,23 +276,132 @@ export abstract class CookieComponent {
   }
 
   initializeMembersPostsMedia(members: Member[]) {
-    if(members != undefined) {
-      for (let member of members) {
-        if(member.posts != undefined) {
-          for (let post of member.posts) {
-            this.initializePostImages(post.postImageList);
-            this.initializePostVideos(post.postVideoList);
+    let count = 0;
+    return new Promise<boolean>((resolve, reject) => {
+      if(members != undefined) {
+        new Observable<number>(observer => {
+          for (let member of members) {
+            this.initializePostsMedia(member.posts).then(() => {
+              observer.next(++count);
+            });
           }
-        }
+        }).subscribe({
+          next: (count: number) => {
+            if (count == members.length) {
+              console.log("All posts media initialized");
+              resolve(true);
+            }
+          }
+        });
+      } else {
+        resolve(true);
       }
-    }
+    })
+  }
+
+  initializePostsMedia(posts: Post[]) {
+    return new Promise<boolean>( (resolve, reject) =>{
+      if(posts != undefined) {
+        let count = 0;
+
+        new Observable<number>((observer) => {
+          for (let post of posts) {
+            this.initializePostImages(post.postImageList).then(() => {
+              observer.next(++count);
+            });
+            this.initializePostVideos(post.postVideoList).then(() => {
+              observer.next(++count);
+            });
+          }
+        }).subscribe({
+          next: (count: number) => {
+            if (count == (posts.length * 2)) {
+              resolve(true);
+            }
+          }
+        });
+
+      } else {
+        resolve(true)
+      }
+    })
   }
 
   initializeMemberFollowersInfo(member: Member) {
-    this.memberService.getFollowersInfo(member.getMemberId()).subscribe({
-      next: (followersInfo: FollowersInfo) => {
-        member.setFollowersCount(followersInfo.followersCount);
-        member.setFollowingCount(followersInfo.followingCount);
+    return new Promise<boolean>((resolve, reject) => {
+      this.memberService.getFollowersInfo(member.getMemberId()).subscribe({
+        next: (followersInfo: FollowersInfo) => {
+          member.setFollowersCount(followersInfo.followersCount);
+          member.setFollowingCount(followersInfo.followingCount);
+          resolve(true);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          resolve(false);
+        }
+      });
+    });
+  }
+
+  private initializePostImages(postImages: PostImage[]) {
+    return new Promise<boolean>((resolve, reject) => {
+      if(postImages != undefined) {
+        let count = 0;
+
+        new Observable<number>((observer) => {
+          for (let postImage of postImages) {
+            this.postImageService.downloadFiles(postImage.name).subscribe({
+              next: (httpEvent: HttpEvent<Blob>) => {
+                if (httpEvent.type === HttpEventType.Response) {
+                  const file: File = this.getFile(httpEvent);
+                  postImage.setImageUrl(URL.createObjectURL(file));
+                  observer.next(++count);
+                }
+              },
+              error: (error: HttpErrorResponse) => {
+                console.log(error);
+              }
+            });
+          }
+        }).subscribe({
+          next: (count: number) => {
+            if (count == postImages.length) {
+              resolve(true);
+            }
+          }
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  }
+
+  private initializePostVideos(postVideos: PostVideo[]) {
+    return new Promise<boolean>((resolve, reject) => {
+      if (postVideos != undefined) {
+        for (let postVideo of postVideos) {
+          this.postVideoService.downloadFiles(postVideo.name).subscribe({
+            next: (httpEvent: HttpEvent<Blob>) => {
+              if (httpEvent.type === HttpEventType.Response) {
+                const file: File = this.getFile(httpEvent);
+                postVideo.setVideoUrl(URL.createObjectURL(file));
+              }
+            },
+            error: (error: HttpErrorResponse) => {
+              console.log(error);
+            }
+          });
+        }
+      } else {
+        resolve(true);
+      }
+    });
+  }
+
+  initializePostLikesCount(post: Post) {
+    this.postService.getLikesCount(post.postId!).subscribe({
+      next: (count: number) => {
+        post.setLikesCount(count);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
@@ -294,40 +409,48 @@ export abstract class CookieComponent {
     });
   }
 
-  private initializePostImages(postImages: PostImage[]) {
-    if(postImages != undefined) {
-      for (let postImage of postImages) {
-        this.postImageService.downloadFiles(postImage.name).subscribe({
-          next: (httpEvent: HttpEvent<Blob>) => {
-            if (httpEvent.type === HttpEventType.Response) {
-              const file: File = this.getFile(httpEvent);
-              postImage.setImageUrl(URL.createObjectURL(file));
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error);
+  fetchMembersMessages(ownerMember: Member, members: Member[]) {
+    return new Promise<boolean>((resolve, reject) => {
+      let count = 0;
+
+      new Observable<number>(observer => {
+        if(members != undefined) {
+          for (let member of members) {
+            this.fetchMessages(ownerMember, member).then(() => {
+              observer.next(++count);
+            });
           }
-        });
-      }
-    }
+        } else{
+          resolve(true);
+        }
+      }).subscribe({
+        next: (count: number) => {
+          if (count == members.length) {
+            resolve(true);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          resolve(false);
+        }
+      });
+    });
   }
 
-  private initializePostVideos(postVideos: PostVideo[]) {
-    if (postVideos != undefined) {
-      for (let postVideo of postVideos) {
-        this.postVideoService.downloadFiles(postVideo.name).subscribe({
-          next: (httpEvent: HttpEvent<Blob>) => {
-            if (httpEvent.type === HttpEventType.Response) {
-              const file: File = this.getFile(httpEvent);
-              postVideo.setVideoUrl(URL.createObjectURL(file));
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error);
-          }
-        });
-      }
-    }
+  fetchMessages(ownerMember: Member, member: Member) {
+    return new Promise<boolean>((resolve, reject) => {
+      this.messageService.getMessagesByMemberIdAndFriendId(new TwoIds(ownerMember.getMemberId(), member.getMemberId())).subscribe({
+        next: (jsonMessages: Message[]) => {
+          let messages: Message[] = Message.initializeMessages(jsonMessages);
+          member.setMessages(messages);
+          resolve(true);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          resolve(false);
+        }
+      });
+    })
   }
 
   logoutOnClick() {

@@ -1,15 +1,15 @@
 export class LikedPost {
-  likedPostId!: number;
+  likedPostId!: number | undefined;
   postId!: number;
-  userId!: number;
+  memberId!: number;
 
-  constructor(likedPostId: number, postId: number, userId: number) {
+  constructor(postId: number, memberId: number, likedPostId?: number) {
     this.likedPostId = likedPostId;
     this.postId = postId;
-    this.userId = userId;
+    this.memberId = memberId;
   }
 
   public static fromJson(jsonLikedPost: LikedPost): LikedPost {
-    return new LikedPost(jsonLikedPost.likedPostId, jsonLikedPost.postId, jsonLikedPost.userId);
+    return new LikedPost(jsonLikedPost.postId, jsonLikedPost.memberId, jsonLikedPost.likedPostId);
   }
 }

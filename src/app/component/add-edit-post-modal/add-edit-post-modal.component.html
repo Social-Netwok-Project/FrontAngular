@@ -22,7 +22,7 @@
         </div>
         <div class="my-modal-element">
           <div class="add-form-elem-1">
-            <label for="body-input">Tags:</label>
+            <label>Tags:</label>
             <select class="default-input-3" [(ngModel)]="selectedTagId" (click)="onTagSelected()">
               <option *ngFor="let tag of availableTags"
                       [value]="tag.tagId">

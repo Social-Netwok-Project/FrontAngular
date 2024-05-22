@@ -1,0 +1,8 @@
+<div class="{{memberElement?.class}}">
+  <app-member-banner
+    *ngIf="memberElement?.member != undefined"
+    [style.width.%]="100"
+    [member]="memberElement?.member"
+    [actions] = false>
+  </app-member-banner>
+</div>

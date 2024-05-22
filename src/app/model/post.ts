@@ -15,6 +15,8 @@ export class Post {
 
   tagPerPostList: TagPerPost[] = [];
 
+  likesCount: number | undefined;
+
   constructor(title: string, creationDate: string, body: string, memberId: number, postId?: number) {
     this.postId = postId;
     this.title = title;
@@ -40,5 +42,13 @@ export class Post {
       }
     }
     return posts;
+  }
+
+  setLikesCount(likesCount: number) {
+    this.likesCount = likesCount;
+  }
+
+  getLikesCount(): number | undefined {
+    return this.likesCount;
   }
 }

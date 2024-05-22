@@ -3,11 +3,11 @@
     <div class="post-header-div post-elem">
       <div class="post-member-div" (click)="sendToMemberPage()">
         <div class="user-pfp-img-div">
-          <img class="pfp-img" src="{{member?.pfpImgUrl!}}" alt="user-pfp-img">
+          <img class="pfp-img" src="{{postOwner?.pfpImgUrl!}}" alt="user-pfp-img">
         </div>
         <div class="user-info-div">
-          <span>{{member?.username}}</span>
-          <span>{{member?.creationDate}}</span>
+          <span>{{postOwner?.username}}</span>
+          <span>{{postOwner?.creationDate}}</span>
         </div>
       </div>
       <div class="post-title-div">
@@ -36,11 +36,11 @@
     <div class="post-likes-div post-elem">
       <span>{{post.creationDate}}</span>
       <div class="likes-div">
-        <div class="icon-elem-1-static-clicked">
-          <fa-icon [icon]="faThumbsUp" [class]="['icon-1']"></fa-icon>
+        <div class="{{isPostLiked ? 'clickable-icon-elem-3-clicked' : 'clickable-icon-elem-3'}}" (click)="onLikeClick()">
+          <fa-icon [icon]="faThumbsUp" [class]="['clickable-icon-3']"></fa-icon>
         </div>
         <div class="likes-count-div">
-          <span>24000</span>
+          <span>{{ post.likesCount }}</span>
         </div>
       </div>
     </div>

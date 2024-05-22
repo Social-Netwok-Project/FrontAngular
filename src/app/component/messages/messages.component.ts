@@ -12,6 +12,13 @@ import {MessageListElement} from "./message-list-element/message-list-element";
 import {FormsModule} from "@angular/forms";
 import {MemberService} from "../../service/member.service";
 import {messagesNavigationItem} from "../header/navigation-item";
+import {MemberElementComponent} from "./member-element/member-element.component";
+import {MemberElement} from "./member-element/member-element";
+import {Member} from "../../model/member";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MessageService} from "../../service/message.service";
+import {Message} from "../../model/message";
+import {getCurrentDate, getCurrentTimeStamp} from "../misc/functions";
 
 @Component({
   selector: 'app-messages',
@@ -21,19 +28,27 @@ import {messagesNavigationItem} from "../header/navigation-item";
     NgForOf,
     MessageListElementComponent,
     FormsModule,
-    NgIf
+    NgIf,
+    MemberElementComponent
   ],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss'
 })
 export class MessagesComponent extends CookieComponent implements OnInit {
-  faMessage = faMessage;
+  messagesNavigationItem = messagesNavigationItem;
+
   messageListElements: MessageListElement[] = [];
+  memberElements: MemberElement[] = [];
+  selectedMemberElement: MemberElement | undefined;
+
   messageTyped: string = "";
+
+  biDirectionalFriends: Member[] = [];
 
   @ViewChild('messageAreaDiv') messageAreaDiv!: ElementRef;
 
   constructor(private el: ElementRef,
+              protected override messageService: MessageService,
               protected override currentMemberService: CurrentMemberService,
               protected override memberService: MemberService,
               protected override cookieService: CookieService,
@@ -43,62 +58,66 @@ export class MessagesComponent extends CookieComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeMemberByToken().then(() => {
-
+      this.memberService.getBiDirectionalFriends(this.currentMemberService.member?.getMemberId()!).subscribe({
+        next: (jsonMembers: Member[]) => {
+          this.biDirectionalFriends = Member.initializeMembers(jsonMembers);
+          this.initializeMembersPfpImgUrl(this.biDirectionalFriends).then(() => {
+            for (let member of this.biDirectionalFriends) {
+              this.memberElements.push(new MemberElement(member));
+            }
+            this.fetchMembersMessages(this.currentMemberService.member!, this.biDirectionalFriends).then(() => {
+              this.onMemberElementClick(this.memberElements[0]);
+            });
+          });
+        },
+        error: (error: HttpErrorResponse) => console.log(error)
+      });
     })
 
     this.el.nativeElement.style.width = `100%`;
   }
 
-  onConversationClick() {
+  onMemberElementClick(memberElement: MemberElement) {
+    for (let memberElement of this.memberElements) {
+      memberElement.setUnclicked();
+    }
 
+    memberElement.setClicked();
+    this.selectedMemberElement = memberElement;
+
+    this.messageListElements = [];
+    if(memberElement.member?.messages != undefined) {
+      for (let message of memberElement.member?.messages!) {
+        this.messageListElements.push(new MessageListElement(message, this.currentMemberService.member!));
+      }
+    }
 
     this.scrollToBottom();
   }
 
   onMessageEnter() {
     if (this.messageTyped.length > 0) {
-      // let messageList = new MessageList(this.messageTyped,
-      //   this.selectedCustomerOrderElement?.customerOrder?.customerOrderId!,
-      //   this.getUserSenderId(adminCategory),
-      //   this.getUserSenderId(customerCategory),
-      //   this.getUserSenderId(deliveryPersonCategory),
-      //   this.getUserSenderId(deliveryServiceCategory),
-      //   this.getUserSenderId(businessCategory))
-      //
-      // this.messageListService.addEntity(messageList).subscribe({
-      //   next: (messageList) => {
-      //     this.updateMessageLists(MessageList.fromJson(messageList));
-      //
-      //     this.messageTyped = "";
-      //   },
-      //   error: (error) => {
-      //     console.log(error);
-      //   }
-      //
-      // })
+      let message = new Message(this.messageTyped,
+        this.currentMemberService.member!.getMemberId()!,
+        this.selectedMemberElement?.member?.getMemberId()!,
+        getCurrentTimeStamp());
+
+      this.messageService.addEntity(message).subscribe({
+        next: (jsonMessage: Message) => {
+          this.updateMessageLists(Message.fromJson(jsonMessage));
+
+          this.messageTyped = "";
+        },
+        error: (error) => {
+          console.log(error);
+        }
+
+      })
     }
   }
-
-  private getUserSenderId() {
-    // if (userCategory.name == this.getCurrentUserCategory().name) {
-    //   return this.currentUserService.user?.getUserId()!;
-    // } else if (userCategory.name == this.getCurrentUserCategory().name) {
-    //   return this.currentUserService.user?.getUserId()!;
-    // } else if (userCategory.name == this.getCurrentUserCategory().name) {
-    //   return this.currentUserService.user?.getUserId()!;
-    // } else if (userCategory.name == this.getCurrentUserCategory().name) {
-    //   return this.currentUserService.user?.getUserId()!;
-    // } else if (userCategory.name == this.getCurrentUserCategory().name) {
-    //   return this.currentUserService.user?.getUserId()!;
-    // } else {
-    //   return 0;
-    // }
-  }
-
-  private updateMessageLists() {
-    // messageList.messageUserOwner = this.currentUserService.user;
-    // this.selectedCustomerOrderElement?.customerOrder?.messageLists?.push(messageList);
-    // this.messageListElements.push(new MessageListElement(messageList, this.currentUserService.user?.getUserId()!, this.getCurrentUserCategory()));
+  private updateMessageLists(message: Message) {
+    this.selectedMemberElement?.member?.messages?.push(message);
+    this.messageListElements.push(new MessageListElement(message, this.currentMemberService.member!));
 
     this.scrollToBottom();
   }
@@ -109,20 +128,4 @@ export class MessagesComponent extends CookieComponent implements OnInit {
       messageAreaDivEl.scrollTop = Math.max(0, messageAreaDivEl.scrollHeight - messageAreaDivEl.offsetHeight);
     }, 5);
   }
-
-  getConversations() {
-    // let filteredCustomerOrderElements: CustomerOrderElement[] = [];
-    //
-    // filteredCustomerOrderElements = this.customerOrderElements.filter(customerOrderElement => {
-    //   return (this.selectedStatusId == undefined || customerOrderElement.customerOrder?.status?.statusId == this.selectedStatusId) &&
-    //     (this.selectedDeliveryPersonId == undefined || customerOrderElement.customerOrder?.deliveryPerson?.getUserId() == this.selectedDeliveryPersonId) &&
-    //     (this.selectedDeliveryServiceId == undefined || customerOrderElement.customerOrder?.deliveryService?.getUserId() == this.selectedDeliveryServiceId) &&
-    //     (this.selectedBusinessId == undefined || customerOrderElement.customerOrder?.business?.getUserId() == this.selectedBusinessId);
-    // });
-    //
-    //
-    // return filteredCustomerOrderElements;
-  }
-
-    protected readonly messagesNavigationItem = messagesNavigationItem;
 }

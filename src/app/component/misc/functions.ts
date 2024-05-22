@@ -17,11 +17,9 @@ export function makeRandomNumber(lengthOfCode: number): number {
 }
 
 export function getDateTime(dateTime: string) {
-  let split = dateTime.split(" ")
-  let date = split[0].split("-")
-  let times=split[1].split(":")
-
-  return date[0] + "/" + date[1] + "/" + date[2] + " at " + times[0] + ":" + times[1];
+  let date = new Date(dateTime);
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} at
+  ${date.getHours() < 10 ? '0':''}${date.getHours()}:${date.getMinutes() < 10 ? '0':''}${date.getMinutes()}`;
 }
 
 export function composeDeliveryAddress(street: string | undefined, city: string | undefined, postalCode: string | undefined, country: string | undefined): string {
@@ -34,4 +32,8 @@ export function randomIntFromInterval(min: number, max: number): number{
 
 export function getCurrentDate(): string {
   return new Date().toISOString().slice(0, 10).replace('T', ' ');
+}
+
+export function getCurrentTimeStamp(): string {
+  return new Date().toISOString();
 }

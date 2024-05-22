@@ -12,21 +12,21 @@
         <span>Chat With Your Friends!</span>
       </div>
       <div class="container-div">
-        <div class="customer-orders-container">
-<!--          <div class="customer-order-body-div" *ngFor="let customerOrderElement of getConversations()" (click)="onConversationClick(customerOrderElement)">-->
-<!--            <app-customer-order-element-->
-<!--              [style.width.%]="100"-->
-<!--              [customerOrderElement]="customerOrderElement">-->
-<!--            </app-customer-order-element>-->
-<!--          </div>-->
+        <div class="member-banner-container">
+          <div class="member-banner-body-div" *ngFor="let memberElement of memberElements" (click)="onMemberElementClick(memberElement)">
+            <app-member-element
+              [style.width.%]="100"
+              [memberElement]="memberElement">
+            </app-member-element>
+          </div>
         </div>
         <div class="message-main-area-div">
           <div #messageAreaDiv class="message-area-div">
             <span>This is the beginning of the chat with your friend. Say Hello :)</span>
-            <div class="message-list-body-div" *ngFor="let messageList of messageListElements">
+            <div class="message-list-body-div" *ngFor="let messageListElement of messageListElements">
               <app-message-list-element
                 [style.width.%]="100"
-                [messageListElement]="messageList">
+                [messageListElement]="messageListElement">
               </app-message-list-element>
             </div>
           </div>

@@ -1,0 +1,28 @@
+@import "../../common.scss";
+
+.member-banner-body-div, .member-banner-body-div-clicked  {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 15px;
+  border: 2px solid transparent;
+}
+
+.member-banner-body-div:hover {
+  border: 2px solid $colorP11;
+}
+
+.member-banner-body-div-clicked {
+  border: 2px solid $colorP11;
+}
+
+
+.owner-message-type {
+  background: $colorP11;
+}
+
+.friend-message-type {
+  background: $colorP15;
+}

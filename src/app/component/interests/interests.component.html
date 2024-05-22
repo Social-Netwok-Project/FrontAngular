@@ -1,10 +1,27 @@
-<div class="main-page-body-div">
-  <div class="header-elem">
-    <div class="header-icon-elem">
-      <fa-icon [class]="['header-icon']" [icon]="interestsNavigationItem.getIcon()"></fa-icon>
+<div (onResize)="handleFooterTopMinValue($event, 80)" class="main-page-body-div">
+  <div class="empty-posts-body-div" *ngIf="recommendPostsByTags.length == 0">
+    <div class="empty-posts-div">
+      <span class="title-span">{{interestsNavigationItem.getName()}} New Posts By Liking Other Posts!</span>
     </div>
-    <h1 class="main-page-h1">Interests</h1>
   </div>
-  <div class="separation-line-2"></div>
 
+  <div class="posts-container" *ngFor="let post of recommendPostsByTags">
+    <app-post
+      [style.width.%]="100"
+      [post]="post">
+    </app-post>
+  </div>
+
+  <ng-container *ngIf="recommendPostsByTags.length == 0">
+    <div class="posts-container" *ngFor="let post of allPosts">
+      <app-post
+        [style.width.%]="100"
+        [post]="post">
+      </app-post>
+    </div>
+  </ng-container>
 </div>
+<app-footer
+  [footerTopMinValue]="footerTopMinValue"
+  [position]="position"
+></app-footer>

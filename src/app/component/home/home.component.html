@@ -3,7 +3,7 @@
     <div class="posts-container" *ngFor="let post of friend.posts">
       <app-post
         [style.width.%]="100"
-        [member]="friend"
+        [postOwner]="friend!"
         [post]="post">
       </app-post>
     </div>

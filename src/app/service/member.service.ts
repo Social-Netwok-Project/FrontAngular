@@ -9,6 +9,7 @@ import {ByToken} from "../model/query/select/by-token";
 import {Member} from "../model/member";
 import {PfpImgPathByEmail} from "../model/query/update/pfp-img-path-by-email";
 import {FollowersInfo} from "../model/query/get/followers-info";
+import {TwoIds} from "../model/query/delete/two-ids";
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +24,16 @@ export abstract class MemberService extends EntityService<Member> {
     return this.http.get<FollowersInfo>(`${this.apiBackendUrl}/${this.entityName}/followers-info/${memberId}`);
   }
 
-  public findFriendsOfFriend(memberId: number): Observable<Member[]> {
+  public getFriendsOfAFriend(memberId: number): Observable<Member[]> {
     return this.http.get<Member[]>(`${this.apiBackendUrl}/${this.entityName}/foaf/${memberId}`);
   }
 
-  public findFriends(memberId: number): Observable<Member[]> {
+  public getFriends(memberId: number): Observable<Member[]> {
     return this.http.get<Member[]>(`${this.apiBackendUrl}/${this.entityName}/friends/${memberId}`);
+  }
+
+  public getBiDirectionalFriends(memberId: number): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiBackendUrl}/${this.entityName}/bi-directional-friends/${memberId}`);
   }
 
   public findMemberByEmail(email: String): Observable<Member> {

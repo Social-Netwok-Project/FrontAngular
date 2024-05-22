@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MessageListElement} from "./message-list-element";
-import {getDateTime} from "../../misc/functions";
+import {getCurrentDate, getDateTime} from "../../misc/functions";
 
 @Component({
   selector: 'app-message-list-element',
@@ -9,14 +9,11 @@ import {getDateTime} from "../../misc/functions";
   templateUrl: './message-list-element.component.html',
   styleUrl: './message-list-element.component.scss'
 })
-export class MessageListElementComponent implements OnInit {
+export class MessageListElementComponent {
   @Input() messageListElement!: MessageListElement | undefined;
-  timeStamp: string = "";
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-    this.timeStamp = getDateTime(this.messageListElement?.message.timestamp!)
-  }
+  protected readonly getCurrentDate = getCurrentDate;
+  protected readonly getDateTime = getDateTime;
 }

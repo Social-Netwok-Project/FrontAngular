@@ -1,44 +1,15 @@
 <div class="main-page-body-div">
   <div class="member-banner-body-div">
-    <div class="member-banner-div">
-      <div class="top-div">
-        <div class="profile-div">
-          <div class="pfp-img-div">
-            <img class="pfp-img" src="{{member?.pfpImgUrl!}}" alt="member pfp img">
-          </div>
-          <div class="info-div">
-            <span>{{ member?.username }}</span>
-            <span>{{ member?.creationDate }}</span>
-          </div>
-        </div>
-        <div class="action-buttons-div" *ngIf="isNotCurrentMember">
-          <div class="action-button" *ngIf="isFriend">
-            <div class="icon-elem-1">
-              <fa-icon [icon]="faMessage" [class]="['icon-1']"></fa-icon>
-            </div>
-            <span>Message</span>
-          </div>
-          <div class="action-button" (click)="followOnClick()">
-            <div class="icon-elem-1" *ngIf="!isFollowing">
-              <fa-icon [icon]="faPlus" [class]="['icon-1']"></fa-icon>
-            </div>
-            <div class="icon-elem-1" *ngIf="isFollowing">
-              <fa-icon [icon]="faCheck" [class]="['icon-1']"></fa-icon>
-            </div>
-            <span>{{ isFollowing ? "Following" : "Follow" }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="follow-div">
-        <span>{{ member?.followersCount }} Followers</span>
-        <span>Following {{ member?.followingCount }}</span>
-      </div>
-    </div>
+    <app-member-banner *ngIf="member != undefined"
+                       [style.width.%]="30"
+                       [member]="member">
+    </app-member-banner>
   </div>
+
   <div class="posts-container" *ngFor="let post of this.member?.posts">
     <app-post
       [style.width.%]="100"
-      [member]="this.member!"
+      [postOwner]="this.member!"
       [post]="post">
     </app-post>
   </div>

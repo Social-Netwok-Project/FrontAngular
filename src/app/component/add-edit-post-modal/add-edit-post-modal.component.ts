@@ -88,7 +88,7 @@ export class AddEditPostModalComponent extends ModalComponent implements OnInit 
       error: (error: HttpErrorResponse) => {
         console.error(error);
       }
-    })
+    });
   }
 
   override isFormValid(): boolean {
@@ -276,7 +276,6 @@ export class AddEditPostModalComponent extends ModalComponent implements OnInit 
                   next: (jsonTagPerPost: TagPerPost) => {
                     let tagPerPost = TagPerPost.fromJson(jsonTagPerPost);
                     console.log("Added tag per post with id: " + tagPerPost.tagPerPostId);
-                    post.tagPerPostList.push(tagPerPost);
                     observer.next(count++);
                   },
                   error: (error: HttpErrorResponse) => {

@@ -1,0 +1,32 @@
+<div class="member-banner-div">
+  <div class="top-div">
+    <div class="profile-div" (click)="onProfileClick()">
+      <div class="pfp-img-div">
+        <img class="pfp-img" src="{{member?.pfpImgUrl!}}" alt="member pfp img">
+      </div>
+      <div class="info-div">
+        <span>{{ member?.username }}</span>
+        <span>Join Date: {{ member?.creationDate }}</span>
+        <span>Followers: {{ member?.followersCount }} </span>
+        <span>Following: {{ member?.followingCount }}</span>
+      </div>
+    </div>
+    <div class="action-buttons-div" *ngIf="isNotCurrentMember && actions">
+      <div class="action-button" *ngIf="isFriend">
+        <div class="icon-elem-1">
+          <fa-icon [icon]="faMessage" [class]="['icon-1']"></fa-icon>
+        </div>
+        <span>Message</span>
+      </div>
+      <div class="action-button" (click)="followOnClick()">
+        <div class="icon-elem-1" *ngIf="!isFollowing">
+          <fa-icon [icon]="faPlus" [class]="['icon-1']"></fa-icon>
+        </div>
+        <div class="icon-elem-1" *ngIf="isFollowing">
+          <fa-icon [icon]="faCheck" [class]="['icon-1']"></fa-icon>
+        </div>
+        <span>{{ isFollowing ? "Following" : "Follow" }}</span>
+      </div>
+    </div>
+  </div>
+</div>

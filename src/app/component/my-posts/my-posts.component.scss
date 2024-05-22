@@ -1,6 +1,5 @@
 @import "../common.scss";
 
-$pfpImageSize: 100px;
 
 .member-banner-body-div {
   display: flex;
@@ -12,102 +11,4 @@ $pfpImageSize: 100px;
   margin-bottom: 100px;
 }
 
-.member-banner-div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
-  width: 30%;
-  background: $colorP12;
-  min-height: 40px;
-  border-radius: 15px;
-  padding: 10px;
-  box-shadow: $boxShadowDefault;
-}
-
-.top-div {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.profile-div {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  width: 100%;
-  height: $pfpImageSize;
-}
-
-.pfp-img-div {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  width: $pfpImageSize;
-  height: $pfpImageSize;
-  margin-right: 10px;
-}
-
-.pfp-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 30px;
-
-  object-fit: cover;
-}
-
-.info-div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: start;
-
-  height: 100%;
-  flex-grow: 1;
-}
-
-.action-buttons-div {
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: end;
-}
-
-.action-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-
-  cursor: pointer;
-
-  border-radius: 15px;
-  border: #d9d9d9 solid 2px;
-  padding: 5px;
-  margin: 3px;
-
-  background: $colorP13;
-}
-
-.action-button:hover{
-  background: $colorP14;
-  border: $colorP11 solid 2px;
-}
-
-.follow-div {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-
-  width: 100%;
-}

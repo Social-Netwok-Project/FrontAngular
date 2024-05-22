@@ -23,6 +23,29 @@
           <span>{{ currentMemberService.member?.email }}</span>
         </div>
       </div>
+      <div class="profile-tags-elem">
+        <div class="tags-select-div">
+          <div class="select-div">
+            <select class="default-input-3" [(ngModel)]="selectedTagId" (click)="onTagSelected()">
+              <option *ngFor="let tag of availableTags"
+                      [value]="tag.tagId">
+                {{ tag.name }}
+              </option>
+            </select>
+          </div>
+          <div class="clickable-icon-elem-3" (click)="saveOnClick()">
+            <fa-icon [icon]="faFloppyDisk" [class]="['clickable-icon-3']"></fa-icon>
+          </div>
+        </div>
+        <div class="tags-container">
+          <div class="tag-element" *ngFor="let tag of getSelectedTags()">
+            <span>{{tag.name}}</span>
+            <div class="clickable-icon-elem-4" (click)="onDeleteTag(tag)">
+              <fa-icon [icon]="faXmark" [class]="['clickable-icon-4']"></fa-icon>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="profile-edit-elem">
         <div class="clickable-icon-elem-1" (click)="routeTo('/user-account/connection-security')">
           <fa-icon [class]="['clickable-icon-1']" [icon]="faPenToSquare"></fa-icon>
