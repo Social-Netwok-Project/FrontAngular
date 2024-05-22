@@ -34,7 +34,7 @@ export class HomeComponent extends CookieComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initializeUserByToken().then((success) => {
+    this.initializeMemberByToken().then((success) => {
       if(success) {
         this.initializerMemberFriends().then((success) => {
           if(success) {

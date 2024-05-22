@@ -17,6 +17,7 @@ import {PostVideo} from "../../model/post-video";
 import {TagService} from "../../service/tag.service";
 import {TagPerPostService} from "../../service/tag-per-post.service";
 import {EdgeService} from "../../service/edge.service";
+import {FollowersInfo} from "../../model/query/get/followers-info";
 
 export abstract class CookieComponent {
   // Services
@@ -71,7 +72,7 @@ export abstract class CookieComponent {
     this.cookieService.delete(StorageKeys.USER_TOKEN, '/');
   }
 
-  initializeUserByToken(): Promise<boolean> {
+  initializeMemberByToken(): Promise<boolean> {
     this.currentMemberService.incrementCounter();
     return new Promise<boolean>((resolve, reject) => {
       if (this.hasUserToken() && this.currentMemberService.getCounter() == 1) {
@@ -79,8 +80,10 @@ export abstract class CookieComponent {
           this.memberService.findMemberByToken({token: this.getUserToken()})
             .subscribe({
               next: (jsonUser: Member) => {
+                console.log(jsonUser)
+
                 if (jsonUser != null) {
-                  this.initializeUser(jsonUser);
+                  this.initializeMember(jsonUser);
                   this.currentMemberService.setCounter(0);
 
                   resolve_sub(true);
@@ -108,8 +111,8 @@ export abstract class CookieComponent {
     });
   }
 
-  initializeUser(jsonUser: Member) {
-    this.currentMemberService.member = Member.fromJson(jsonUser);
+  initializeMember(jsonMember: Member) {
+    this.currentMemberService.member = Member.fromJson(jsonMember);
     this.initializeMemberPfpImgUrl().then();
 
     console.log(this.currentMemberService.member!)
@@ -277,6 +280,18 @@ export abstract class CookieComponent {
         }
       }
     }
+  }
+
+  initializeMemberFollowersInfo(member: Member) {
+    this.memberService.getFollowersInfo(member.getMemberId()).subscribe({
+      next: (followersInfo: FollowersInfo) => {
+        member.setFollowersCount(followersInfo.followersCount);
+        member.setFollowingCount(followersInfo.followingCount);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    });
   }
 
   private initializePostImages(postImages: PostImage[]) {

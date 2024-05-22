@@ -40,7 +40,7 @@ export class ConnectionSecurityComponent extends CookieComponent implements OnIn
   ngOnInit(): void {
     this.el.nativeElement.style.width = `100%`;
 
-    this.initializeUserByToken().then(() => {
+    this.initializeMemberByToken().then(() => {
       this.loggedInPage();
     });
 

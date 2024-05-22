@@ -1,4 +1,5 @@
 import {Post} from "./post";
+import {join} from "@angular/compiler-cli";
 
 export class Member {
   protected memberId: number | undefined;
@@ -18,6 +19,9 @@ export class Member {
   posts: Post[] = [];
   friends: Member[] = [];
 
+  followersCount: number | undefined;
+  followingCount: number | undefined;
+
   constructor(username: string, email: string, password: string, birthdate: string,
               creationDate?: string, userId?: number,
               token?: string, pfpImgPath?: string) {
@@ -34,7 +38,9 @@ export class Member {
   }
 
   static fromJson(jsonMember: Member): Member {
-    let member = new Member(jsonMember.username, jsonMember.email, jsonMember.password, jsonMember.birthdate, jsonMember.creationDate, jsonMember.memberId, jsonMember.token, jsonMember.pfpImageName);
+    let member = new Member(jsonMember.username, jsonMember.email, jsonMember.password,
+      jsonMember.birthdate, jsonMember.creationDate, jsonMember.memberId, jsonMember.token,
+      jsonMember.pfpImageName);
     member.setPosts(Post.initializePosts(jsonMember.posts));
 
     return member;
@@ -104,6 +110,22 @@ export class Member {
 
   setBirthDate(birthdate: string) {
     this.birthdate = birthdate;
+  }
+
+  getFollowersCount(): number {
+    return this.followersCount!;
+  }
+
+  setFollowersCount(followersCount: number) {
+    this.followersCount = followersCount;
+  }
+
+  getFollowingCount(): number {
+    return this.followingCount!;
+  }
+
+  setFollowingCount(followingCount: number) {
+    this.followingCount = followingCount;
   }
 
   static initializeMembers(jsonFriends: Member[]) {

@@ -8,6 +8,7 @@ import {PasswordByEmail} from "../model/query/update/password-by-email";
 import {ByToken} from "../model/query/select/by-token";
 import {Member} from "../model/member";
 import {PfpImgPathByEmail} from "../model/query/update/pfp-img-path-by-email";
+import {FollowersInfo} from "../model/query/get/followers-info";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,10 @@ export abstract class MemberService extends EntityService<Member> {
 
   protected constructor(http: HttpClient) {
     super(http, "member");
+  }
+
+  public getFollowersInfo(memberId: number): Observable<FollowersInfo> {
+    return this.http.get<FollowersInfo>(`${this.apiBackendUrl}/${this.entityName}/followers-info/${memberId}`);
   }
 
   public findFriendsOfFriend(memberId: number): Observable<Member[]> {

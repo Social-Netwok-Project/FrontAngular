@@ -45,7 +45,7 @@ export class UserAccountComponent extends CookieComponent implements OnInit, Aft
   }
 
   ngOnInit(): void {
-    this.initializeUserByToken().then(() => {
+    this.initializeMemberByToken().then(() => {
       this.loggedInPage();
     });
     if (this.router.url == '/user-account') {

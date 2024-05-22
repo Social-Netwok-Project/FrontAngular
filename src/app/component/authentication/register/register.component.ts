@@ -69,7 +69,7 @@ export class RegisterComponent extends AuthenticationComponent implements OnInit
   }
 
   ngOnInit(): void {
-    this.initializeUserByToken().then();
+    this.initializeMemberByToken().then();
   }
 
   override onSubmit() {

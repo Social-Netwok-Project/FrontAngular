@@ -1,15 +1,15 @@
 export class Edge {
-  edgeId: number;
+  edgeId: number | undefined;
   memberId: number;
   friendId: number;
 
-  constructor(edgeId: number, memberId: number, friendId: number) {
+  constructor(memberId: number, friendId: number, edgeId?: number) {
     this.edgeId = edgeId;
     this.memberId = memberId;
     this.friendId = friendId;
   }
 
   public static fromJson(jsonEdge: Edge): Edge {
-    return new Edge(jsonEdge.edgeId, jsonEdge.memberId, jsonEdge.friendId);
+    return new Edge(jsonEdge.memberId, jsonEdge.friendId, jsonEdge.edgeId);
   }
 }

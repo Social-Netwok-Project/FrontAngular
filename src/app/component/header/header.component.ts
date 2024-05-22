@@ -59,7 +59,7 @@ export class HeaderComponent extends CookieComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initializeUserByToken().then();
+    this.initializeMemberByToken().then();
   }
 
   routeToAndCloseBurgerMenu(profileMenuItem: ProfileMenuItem) {

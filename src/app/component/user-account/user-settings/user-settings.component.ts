@@ -43,7 +43,7 @@ export class UserSettingsComponent extends CookieComponent implements OnInit {
   ngOnInit(): void {
     this.el.nativeElement.style.width = `100%`;
 
-    this.initializeUserByToken().then(() => {
+    this.initializeMemberByToken().then(() => {
       this.loggedInPage();
 
       this.user = this.currentMemberService.member!;

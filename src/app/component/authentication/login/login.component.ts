@@ -76,7 +76,7 @@ export class LoginComponent extends AuthenticationComponent implements OnInit {
                   this.resetTokenByEmail(jsonMember.email).then((success) => {
                     resolve(success);
                     if (success) {
-                      this.initializeUser(jsonMember);
+                      this.initializeMember(jsonMember);
                     }
                   });
                   this.isLoginValid = true;

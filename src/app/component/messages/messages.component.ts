@@ -42,7 +42,7 @@ export class MessagesComponent extends CookieComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initializeUserByToken().then(() => {
+    this.initializeMemberByToken().then(() => {
 
     })
 
