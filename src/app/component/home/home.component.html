@@ -1,13 +1,28 @@
 <div (onResize)="handleFooterTopMinValue($event, 80)" class="main-page-body-div">
-  <div class="friends-container" *ngFor="let friend of this.currentMemberService.member?.friends">
-    <div class="posts-container" *ngFor="let post of friend.posts">
+  <ng-container *ngIf="currentMemberService.isLoggedIn()">
+    <div class="friends-container" *ngFor="let friend of this.currentMemberService.member?.friends">
+      <div class="posts-container" *ngFor="let post of friend.posts">
+        <app-post
+          [style.width.%]="100"
+          [postOwner]="friend!"
+          [post]="post">
+        </app-post>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!currentMemberService.isLoggedIn() || currentMemberService.member?.friends?.length == 0">
+    <div class="empty-elements-body-div" *ngIf="currentMemberService.member?.friends?.length == 0">
+      <div class="empty-elements-div">
+        <span class="title-span">Find Friend Posts By Following Other People!</span>
+      </div>
+    </div>
+    <div class="posts-container" *ngFor="let post of allPosts">
       <app-post
         [style.width.%]="100"
-        [postOwner]="friend!"
         [post]="post">
       </app-post>
     </div>
-  </div>
+  </ng-container>
 </div>
 <app-footer
   [footerTopMinValue]="footerTopMinValue"

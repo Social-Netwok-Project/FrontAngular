@@ -14,6 +14,7 @@ import {PostImageService} from "../../service/post-image.service";
 import {PostVideoService} from "../../service/post-video.service";
 import {MemberService} from "../../service/member.service";
 import {discoverNavigationItem, interestsNavigationItem} from "../header/navigation-item";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-interests',
@@ -39,23 +40,25 @@ export class InterestsComponent extends CookieComponent implements OnInit {
               protected override postImageService: PostImageService,
               protected override postVideoService: PostVideoService,
               protected override memberService: MemberService,
-              protected override currentMemberService: CurrentMemberService) {
+              protected override currentMemberService: CurrentMemberService,
+              protected override router: Router, protected override route: ActivatedRoute) {
     super();
   }
 
   ngOnInit(): void {
     this.initializeMemberByToken().then((success) => {
+      this.loggedInPage();
       if(success) {
         this.postService.getRecommendedPostsByTags(this.currentMemberService.member?.getMemberId()!).subscribe({
           next: (jsonPosts: Post[]) => {
             this.recommendPostsByTags = Post.initializePosts(jsonPosts);
-            this.initializePostsMedia(this.recommendPostsByTags);
+            this.initializePostsMedia(this.recommendPostsByTags).then();
 
             if(this.recommendPostsByTags.length == 0) {
               this.postService.getAllEntities().subscribe({
                 next: (jsonPosts: Post[]) => {
                   this.allPosts = Post.initializePosts(jsonPosts);
-                  this.initializePostsMedia(this.allPosts);
+                  this.initializePostsMedia(this.allPosts).then();
                 },
                 error: (error: HttpErrorResponse) => console.error(error)
               });

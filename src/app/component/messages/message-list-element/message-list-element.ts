@@ -3,32 +3,30 @@ import {Member} from "../../../model/member";
 
 export class MessageListElement {
   message: Message;
-  memberOwner: Member;
-  messageType: MessageType;
-  position: MessagePosition;
+  currentMember: Member;
+  friendMember: Member;
 
-  constructor(message: Message, memberOwner: Member) {
+  messageType!: MessageType;
+  position!: MessagePosition;
+  ownerMember!: Member;
+
+  constructor(message: Message, currentMember: Member, friendMember: Member) {
     this.message = message;
-    this.memberOwner = memberOwner;
-    this.messageType = this.setMessageType();
-    this.position = this.setPosition()
+    this.currentMember = currentMember;
+    this.friendMember = friendMember;
+    this.setMessageParams();
   }
 
-  private setMessageType() {
-    if(this.message.memberId == this.memberOwner.getMemberId()) {
-      return ownerMessageType;
+  private setMessageParams() {
+    if(this.message.memberId == this.currentMember.getMemberId()) {
+      this.messageType = ownerMessageType;
+      this.position = MessagePosition.END;
+      this.ownerMember = this.currentMember;
     } else {
-      return friendMessageType;
+      this.messageType = friendMessageType;
+      this.position = MessagePosition.START;
+      this.ownerMember = this.friendMember;
     }
-  }
-
-  private setPosition() {
-    if(this.message.memberId == this.memberOwner.getMemberId()) {
-      return MessagePosition.END;
-    } else {
-      return MessagePosition.START;
-    }
-
   }
 }
 

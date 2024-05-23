@@ -257,21 +257,29 @@ export abstract class CookieComponent {
     });
   }
 
-  initializerMemberFriends() {
+  initializeCurrentMemberFriends() {
+    return this.initializeMemberFriends(this.currentMemberService.member!)
+  }
+
+  initializeMemberFriends(member: Member) {
     return new Promise<boolean>((resolve, reject) => {
-      this.memberService.getFriends(this.currentMemberService.member!.getMemberId()).subscribe({
-        next: (jsonFriends: Member[]) => {
-          let friends: Member[] = Member.initializeMembers(jsonFriends);
-          this.currentMemberService.member?.setFriends(friends)
-          this.initializeMembersPfpImgUrl(this.currentMemberService.member?.friends).then((success) => {
-            resolve(success);
-          });
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-          resolve(false);
-        }
-      })
+      if(member != undefined) {
+        this.memberService.getFriends(member.getMemberId()!).subscribe({
+          next: (jsonFriends: Member[]) => {
+            let friends: Member[] = Member.initializeMembers(jsonFriends);
+            member.setFriends(friends)
+            this.initializeMembersPfpImgUrl(member.friends).then((success) => {
+              resolve(success);
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+            resolve(false);
+          }
+        })
+      } else {
+        resolve(true);
+      }
     });
   }
 

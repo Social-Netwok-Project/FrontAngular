@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
-import {faCheck, faMessage, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faMessage, faPlus, faRightToBracket} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgIf} from "@angular/common";
 import {Member} from "../../model/member";
@@ -28,7 +28,8 @@ import {CookieComponent} from "../misc/cookie-component";
 export class MemberBannerComponent extends CookieComponent implements OnInit {
 
   @Input() member!: Member | undefined;
-  @Input() actions: boolean = true;
+  @Input() interactionActions: boolean = true;
+  @Input() loginAction: boolean = false;
 
   isNotCurrentMember: boolean = false;
   isFriend: boolean = false;
@@ -50,7 +51,9 @@ export class MemberBannerComponent extends CookieComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.member != undefined) this.initFriends();
+    this.initializeMemberByToken().then(() => {
+      if(this.member != undefined) this.initFriends();
+    })
   }
 
   followOnClick() {
@@ -107,13 +110,15 @@ export class MemberBannerComponent extends CookieComponent implements OnInit {
   }
 
   private initFriends() {
-    this.initializerMemberFriends().then((success) => {
+    this.initializeCurrentMemberFriends().then((success) => {
       if (success) {
         this.isNotCurrentMember = this.member?.getMemberId() != this.currentMemberService.member?.getMemberId();
         let followingMember = this.currentMemberService.member?.friends.find((friend) => friend.getMemberId() == this.member?.getMemberId());
         this.isFollowing = followingMember != undefined;
         if (followingMember != undefined) {
-          this.isFriend = followingMember.friends.find((friend) => friend.getMemberId() == this.member?.getMemberId()) != undefined;
+          this.initializeMemberFriends(followingMember).then(() => {
+            this.isFriend = followingMember?.friends.find((friend) => friend.getMemberId() == this.currentMemberService.member?.getMemberId()) != undefined;
+          });
         }
       }
     });
@@ -122,6 +127,27 @@ export class MemberBannerComponent extends CookieComponent implements OnInit {
   }
 
   onProfileClick() {
-    if(this.actions) this.routeTo(`/my-posts/${this.member?.getMemberId()}`)
+    if(this.interactionActions) this.routeTo(`/my-posts/${this.member?.getMemberId()}`)
+  }
+
+  protected readonly faRightToBracket = faRightToBracket;
+
+  onMessage() {
+    if(this.member != undefined) {
+      this.routeTo(`/messages/${this.member .getMemberId()}`)
+    }
+  }
+
+  loginOnClick() {
+    if(this.member != undefined) {
+      this.resetTokenByEmail(this.member?.email).then((success) => {
+        if (success) {
+          this.initializeMember(this.member!);
+          this.routeToHome().then();
+        } else {
+          console.log(`Could not login as ${this.member?.username}`)
+        }
+      });
+    }
   }
 }

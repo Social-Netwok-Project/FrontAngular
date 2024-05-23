@@ -14,14 +14,6 @@ import {NgIf} from "@angular/common";
   templateUrl: './member-element.component.html',
   styleUrl: './member-element.component.scss'
 })
-export class MemberElementComponent extends CookieComponent implements OnInit {
+export class MemberElementComponent {
   @Input() memberElement!: MemberElement | undefined;
-
-  constructor() {
-    super();
-  }
-
-  ngOnInit(): void {
-
-  }
 }

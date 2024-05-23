@@ -1,7 +1,7 @@
 <div class="message-container" [style.justify-content]="messageListElement?.position">
   <div class="message-body-div">
     <div class="info-div">
-      <span class="username-span small-span">{{ messageListElement?.memberOwner?.username }}</span>
+      <span class="username-span small-span">{{ messageListElement?.ownerMember?.username }}</span>
       <span class="small-span">{{getDateTime(messageListElement?.message?.timestamp!)}}</span>
     </div>
     <div class="message-div {{messageListElement?.messageType?.backgroundClass}}">

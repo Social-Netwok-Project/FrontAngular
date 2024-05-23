@@ -14,6 +14,7 @@ import {CurrentMemberService} from "../../service/current-member.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {CookieComponent} from "../misc/cookie-component";
 import {NgxResizeObserverModule} from "ngx-resize-observer";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-discover',
@@ -39,23 +40,25 @@ export class DiscoverComponent extends CookieComponent implements OnInit {
               protected override postImageService: PostImageService,
               protected override postVideoService: PostVideoService,
               protected override memberService: MemberService,
-              protected override currentMemberService: CurrentMemberService) {
+              protected override currentMemberService: CurrentMemberService,
+              protected override router: Router, protected override route: ActivatedRoute) {
     super();
   }
 
   ngOnInit(): void {
     this.initializeMemberByToken().then((success) => {
+      this.loggedInPage();
       if(success) {
         this.postService.getRecommendedPostsByLikes(this.currentMemberService.member?.getMemberId()!).subscribe({
           next: (jsonPosts: Post[]) => {
             this.recommendPostsByLikes = Post.initializePosts(jsonPosts);
-            this.initializePostsMedia(this.recommendPostsByLikes);
+            this.initializePostsMedia(this.recommendPostsByLikes).then();
 
             if(this.recommendPostsByLikes.length == 0) {
               this.postService.getAllEntities().subscribe({
                 next: (jsonPosts: Post[]) => {
                   this.allPosts = Post.initializePosts(jsonPosts);
-                  this.initializePostsMedia(this.allPosts);
+                  this.initializePostsMedia(this.allPosts).then();
                 },
                 error: (error: HttpErrorResponse) => console.error(error)
               });

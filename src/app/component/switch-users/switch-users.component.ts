@@ -2,11 +2,17 @@ import {Component, ElementRef, OnInit} from '@angular/core';
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
 import {MessageListElementComponent} from "../messages/message-list-element/message-list-element.component";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {CookieComponent} from "../misc/cookie-component";
 import {faArrowRightToBracket} from "@fortawesome/free-solid-svg-icons";
 import {switchUsersNavigationItem} from "../header/navigation-item";
+import {MemberBannerComponent} from "../member-banner/member-banner.component";
+import {Member} from "../../model/member";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MemberService} from "../../service/member.service";
+import {CurrentMemberService} from "../../service/current-member.service";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
   selector: 'app-switch-users',
@@ -16,21 +22,40 @@ import {switchUsersNavigationItem} from "../header/navigation-item";
     FormsModule,
     MessageListElementComponent,
     NgForOf,
-    PaginatorModule
+    PaginatorModule,
+    MemberBannerComponent,
+    NgIf
   ],
   templateUrl: './switch-users.component.html',
   styleUrl: './switch-users.component.scss'
 })
 export class SwitchUsersComponent extends CookieComponent implements OnInit {
-  faArrowRightToBracket = faArrowRightToBracket;
+  switchUsersNavigationItem = switchUsersNavigationItem;
 
-  constructor(private el: ElementRef) {
+  allMembers: Member[] = [];
+
+  searchString: String = "";
+
+  constructor(private el: ElementRef,
+              protected override memberService: MemberService,
+              protected override currentMemberService: CurrentMemberService,
+              protected override cookieService: CookieService) {
     super();
   }
 
   ngOnInit(): void {
+    this.initializeMemberByToken().then(() => {
+      this.memberService.getAllEntities().subscribe({
+        next: (jsonMembers: Member[]) => {
+          this.allMembers = Member.initializeMembers(jsonMembers);
+          this.initializeMembersPfpImgUrl(this.allMembers).then();
+        },
+        error: (error: HttpErrorResponse) => console.log(error)
+      });
+    })
+
+
     this.el.nativeElement.style.width = `100%`;
   }
 
-  protected readonly switchUsersNavigationItem = switchUsersNavigationItem;
 }

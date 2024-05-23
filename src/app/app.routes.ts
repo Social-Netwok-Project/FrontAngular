@@ -24,6 +24,7 @@ export const routes: Routes = [
   {path: 'password-recovery', component: PasswordRecoveryComponent},
   {path: `password-reset/:${StorageKeys.USER_TOKEN}`, component: PasswordResetComponent},
   {path: 'messages', component: MessagesComponent},
+  {path: 'messages/:id', component: MessagesComponent},
   {path: 'my-posts', component: MyPostsComponent},
   {path: 'my-posts/:id', component: MyPostsComponent},
   {path: 'interests', component: InterestsComponent},

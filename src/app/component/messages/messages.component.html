@@ -31,7 +31,7 @@
             </div>
           </div>
           <form class="message-input-form" (ngSubmit)="onMessageEnter()">
-            <input class="default-input-2" [(ngModel)]="messageTyped" placeholder="Type a message..." name="message-input">
+            <input class="default-input-2" [(ngModel)]="messageTyped" autocomplete="off" placeholder="Type a message..." name="message-input">
           </form>
         </div>
       </div>

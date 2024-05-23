@@ -59,7 +59,6 @@ export class LoginComponent extends AuthenticationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("here")
     if (this.hasUserToken()) {
       this.deleteUserToken();
     }

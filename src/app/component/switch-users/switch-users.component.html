@@ -7,4 +7,19 @@
   </div>
   <div class="separation-line-2"></div>
 
+  <div class="search-div">
+    <input class="default-input-3" placeholder="Search By Username..." [(ngModel)]="searchString">
+  </div>
+  <div class="member-banner-container">
+    <ng-container *ngFor="let member of allMembers">
+      <div class="member-banner-body-div" *ngIf="member.getMemberId() != currentMemberService.member?.getMemberId()">
+        <app-member-banner
+          [style.width.%]="50"
+          [member]="member"
+          [interactionActions]="false"
+          [loginAction]="true">
+        </app-member-banner>
+      </div>
+    </ng-container>
+  </div>
 </div>

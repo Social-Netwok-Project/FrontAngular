@@ -57,22 +57,38 @@ export class MessagesComponent extends CookieComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initializeMemberByToken().then(() => {
-      this.memberService.getBiDirectionalFriends(this.currentMemberService.member?.getMemberId()!).subscribe({
-        next: (jsonMembers: Member[]) => {
-          this.biDirectionalFriends = Member.initializeMembers(jsonMembers);
-          this.initializeMembersPfpImgUrl(this.biDirectionalFriends).then(() => {
-            for (let member of this.biDirectionalFriends) {
-              this.memberElements.push(new MemberElement(member));
-            }
-            this.fetchMembersMessages(this.currentMemberService.member!, this.biDirectionalFriends).then(() => {
-              this.onMemberElementClick(this.memberElements[0]);
-            });
+    this.route.params.subscribe( params => {
+      let id = params['id'];
+
+      this.initializeMemberByToken().then(() => {
+        this.loggedInPage();
+
+        if(this.currentMemberService.isLoggedIn()) {
+          this.memberService.getBiDirectionalFriends(this.currentMemberService.member?.getMemberId()!).subscribe({
+            next: (jsonMembers: Member[]) => {
+              this.biDirectionalFriends = Member.initializeMembers(jsonMembers);
+              this.initializeMembersPfpImgUrl(this.biDirectionalFriends).then(() => {
+                for (let member of this.biDirectionalFriends) {
+                  this.memberElements.push(new MemberElement(member));
+                }
+                this.fetchMembersMessages(this.currentMemberService.member!, this.biDirectionalFriends).then(() => {
+                  let memberElement = this.memberElements[0]
+
+                  if(id != undefined && id.length > 0) {
+                    let tempMemberElement = this.memberElements.find(memberElement => memberElement.member.getMemberId() == parseInt(id))
+                    if(tempMemberElement != undefined) memberElement = tempMemberElement;
+                  }
+                  this.onMemberElementClick(memberElement);
+                });
+              });
+            },
+            error: (error: HttpErrorResponse) => console.log(error)
           });
-        },
-        error: (error: HttpErrorResponse) => console.log(error)
-      });
+        }
+      })
     })
+
+
 
     this.el.nativeElement.style.width = `100%`;
   }
@@ -88,7 +104,7 @@ export class MessagesComponent extends CookieComponent implements OnInit {
     this.messageListElements = [];
     if(memberElement.member?.messages != undefined) {
       for (let message of memberElement.member?.messages!) {
-        this.messageListElements.push(new MessageListElement(message, this.currentMemberService.member!));
+        this.messageListElements.push(new MessageListElement(message, this.currentMemberService.member!, memberElement.member));
       }
     }
 
@@ -117,7 +133,7 @@ export class MessagesComponent extends CookieComponent implements OnInit {
   }
   private updateMessageLists(message: Message) {
     this.selectedMemberElement?.member?.messages?.push(message);
-    this.messageListElements.push(new MessageListElement(message, this.currentMemberService.member!));
+    this.messageListElements.push(new MessageListElement(message, this.currentMemberService.member!, this.selectedMemberElement?.member!));
 
     this.scrollToBottom();
   }

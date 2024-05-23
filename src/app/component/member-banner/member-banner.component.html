@@ -11,14 +11,14 @@
         <span>Following: {{ member?.followingCount }}</span>
       </div>
     </div>
-    <div class="action-buttons-div" *ngIf="isNotCurrentMember && actions">
-      <div class="action-button" *ngIf="isFriend">
+    <div class="actions-buttons-div" *ngIf="isNotCurrentMember">
+      <div class="action-button" *ngIf="isFriend && interactionActions  && currentMemberService.isLoggedIn()" (click)="onMessage()">
         <div class="icon-elem-1">
           <fa-icon [icon]="faMessage" [class]="['icon-1']"></fa-icon>
         </div>
         <span>Message</span>
       </div>
-      <div class="action-button" (click)="followOnClick()">
+      <div class="action-button" *ngIf="interactionActions  && currentMemberService.isLoggedIn()" (click)="followOnClick()">
         <div class="icon-elem-1" *ngIf="!isFollowing">
           <fa-icon [icon]="faPlus" [class]="['icon-1']"></fa-icon>
         </div>
@@ -26,6 +26,12 @@
           <fa-icon [icon]="faCheck" [class]="['icon-1']"></fa-icon>
         </div>
         <span>{{ isFollowing ? "Following" : "Follow" }}</span>
+      </div>
+      <div class="action-button" *ngIf="loginAction" (click)="loginOnClick()">
+        <div class="icon-elem-1">
+          <fa-icon [icon]="faRightToBracket" [class]="['icon-1']"></fa-icon>
+        </div>
+        <span>Login as {{member?.username}}</span>
       </div>
     </div>
   </div>

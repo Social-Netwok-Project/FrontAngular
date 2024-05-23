@@ -66,11 +66,13 @@ $pfpImageSize: 100px;
   flex-grow: 1;
 }
 
-.action-buttons-div {
+.actions-buttons-div {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: start;
   align-items: end;
+
+  white-space: nowrap;
 }
 
 .action-button {
@@ -92,6 +94,10 @@ $pfpImageSize: 100px;
 .action-button:hover{
   background: $colorP14;
   border: $colorP11 solid 2px;
+}
+
+.action-button div {
+  margin-right: 5px;
 }
 
 //.follow-div {
