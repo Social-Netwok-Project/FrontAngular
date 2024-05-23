@@ -12,4 +12,14 @@ export class Edge {
   public static fromJson(jsonEdge: Edge): Edge {
     return new Edge(jsonEdge.memberId, jsonEdge.friendId, jsonEdge.edgeId);
   }
+
+  static initializeEdges(jsonEdges: Edge[]) {
+    let edges: Edge[] = [];
+    if(jsonEdges != undefined) {
+      for (let jsonEdge of jsonEdges) {
+        edges.push(Edge.fromJson(jsonEdge));
+      }
+    }
+    return edges;
+  }
 }

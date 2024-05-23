@@ -6,6 +6,35 @@
     <h1 class="main-page-h1">Site Graph</h1>
   </div>
   <div class="separation-line-2"></div>
-
+  <div class="site-graph-body-div">
+    <div class="site-graph-div">
+      <div id="site-graph"></div>
+    </div>
+    <div class="controls-div">
+      <div class="select-div">
+        <label>Start member:</label>
+        <select class="default-input-3" [(ngModel)]="startMemberId">
+          <option *ngFor="let member of allMembers"
+                  [value]="member.getMemberId()">
+            {{ member.username }}
+          </option>
+        </select>
+      </div>
+      <div class="select-div">
+        <label>End member:</label>
+        <select class="default-input-3" [(ngModel)]="endMemberId">
+          <option *ngFor="let member of allMembers"
+                  [value]="member.getMemberId()">
+            {{ member.username }}
+          </option>
+        </select>
+      </div>
+      <div class="buttons-div">
+        <button class="default-btn" (click)="onFindShortestPath()">Find Shortest Path</button>
+        <button class="default-btn" (click)="onReload()">Reset</button>
+      </div>
+      <span class="validation-error-span">{{ errorMsg }}</span>
+    </div>
+  </div>
 </div>
 

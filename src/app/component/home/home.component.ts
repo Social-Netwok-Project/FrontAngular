@@ -48,7 +48,7 @@ export class HomeComponent extends CookieComponent implements OnInit {
           }
         });
       }
-      if(this.currentMemberService.isLoggedIn() && this.currentMemberService.member?.friends?.length == 0){
+      if(!this.currentMemberService.isLoggedIn() || this.currentMemberService.member?.friends?.length == 0){
         this.postService.getAllEntities().subscribe({
           next: (jsonPosts: Post[]) => {
             this.allPosts = Post.initializePosts(jsonPosts);
