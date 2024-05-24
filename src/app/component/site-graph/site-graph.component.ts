@@ -265,7 +265,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
 
   onSubmitMember(keyboardEvent: KeyboardEvent) {
     if (keyboardEvent.key === 'Enter') {
-      
+
     }
   }
 }
