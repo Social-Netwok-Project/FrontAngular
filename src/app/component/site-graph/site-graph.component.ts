@@ -17,6 +17,7 @@ import {Edge} from "../../model/edge";
 import {Observable} from "rxjs";
 import {TwoIds} from "../../model/query/delete/two-ids";
 import {HttpErrorResponse} from "@angular/common/http";
+import {AutoCompleteModule} from "primeng/autocomplete";
 
 @Component({
   selector: 'app-site-graph',
@@ -27,7 +28,8 @@ import {HttpErrorResponse} from "@angular/common/http";
     MessageListElementComponent,
     NgForOf,
     PaginatorModule,
-    NgxResizeObserverModule
+    NgxResizeObserverModule,
+    AutoCompleteModule
   ],
   templateUrl: './site-graph.component.html',
   styleUrl: './site-graph.component.scss'
@@ -42,11 +44,15 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
   width: number = 600;
   height: number = 600;
 
-  svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
-
   startMemberId: number | undefined;
   endMemberId: number | undefined;
   errorMsg: string = "";
+
+  selectedMemberStart: Member | string | undefined;
+  selectedMemberEnd: Member | string | undefined;
+
+  foundMembersStart: Member[] = [];
+  foundMembersEnd: Member[] = [];
 
   constructor(protected override memberService: MemberService,
               protected override edgeService: EdgeService) {
@@ -73,7 +79,8 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
     }).subscribe({
       next: (value: Member[] | Edge[]) => {
         if (this.allMembers.length > 0 && this.allEdges.length > 0) {
-          this.renderGraph(this.parseData(this.allMembers, this.allEdges));
+          this.renderGraph(this.allMembers, this.allEdges, "#site-graph-main");
+          this.renderGraph(this.allMembers, this.allEdges, "#site-graph");
         }
       }
     });
@@ -100,7 +107,9 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
     return {nodes, links}
   }
 
-  renderGraph(data: { nodes: MySimulationNodeDatum[], links: MySimulationLinkDatum[] }) {
+  renderGraph(members: Member[], edges: Edge[], divId: string) {
+    let data = this.parseData(members, edges)
+
     if (data) {
       const {nodes, links} = data;
       const types = Array.from(new Set(links.map(d => d.color)));
@@ -115,13 +124,13 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
         .force("y", d3.forceY());
 
 
-      d3.select("#site-graph").select('svg').remove()
+      d3.select(divId).select('svg').remove()
 
-      this.svg = d3.select("#site-graph").append("svg")
+      let svg = d3.select(divId).append("svg")
         .attr("viewBox", [-this.width / 2, -this.height / 2, this.width, this.height])
         .attr("style", "max-width: 100%; height: auto; font: 12px sans-serif;")
 
-      this.svg.append("defs").selectAll("marker")
+      svg.append("defs").selectAll("marker")
         .data(types)
         .join("marker")
         .attr("id", d => `arrow-${d}`)
@@ -136,7 +145,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
         .attr("d", "M0,-5L10,0L0,5")
 
 
-      let link = this.svg.append("g")
+      let link = svg.append("g")
         .attr("fill", "none")
         .attr("stroke-width", 1.5)
         .selectAll("path")
@@ -145,7 +154,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
         .attr("stroke", d => color(d.color))
         .attr("marker-end", d => `url(#arrow-${d.color})`);
 
-      let node = this.svg.append("g")
+      let node = svg.append("g")
         .attr("fill", "currentColor")
         .attr("stroke-linecap", "round")
         .attr("stroke-linejoin", "round")
@@ -217,7 +226,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
 
   onReload() {
     this.resetValues()
-    this.renderGraph(this.parseData(this.allMembers, this.allEdges))
+    this.renderGraph(this.allMembers, this.allEdges, "#site-graph")
   }
 
   onFindShortestPath() {
@@ -236,7 +245,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
               }
             }
 
-            this.renderGraph(this.parseData(members, edges))
+            this.renderGraph(members, edges, "#site-graph")
           } else {
             this.errorMsg = `No Path Found`
           }
@@ -252,6 +261,12 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
     this.startMemberId = undefined;
     this.endMemberId = undefined;
     this.errorMsg = "";
+  }
+
+  onSubmitMember(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.key === 'Enter') {
+      
+    }
   }
 }
 

@@ -15,6 +15,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {CookieComponent} from "../misc/cookie-component";
 import {NgxResizeObserverModule} from "ngx-resize-observer";
 import {ActivatedRoute, Router} from "@angular/router";
+import {PostBody} from "../../model/misc/post-body";
 
 @Component({
   selector: 'app-discover',
@@ -32,8 +33,12 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class DiscoverComponent extends CookieComponent implements OnInit {
 
+  discoverNavigationItem = discoverNavigationItem;
+
   recommendPostsByLikes: Post[] = [];
   allPosts: Post[] = [];
+
+  excludedIds: number[] = [];
 
   constructor(protected override postService: PostService,
               protected override cookieService: CookieService,
@@ -49,26 +54,39 @@ export class DiscoverComponent extends CookieComponent implements OnInit {
     this.initializeMemberByToken().then((success) => {
       this.loggedInPage();
       if(success) {
-        this.postService.getRecommendedPostsByLikes(this.currentMemberService.member?.getMemberId()!).subscribe({
-          next: (jsonPosts: Post[]) => {
-            this.recommendPostsByLikes = Post.initializePosts(jsonPosts);
-            this.initializePostsMedia(this.recommendPostsByLikes).then();
-
-            if(this.recommendPostsByLikes.length == 0) {
-              this.postService.getAllEntities().subscribe({
-                next: (jsonPosts: Post[]) => {
-                  this.allPosts = Post.initializePosts(jsonPosts);
-                  this.initializePostsMedia(this.allPosts).then();
-                },
-                error: (error: HttpErrorResponse) => console.error(error)
-              });
-            }
-          },
-          error: (error: HttpErrorResponse) => console.error(error)
-        });
+        this.fetchPosts();
       }
     });
   }
 
-  protected readonly discoverNavigationItem = discoverNavigationItem;
+  fetchPosts() {
+    this.postService.getRecommendedPostsByLikes(new PostBody(this.currentMemberService.member?.getMemberId()!, this.excludedIds)).subscribe({
+      next: (jsonPosts: Post[]) => {
+        let newPosts = Post.initializePosts(jsonPosts);
+        console.log(newPosts)
+        this.initializePostsMedia(newPosts).then(() => {
+          newPosts.forEach(post => {
+            this.recommendPostsByLikes.push(post)
+            this.excludedIds.push(post.postId!)
+          });
+        });
+
+        if(this.recommendPostsByLikes.length == 0) {
+          this.postService.getAllEntities().subscribe({
+            next: (jsonPosts: Post[]) => {
+              let newPosts = Post.initializePosts(jsonPosts);
+              this.initializePostsMedia(newPosts).then(() => {
+                newPosts.forEach(post => {
+                  this.allPosts.push(post)
+                  this.excludedIds.push(post.postId!)
+                });
+              });
+            },
+            error: (error: HttpErrorResponse) => console.error(error)
+          });
+        }
+      },
+      error: (error: HttpErrorResponse) => console.error(error)
+    });
+  }
 }

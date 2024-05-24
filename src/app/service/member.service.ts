@@ -59,4 +59,8 @@ export abstract class MemberService extends EntityService<Member> {
   public updatePfpImgNameByEmail(pfpImgPathByEmail: PfpImgPathByEmail): Observable<number> {
     return this.http.post<number>(`${this.apiBackendUrl}/${this.entityName}/update-pfp-img-path-by-email`, pfpImgPathByEmail);
   }
+
+  public findMembersByUsername(username: string): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiBackendUrl}/${this.entityName}/find-members-by-username/${username}`)
+  }
 }

@@ -323,7 +323,7 @@ export abstract class CookieComponent {
           }
         }).subscribe({
           next: (count: number) => {
-            if (count == (posts.length * 2)) {
+            if (count == 2) {
               resolve(true);
             }
           }
@@ -387,19 +387,29 @@ export abstract class CookieComponent {
   private initializePostVideos(postVideos: PostVideo[]) {
     return new Promise<boolean>((resolve, reject) => {
       if (postVideos != undefined) {
-        for (let postVideo of postVideos) {
-          this.postVideoService.downloadFiles(postVideo.name).subscribe({
-            next: (httpEvent: HttpEvent<Blob>) => {
-              if (httpEvent.type === HttpEventType.Response) {
-                const file: File = this.getFile(httpEvent);
-                postVideo.setVideoUrl(URL.createObjectURL(file));
+        let count = 0;
+        new Observable<number>((observer) => {
+          for (let postVideo of postVideos) {
+            this.postVideoService.downloadFiles(postVideo.name).subscribe({
+              next: (httpEvent: HttpEvent<Blob>) => {
+                if (httpEvent.type === HttpEventType.Response) {
+                  const file: File = this.getFile(httpEvent);
+                  postVideo.setVideoUrl(URL.createObjectURL(file));
+                  observer.next(++count);
+                }
+              },
+              error: (error: HttpErrorResponse) => {
+                console.log(error);
               }
-            },
-            error: (error: HttpErrorResponse) => {
-              console.log(error);
+            });
+          }
+        }).subscribe({
+          next: (count: number) => {
+            if (count == postVideos.length) {
+              resolve(true);
             }
-          });
-        }
+          }
+        });
       } else {
         resolve(true);
       }

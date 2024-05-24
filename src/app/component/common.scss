@@ -719,6 +719,14 @@ $hoverBackground: rgba(0, 0, 0, 0.3);
   box-shadow: $boxShadowDefault;
 }
 
+.bottom-button-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%
+}
+
 // HIDE NUMBER INPUT ARROWS
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

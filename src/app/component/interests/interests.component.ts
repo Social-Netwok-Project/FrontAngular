@@ -15,6 +15,7 @@ import {PostVideoService} from "../../service/post-video.service";
 import {MemberService} from "../../service/member.service";
 import {discoverNavigationItem, interestsNavigationItem} from "../header/navigation-item";
 import {ActivatedRoute, Router} from "@angular/router";
+import {PostBody} from "../../model/misc/post-body";
 
 @Component({
   selector: 'app-interests',
@@ -35,6 +36,8 @@ export class InterestsComponent extends CookieComponent implements OnInit {
   recommendPostsByTags: Post[] = [];
   allPosts: Post[] = [];
 
+  excludedIds: number[] = [];
+
   constructor(protected override postService: PostService,
               protected override cookieService: CookieService,
               protected override postImageService: PostImageService,
@@ -49,28 +52,39 @@ export class InterestsComponent extends CookieComponent implements OnInit {
     this.initializeMemberByToken().then((success) => {
       this.loggedInPage();
       if(success) {
-        this.postService.getRecommendedPostsByTags(this.currentMemberService.member?.getMemberId()!).subscribe({
-          next: (jsonPosts: Post[]) => {
-            this.recommendPostsByTags = Post.initializePosts(jsonPosts);
-            this.initializePostsMedia(this.recommendPostsByTags).then();
-
-            if(this.recommendPostsByTags.length == 0) {
-              this.postService.getAllEntities().subscribe({
-                next: (jsonPosts: Post[]) => {
-                  this.allPosts = Post.initializePosts(jsonPosts);
-                  this.initializePostsMedia(this.allPosts).then();
-                },
-                error: (error: HttpErrorResponse) => console.error(error)
-              });
-            }
-          },
-          error: (error: HttpErrorResponse) => console.error(error)
-        });
+        this.fetchPosts();
       }
-
-    })
+    });
   }
 
-  protected readonly discoverNavigationItem = discoverNavigationItem;
-  protected readonly interestsNavigationItem = interestsNavigationItem;
+  fetchPosts() {
+    this.postService.getRecommendedPostsByTags(new PostBody(this.currentMemberService.member?.getMemberId()!, this.excludedIds)).subscribe({
+      next: (jsonPosts: Post[]) => {
+        let newPosts = Post.initializePosts(jsonPosts);
+        console.log(newPosts)
+        this.initializePostsMedia(newPosts).then(() => {
+          newPosts.forEach(post => {
+            this.recommendPostsByTags.push(post)
+            this.excludedIds.push(post.postId!)
+          });
+        });
+
+        if(this.recommendPostsByTags.length == 0) {
+          this.postService.getAllEntities().subscribe({
+            next: (jsonPosts: Post[]) => {
+              let newPosts = Post.initializePosts(jsonPosts);
+              this.initializePostsMedia(newPosts).then(() => {
+                newPosts.forEach(post => {
+                  this.allPosts.push(post)
+                  this.excludedIds.push(post.postId!)
+                });
+              });
+            },
+            error: (error: HttpErrorResponse) => console.error(error)
+          });
+        }
+      },
+      error: (error: HttpErrorResponse) => console.error(error)
+    });
+  }
 }

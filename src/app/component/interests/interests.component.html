@@ -1,4 +1,4 @@
-<div (onResize)="handleFooterTopMinValue($event, 80)" class="main-page-body-div">
+<div (onResize)="handleFooterTopMinValue($event, 200)" class="main-page-body-div">
   <div class="empty-elements-body-div" *ngIf="recommendPostsByTags.length == 0">
     <div class="empty-elements-div">
       <span class="title-span">Find New Posts By Liking Other Posts!</span>
@@ -20,6 +20,9 @@
       </app-post>
     </div>
   </ng-container>
+  <div class="bottom-button-div">
+    <button class="default-btn" (click)="fetchPosts()">Fetch More Posts</button>
+  </div>
 </div>
 <app-footer
   [footerTopMinValue]="footerTopMinValue"

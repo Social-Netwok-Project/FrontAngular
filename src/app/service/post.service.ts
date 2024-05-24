@@ -4,6 +4,7 @@ import {Post} from "../model/post";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {TwoIds} from "../model/query/delete/two-ids";
+import {PostBody} from "../model/misc/post-body";
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,11 @@ export abstract class PostService extends EntityService<Post> {
     return this.http.post<boolean>(`${this.apiBackendUrl}/${this.entityName}/is-post-liked-by-member`, twoIds);
   }
 
-  public getRecommendedPostsByLikes(memberId: number): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.apiBackendUrl}/${this.entityName}/recommended-posts-by-likes/${memberId}`);
+  public getRecommendedPostsByLikes(postBody: PostBody): Observable<Post[]> {
+    return this.http.post<Post[]>(`${this.apiBackendUrl}/${this.entityName}/recommended-posts-by-likes`, postBody);
   }
 
-  public getRecommendedPostsByTags(memberId: number): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.apiBackendUrl}/${this.entityName}/recommended-posts-by-tags/${memberId}`);
+  public getRecommendedPostsByTags(postBody: PostBody): Observable<Post[]> {
+    return this.http.post<Post[]>(`${this.apiBackendUrl}/${this.entityName}/recommended-posts-by-tags`, postBody);
   }
 }
