@@ -2,7 +2,8 @@
   <div class="top-div">
     <div class="profile-div" (click)="onProfileClick()">
       <div class="pfp-img-div">
-        <img class="pfp-img" src="{{member?.pfpImgUrl!}}" alt="member pfp img">
+        <img class="pfp-img" src="{{member?.pfpImgUrl!}}" alt="member pfp img" *ngIf="member?.pfpImgUrl != undefined">
+        <fa-icon class="user-icon-2" [icon]="faUser" *ngIf="member?.pfpImgUrl == undefined"></fa-icon>
       </div>
       <div class="info-div">
         <span>{{ member?.username }}</span>

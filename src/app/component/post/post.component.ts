@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faThumbsUp} from "@fortawesome/free-solid-svg-icons";
+import {faThumbsUp, faUser} from "@fortawesome/free-solid-svg-icons";
 import {CookieComponent} from "../misc/cookie-component";
 import {Post} from "../../model/post";
 import {Member} from "../../model/member";
@@ -116,4 +116,6 @@ export class PostComponent extends CookieComponent implements OnInit {
       });
     }
   }
+
+  protected readonly faUser = faUser;
 }

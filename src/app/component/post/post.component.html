@@ -3,7 +3,8 @@
     <div class="post-header-div post-elem">
       <div class="post-member-div" (click)="sendToMemberPage()">
         <div class="user-pfp-img-div">
-          <img class="pfp-img" src="{{postOwner?.pfpImgUrl!}}" alt="user-pfp-img">
+          <img class="pfp-img" src="{{postOwner?.pfpImgUrl!}}" alt="user-pfp-img" *ngIf="postOwner?.pfpImgUrl != undefined">
+          <fa-icon class="user-icon-2" [icon]="faUser" *ngIf="postOwner?.pfpImgUrl == undefined"></fa-icon>
         </div>
         <div class="user-info-div">
           <span>{{postOwner?.username}}</span>

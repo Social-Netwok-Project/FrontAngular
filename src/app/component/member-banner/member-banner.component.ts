@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
-import {faCheck, faMessage, faPlus, faRightToBracket} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faMessage, faPlus, faRightToBracket, faUser} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgIf} from "@angular/common";
 import {Member} from "../../model/member";
@@ -150,4 +150,6 @@ export class MemberBannerComponent extends CookieComponent implements OnInit {
       });
     }
   }
+
+    protected readonly faUser = faUser;
 }
