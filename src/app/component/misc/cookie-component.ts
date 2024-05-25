@@ -243,7 +243,6 @@ export abstract class CookieComponent {
               }
             });
           } else {
-            console.log("User does not have pfp img");
             observer.next(++count);
           }
         }
@@ -353,7 +352,7 @@ export abstract class CookieComponent {
 
   private initializePostImages(postImages: PostImage[]) {
     return new Promise<boolean>((resolve, reject) => {
-      if(postImages != undefined) {
+      if(postImages.length > 0) {
         let count = 0;
 
         new Observable<number>((observer) => {
@@ -367,12 +366,13 @@ export abstract class CookieComponent {
                 }
               },
               error: (error: HttpErrorResponse) => {
-                console.log(error);
+                observer.next(++count);
               }
             });
           }
         }).subscribe({
           next: (count: number) => {
+            console.log(count)
             if (count == postImages.length) {
               resolve(true);
             }
@@ -386,7 +386,7 @@ export abstract class CookieComponent {
 
   private initializePostVideos(postVideos: PostVideo[]) {
     return new Promise<boolean>((resolve, reject) => {
-      if (postVideos != undefined) {
+      if (postVideos.length > 0) {
         let count = 0;
         new Observable<number>((observer) => {
           for (let postVideo of postVideos) {

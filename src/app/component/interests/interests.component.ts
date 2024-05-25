@@ -61,15 +61,15 @@ export class InterestsComponent extends CookieComponent implements OnInit {
     this.postService.getRecommendedPostsByTags(new PostBody(this.currentMemberService.member?.getMemberId()!, this.excludedIds)).subscribe({
       next: (jsonPosts: Post[]) => {
         let newPosts = Post.initializePosts(jsonPosts);
-        console.log(newPosts)
         this.initializePostsMedia(newPosts).then(() => {
           newPosts.forEach(post => {
             this.recommendPostsByTags.push(post)
             this.excludedIds.push(post.postId!)
           });
+          console.log(this.excludedIds)
         });
 
-        if(this.recommendPostsByTags.length == 0) {
+        if(jsonPosts.length == 0) {
           this.postService.getAllEntities().subscribe({
             next: (jsonPosts: Post[]) => {
               let newPosts = Post.initializePosts(jsonPosts);

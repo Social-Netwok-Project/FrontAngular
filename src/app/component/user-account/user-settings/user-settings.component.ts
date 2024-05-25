@@ -45,7 +45,7 @@ export class UserSettingsComponent extends CookieComponent implements OnInit {
 
   faXmark = faXmark;
   availableTags: Tag[] = [];
-  selectedTagId!: string;
+  selectedTagId!: string | undefined;
 
   constructor(private el: ElementRef,
               protected override memberService: MemberService,
@@ -84,10 +84,12 @@ export class UserSettingsComponent extends CookieComponent implements OnInit {
   }
 
   onTagSelected() {
-    let selectedTagId = parseInt(this.selectedTagId);
-    if (!this.currentMemberService.member?.tagPerMemberList.find(tagPerMember => tagPerMember.tagId == selectedTagId) && this.selectedTagId != undefined) {
-      let tagPerMember = new TagPerMember(selectedTagId, this.currentMemberService.member?.getMemberId()!);
-      this.currentMemberService.member?.tagPerMemberList.push(tagPerMember);
+    if(this.selectedTagId != undefined) {
+      let selectedTagId = parseInt(this.selectedTagId);
+      if (!this.currentMemberService.member?.tagPerMemberList.find(tagPerMember => tagPerMember.tagId == selectedTagId) && this.selectedTagId != undefined) {
+        let tagPerMember = new TagPerMember(selectedTagId, this.currentMemberService.member?.getMemberId()!);
+        this.currentMemberService.member?.tagPerMemberList.push(tagPerMember);
+      }
     }
   }
 
@@ -98,10 +100,12 @@ export class UserSettingsComponent extends CookieComponent implements OnInit {
   }
 
   onDeleteTag(tag: Tag) {
+    this.selectedTagId = undefined;
 
     new Promise<boolean>((resolve, reject) => {
-      if(tag.tagId != undefined) {
-        let tagPerMember = this.currentMemberService.member?.tagPerMemberList.find(tagPerMember => tagPerMember.tagId == tag.tagId);
+      let tagPerMember = this.currentMemberService.member?.tagPerMemberList.find(tagPerMember => tagPerMember.tagId == tag.tagId);
+
+      if(tagPerMember?.tagPerMemberId != undefined) {
         this.tagPerMemberService.deleteEntityById(tagPerMember?.tagPerMemberId!).subscribe({
           next: () => {
             console.log("Deleted tag per member with id: " + (tagPerMember?.tagPerMemberId!));

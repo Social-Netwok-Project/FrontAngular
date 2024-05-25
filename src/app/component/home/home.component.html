@@ -1,5 +1,5 @@
 <div (onResize)="handleFooterTopMinValue($event, 200)" class="main-page-body-div">
-  <ng-container *ngIf="currentMemberService.isLoggedIn()">
+  <ng-container *ngIf="currentMemberService.isLoggedIn() && hasFriends">
     <div class="friends-container" *ngFor="let friend of this.currentMemberService.member?.friends">
       <div class="posts-container" *ngFor="let post of friend.posts">
         <app-post
@@ -10,8 +10,8 @@
       </div>
     </div>
   </ng-container>
-  <ng-container *ngIf="!currentMemberService.isLoggedIn() || currentMemberService.member?.friends?.length == 0">
-    <div class="empty-elements-body-div" *ngIf="currentMemberService.member?.friends?.length == 0">
+  <ng-container *ngIf="!currentMemberService.isLoggedIn() || !hasFriends">
+    <div class="empty-elements-body-div" *ngIf="!hasFriends">
       <div class="empty-elements-div">
         <span class="title-span">Find Friend Posts By Following Other People!</span>
       </div>

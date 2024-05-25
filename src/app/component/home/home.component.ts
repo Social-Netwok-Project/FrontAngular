@@ -28,6 +28,7 @@ import {PostService} from "../../service/post.service";
 export class HomeComponent extends CookieComponent implements OnInit {
 
   allPosts: Post[] = [];
+  hasFriends: boolean = false;
 
   constructor(private el: ElementRef,
               protected override cookieService: CookieService,
@@ -45,6 +46,7 @@ export class HomeComponent extends CookieComponent implements OnInit {
         this.initializeCurrentMemberFriends().then((success) => {
           if(success) {
             this.initializeMembersPostsMedia(this.currentMemberService.member?.friends!).then();
+            this.hasFriends = this.currentMemberService.member?.friends?.length! > 0;
           }
         });
       }

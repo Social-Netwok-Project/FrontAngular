@@ -41,8 +41,8 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
   allMembers: Member[] = [];
   allEdges: Edge[] = []
 
-  width: number = 600;
-  height: number = 600;
+  width: number = 1200;
+  height: number = 1200;
 
   errorMsg: string = "";
 
