@@ -7,7 +7,7 @@
   </div>
   <div class="separation-line-2"></div>
   <div class="site-graph-body-div">
-    <div class="site-graph-div">
+    <div class="site-graph-main-div">
       <div id="site-graph-main"></div>
     </div>
   </div>
@@ -19,29 +19,29 @@
     <div class="controls-div">
       <div class="select-div">
         <label>Start member:</label>
-<!--        <select class="default-input-3" [(ngModel)]="startMemberId">-->
-<!--          <option *ngFor="let member of allMembers"-->
-<!--                  [value]="member.getMemberId()">-->
-<!--            {{ member.username }}-->
-<!--          </option>-->
-<!--        </select>-->
-        <p-autoComplete name="auto-complete"
-                        [(ngModel)]="selectedMemberStart"
-                        [placeholder]="'Search Member'"
-                        [inputStyleClass]="'default-input-1'"
-                        [styleClass]="'default-input-1-container'"
-                        [style.width.%]="100"
-                        [suggestions]="foundMembersStart"
-                        (onKeyUp)="onSubmitMember($event)"/>
+        <div class="autocomplete-div">
+          <p-autoComplete name="auto-complete"
+                          [(ngModel)]="selectedMemberStart"
+                          [placeholder]="'Search Member'"
+                          [inputStyleClass]="'default-input-3'"
+                          [styleClass]="'default-input-1-container'"
+                          [style.width.%]="100"
+                          [suggestions]="foundMembersStart"
+                          (onKeyUp)="onSubmitStartMember($event)"/>
+        </div>
       </div>
       <div class="select-div">
         <label>End member:</label>
-<!--        <select class="default-input-3" [(ngModel)]="endMemberId">-->
-<!--          <option *ngFor="let member of allMembers"-->
-<!--                  [value]="member.getMemberId()">-->
-<!--            {{ member.username }}-->
-<!--          </option>-->
-<!--        </select>-->
+        <div class="autocomplete-div">
+          <p-autoComplete name="auto-complete"
+                          [(ngModel)]="selectedMemberEnd"
+                          [placeholder]="'Search Member'"
+                          [inputStyleClass]="'default-input-3'"
+                          [styleClass]="'default-input-1-container'"
+                          [style.width.%]="100"
+                          [suggestions]="foundMembersEnd"
+                          (onKeyUp)="onSubmitMemberEnd($event)"/>
+        </div>
       </div>
       <div class="buttons-div">
         <button class="default-btn" (click)="onFindShortestPath()">Find Shortest Path</button>

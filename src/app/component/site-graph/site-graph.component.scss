@@ -3,25 +3,34 @@
 .site-graph-body-div {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 
   width: 100%;
   margin-bottom: 40px;
 }
 
-.site-graph-div {
+.site-graph-div, .site-graph-main-div {
   display: block;
   justify-content: center;
   align-items: center;
 
-  height: 600px;
-  width: 600px;
+
   box-shadow:  $boxShadowDefault;
   border-radius: 15px;
 
   overflow-x: auto;
   overflow-y: auto;
+}
+
+.site-graph-div {
+  height: 800px;
+  width: 800px;
+}
+
+.site-graph-main-div {
+  height: 800px;
+  width: 800px;
 }
 
 .controls-div {
@@ -30,6 +39,8 @@
   justify-content: center;
   align-items: center;
 
+  height: 100%;
+  width: 30%;
   white-space: nowrap;
 }
 
@@ -41,9 +52,10 @@
 }
 
 .select-div {
-  justify-content: space-between;
+  justify-content: space-around;
+  width: 100%
 }
 
-.default-input-3 {
-  width: 40%;
+.autocomplete-div {
+  width: 50%;
 }

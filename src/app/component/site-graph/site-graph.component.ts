@@ -44,8 +44,6 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
   width: number = 600;
   height: number = 600;
 
-  startMemberId: number | undefined;
-  endMemberId: number | undefined;
   errorMsg: string = "";
 
   selectedMemberStart: Member | string | undefined;
@@ -232,8 +230,10 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
   onFindShortestPath() {
     this.errorMsg = "";
 
-    if (this.startMemberId != undefined && this.endMemberId != undefined) {
-      this.edgeService.getShortestPath(new TwoIds(this.startMemberId, this.endMemberId)).subscribe({
+    if (this.selectedMemberStart != undefined && this.selectedMemberEnd != undefined &&
+        this.selectedMemberStart instanceof Member && this.selectedMemberEnd instanceof Member) {
+
+      this.edgeService.getShortestPath(new TwoIds(this.selectedMemberStart.getMemberId(), this.selectedMemberEnd.getMemberId())).subscribe({
         next: (data: { path: Member[], length: number }) => {
           if(data != null && data.path.length > 0) {
             let members: Member[] = Member.initializeMembers(data.path);
@@ -258,14 +258,34 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
   }
 
   private resetValues() {
-    this.startMemberId = undefined;
-    this.endMemberId = undefined;
+    this.selectedMemberStart = undefined;
+    this.selectedMemberEnd = undefined;
     this.errorMsg = "";
   }
 
-  onSubmitMember(keyboardEvent: KeyboardEvent) {
+  onSubmitStartMember(keyboardEvent: KeyboardEvent) {
     if (keyboardEvent.key === 'Enter') {
+      if(this.selectedMemberStart != undefined) {
+        this.memberService.findMembersByUsername(this.selectedMemberStart ?.toString()).subscribe({
+          next: (jsonMembers: Member[]) => {
+            this.foundMembersStart = Member.initializeMembers(jsonMembers)
+          },
+          error: (error: HttpErrorResponse) => console.log(error)
+        })
+      }
+    }
+  }
 
+  onSubmitMemberEnd(keyboardEvent: KeyboardEvent) {
+    if (keyboardEvent.key === 'Enter') {
+      if(this.selectedMemberEnd != undefined) {
+        this.memberService.findMembersByUsername(this.selectedMemberEnd ?.toString()).subscribe({
+          next: (jsonMembers: Member[]) => {
+            this.foundMembersEnd = Member.initializeMembers(jsonMembers)
+          },
+          error: (error: HttpErrorResponse) => console.log(error)
+        })
+      }
     }
   }
 }
