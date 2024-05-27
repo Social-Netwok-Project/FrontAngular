@@ -41,8 +41,8 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
   allMembers: Member[] = [];
   allEdges: Edge[] = []
 
-  width: number = 1200;
-  height: number = 1200;
+  svgSizeMain: number = 1500;
+  svgSizeShortestPath: number = 300;
 
   errorMsg: string = "";
 
@@ -77,8 +77,8 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
     }).subscribe({
       next: (value: Member[] | Edge[]) => {
         if (this.allMembers.length > 0 && this.allEdges.length > 0) {
-          this.renderGraph(this.allMembers, this.allEdges, "#site-graph-main");
-          this.renderGraph(this.allMembers, this.allEdges, "#site-graph");
+          this.renderGraph(this.allMembers, this.allEdges, "#site-graph-main", this.svgSizeMain);
+          this.renderGraph(this.allMembers, this.allEdges, "#site-graph", this.svgSizeShortestPath);
         }
       }
     });
@@ -105,7 +105,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
     return {nodes, links}
   }
 
-  renderGraph(members: Member[], edges: Edge[], divId: string) {
+  renderGraph(members: Member[], edges: Edge[], divId: string, svgSize: number) {
     let data = this.parseData(members, edges)
 
     if (data) {
@@ -125,7 +125,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
       d3.select(divId).select('svg').remove()
 
       let svg = d3.select(divId).append("svg")
-        .attr("viewBox", [-this.width / 2, -this.height / 2, this.width, this.height])
+        .attr("viewBox", [-svgSize / 2, -svgSize / 2, svgSize, svgSize])
         .attr("style", "max-width: 100%; height: auto; font: 12px sans-serif;")
 
       svg.append("defs").selectAll("marker")
@@ -222,9 +222,9 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
     };
   }
 
-  onReload() {
+  onReload(svgName: string, svgSize: number) {
     this.resetValues()
-    this.renderGraph(this.allMembers, this.allEdges, "#site-graph")
+    this.renderGraph(this.allMembers, this.allEdges, svgName, svgSize)
   }
 
   onFindShortestPath() {
@@ -245,7 +245,7 @@ export class SiteGraphComponent extends CookieComponent implements OnInit {
               }
             }
 
-            this.renderGraph(members, edges, "#site-graph")
+            this.renderGraph(members, edges, "#site-graph", this.svgSizeShortestPath)
           } else {
             this.errorMsg = `No Path Found`
           }

@@ -60,14 +60,14 @@ export class HomeComponent extends CookieComponent implements OnInit {
           }
         });
       }
-      if(!this.currentMemberService.isLoggedIn() || this.currentMemberService.member?.friends?.length == 0){
-        this.postService.getAllEntities().subscribe({
-          next: (jsonPosts: Post[]) => {
-            this.allPosts = Post.initializePosts(jsonPosts);
-            this.initializePostsMedia(this.allPosts).then();
-          }
-        });
-      }
+      // if(!this.currentMemberService.isLoggedIn() || this.currentMemberService.member?.friends?.length == 0){
+      //   this.postService.getAllEntities().subscribe({
+      //     next: (jsonPosts: Post[]) => {
+      //       this.allPosts = Post.initializePosts(jsonPosts);
+      //       this.initializePostsMedia(this.allPosts).then();
+      //     }
+      //   });
+      // }
     });
 
     this.el.nativeElement.style.width = `100%`;

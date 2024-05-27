@@ -10,6 +10,18 @@
     <div class="site-graph-main-div">
       <div id="site-graph-main"></div>
     </div>
+    <div class="controls-div">
+      <div class="select-div">
+        <label>SVG Size:</label>
+        <div class="autocomplete-div">
+          <input class="default-input-3" type="text" [(ngModel)]="svgSizeMain">
+        </div>
+      </div>
+      <div class="buttons-div">
+        <button class="default-btn" (click)="onReload('#site-graph-main', svgSizeMain)">Resize</button>
+      </div>
+      <span class="validation-error-span">{{ errorMsg }}</span>
+    </div>
   </div>
 
   <div class="site-graph-body-div">
@@ -43,9 +55,15 @@
                           (onKeyUp)="onSubmitMemberEnd($event)"/>
         </div>
       </div>
+      <div class="select-div">
+        <label>SVG Size:</label>
+        <div class="autocomplete-div">
+          <input class="default-input-3" type="text" [(ngModel)]="svgSizeShortestPath">
+        </div>
+      </div>
       <div class="buttons-div">
         <button class="default-btn" (click)="onFindShortestPath()">Find Shortest Path</button>
-        <button class="default-btn" (click)="onReload()">Reset</button>
+        <button class="default-btn" (click)="onReload('#site-graph', svgSizeShortestPath)">Reset</button>
       </div>
       <span class="validation-error-span">{{ errorMsg }}</span>
     </div>
