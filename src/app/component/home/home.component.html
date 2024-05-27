@@ -10,19 +10,24 @@
       </div>
     </div>
   </ng-container>
-  <ng-container *ngIf="!currentMemberService.isLoggedIn() || !hasFriends">
-    <div class="empty-elements-body-div" *ngIf="!hasFriends">
-      <div class="empty-elements-div">
-        <span class="title-span">Find Friend Posts By Following Other People!</span>
-      </div>
+  <div class="empty-elements-body-div" *ngIf="!hasFriends">
+    <div class="empty-elements-div">
+      <span class="title-span">Find Friend Posts By Following Other People!</span>
     </div>
-    <div class="posts-container" *ngFor="let post of allPosts">
-      <app-post
-        [style.width.%]="100"
-        [post]="post">
-      </app-post>
+  </div>
+  <div class="empty-elements-body-div" *ngIf="(friendsHaveNoPosts && hasFriends) || currentMemberService.isLoggedIn()">
+    <div class="empty-elements-div">
+      <span class="title-span">Currently following no one, <a href="/research">Connect</a> with other users</span>
     </div>
-  </ng-container>
+  </div>
+<!--  <ng-container *ngIf="!currentMemberService.isLoggedIn() || !hasFriends || friendsHaveNoPosts">-->
+<!--    <div class="posts-container" *ngFor="let post of allPosts">-->
+<!--      <app-post-->
+<!--        [style.width.%]="100"-->
+<!--        [post]="post">-->
+<!--      </app-post>-->
+<!--    </div>-->
+<!--  </ng-container>-->
 </div>
 <app-footer
   [footerTopMinValue]="footerTopMinValue"

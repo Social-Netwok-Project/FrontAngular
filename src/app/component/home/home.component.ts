@@ -11,6 +11,7 @@ import {PostImageService} from "../../service/post-image.service";
 import {PostVideoService} from "../../service/post-video.service";
 import {Post} from "../../model/post";
 import {PostService} from "../../service/post.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -29,6 +30,7 @@ export class HomeComponent extends CookieComponent implements OnInit {
 
   allPosts: Post[] = [];
   hasFriends: boolean = false;
+  friendsHaveNoPosts: boolean = true;
 
   constructor(private el: ElementRef,
               protected override cookieService: CookieService,
@@ -36,7 +38,8 @@ export class HomeComponent extends CookieComponent implements OnInit {
               protected override postVideoService: PostVideoService,
               protected override postService: PostService,
               protected override currentMemberService: CurrentMemberService,
-              protected override memberService: MemberService) {
+              protected override memberService: MemberService,
+              protected override router: Router, protected override route: ActivatedRoute) {
     super();
   }
 
@@ -47,6 +50,13 @@ export class HomeComponent extends CookieComponent implements OnInit {
           if(success) {
             this.initializeMembersPostsMedia(this.currentMemberService.member?.friends!).then();
             this.hasFriends = this.currentMemberService.member?.friends?.length! > 0;
+            if(this.hasFriends) {
+              this.currentMemberService.member?.friends?.forEach(friend => {
+                if(friend.posts?.length > 0) {
+                  this.friendsHaveNoPosts = false;
+                }
+              })
+            }
           }
         });
       }

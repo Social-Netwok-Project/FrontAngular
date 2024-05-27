@@ -1,18 +1,18 @@
 <div (onResize)="handleFooterTopMinValue($event, 200)" class="main-page-body-div">
-  <div class="empty-elements-body-div" *ngIf="recommendPostsByLikes.length == 0">
+  <div class="empty-elements-body-div" *ngIf="recommendPosts.length == 0">
     <div class="empty-elements-div">
       <span class="title-span">{{discoverNavigationItem.getName()}} New Posts By Liking Other Posts!</span>
     </div>
   </div>
 
-  <div class="posts-container" *ngFor="let post of recommendPostsByLikes">
+  <div class="posts-container" *ngFor="let post of recommendPosts">
     <app-post
       [style.width.%]="100"
       [post]="post">
     </app-post>
   </div>
 
-  <ng-container *ngIf="recommendPostsByLikes.length == 0">
+  <ng-container *ngIf="recommendPosts.length == 0">
     <div class="posts-container" *ngFor="let post of allPosts">
       <app-post
         [style.width.%]="100"

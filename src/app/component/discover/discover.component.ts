@@ -35,7 +35,7 @@ export class DiscoverComponent extends CookieComponent implements OnInit {
 
   discoverNavigationItem = discoverNavigationItem;
 
-  recommendPostsByLikes: Post[] = [];
+  recommendPosts: Post[] = [];
   allPosts: Post[] = [];
 
   excludedIds: number[] = [];
@@ -60,18 +60,18 @@ export class DiscoverComponent extends CookieComponent implements OnInit {
   }
 
   fetchPosts() {
-    this.postService.getRecommendedPostsByLikes(new PostBody(this.currentMemberService.member?.getMemberId()!, this.excludedIds)).subscribe({
+    let postBody = new PostBody(this.currentMemberService.member?.getMemberId()!, this.excludedIds);
+    this.postService.getRecommendedPosts(postBody).subscribe({
       next: (jsonPosts: Post[]) => {
         let newPosts = Post.initializePosts(jsonPosts);
-        console.log(newPosts)
         this.initializePostsMedia(newPosts).then(() => {
           newPosts.forEach(post => {
-            this.recommendPostsByLikes.push(post)
+            this.recommendPosts.push(post)
             this.excludedIds.push(post.postId!)
           });
         });
 
-        if(this.recommendPostsByLikes.length == 0) {
+        if(jsonPosts.length == 0) {
           this.postService.getAllEntities().subscribe({
             next: (jsonPosts: Post[]) => {
               let newPosts = Post.initializePosts(jsonPosts);

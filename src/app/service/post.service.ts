@@ -22,8 +22,8 @@ export abstract class PostService extends EntityService<Post> {
     return this.http.post<boolean>(`${this.apiBackendUrl}/${this.entityName}/is-post-liked-by-member`, twoIds);
   }
 
-  public getRecommendedPostsByLikes(postBody: PostBody): Observable<Post[]> {
-    return this.http.post<Post[]>(`${this.apiBackendUrl}/${this.entityName}/recommended-posts-by-likes`, postBody);
+  public getRecommendedPosts(postBody: PostBody): Observable<Post[]> {
+    return this.http.post<Post[]>(`${this.apiBackendUrl}/${this.entityName}/recommended-posts`, postBody);
   }
 
   public getRecommendedPostsByTags(postBody: PostBody): Observable<Post[]> {
