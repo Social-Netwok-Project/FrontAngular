@@ -28,8 +28,8 @@ export class Member {
   followingCount: number | undefined;
 
   constructor(username: string, email: string, password: string, birthdate: string,
-              creationDate?: string, userId?: number,
-              token?: string, pfpImgPath?: string) {
+              creationDate?: string, token?: string,
+              userId?: number, pfpImgPath?: string) {
     this.memberId = userId;
 
     this.email = email;
@@ -43,9 +43,7 @@ export class Member {
   }
 
   static fromJson(jsonMember: Member): Member {
-    let member = new Member(jsonMember.username, jsonMember.email, jsonMember.password,
-      jsonMember.birthdate, jsonMember.creationDate, jsonMember.memberId, jsonMember.token,
-      jsonMember.pfpImageName);
+    let member = new Member(jsonMember.username, jsonMember.email, jsonMember.password, jsonMember.birthdate, jsonMember.creationDate, jsonMember.token, jsonMember.memberId, jsonMember.pfpImageName);
     member.posts = Post.initializePosts(jsonMember.posts);
     member.tagPerMemberList = TagPerMember.initializeTagPerMembers(jsonMember.tagPerMemberList);
 

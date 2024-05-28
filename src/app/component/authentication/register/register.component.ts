@@ -17,7 +17,7 @@ import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import {emailElement, usernameElement} from "../../misc/editable-element";
 import {AuthenticationComponent} from "../authentication-component";
 import {HttpErrorResponse} from "@angular/common/http";
-import {getCurrentDate} from "../../misc/functions";
+import {generateRandomToken, getCurrentDate} from "../../misc/functions";
 
 @Component({
   selector: 'app-register',
@@ -81,13 +81,18 @@ export class RegisterComponent extends AuthenticationComponent implements OnInit
           // Generating hash from password with bcrypt (one of the packages that is used for hashing passwords)
           if (!this.isEmailExists) {
             bcrypt.hash(this.passwordInput, this.hashSalt, (err, hashPassword) => {
-              let newMember: Member = new Member(this.usernameInput, this.emailInput, hashPassword, this.birthDateInput, getCurrentDate())
-              console.log(newMember)
+              let token = generateRandomToken();
+              let newMember: Member = new Member(this.usernameInput, this.emailInput, hashPassword, this.birthDateInput, getCurrentDate(),
+                token)
+              this.setUserToken(token)
               this.memberService.addEntity(newMember).subscribe({
                 next: (jsonMember: Member) => {
                   if (jsonMember != null) {
                     console.log("User added: ", jsonMember);
-                    this.router.navigate(['/home'], {relativeTo: this.route}).then();
+                    this.currentMemberService.setCounter(0)
+                    this.initializeMemberByToken().then(() => {
+                      this.routeToHome().then();
+                    });
                     resolve(true);
                   } else {
                     console.log("Error, user is null");

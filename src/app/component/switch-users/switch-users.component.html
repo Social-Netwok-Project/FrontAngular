@@ -11,7 +11,7 @@
     <input class="default-input-3" placeholder="Search By Username..." [(ngModel)]="searchString">
   </div>
   <div class="member-banner-container">
-    <ng-container *ngFor="let member of allMembers">
+    <ng-container *ngFor="let member of getFilteredMembers()">
       <div class="member-banner-body-div" *ngIf="member.getMemberId() != currentMemberService.member?.getMemberId()">
         <app-member-banner
           [style.width.%]="50"

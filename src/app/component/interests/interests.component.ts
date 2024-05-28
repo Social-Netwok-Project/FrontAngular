@@ -61,6 +61,7 @@ export class InterestsComponent extends CookieComponent implements OnInit {
     this.postService.getRecommendedPostsByTags(new PostBody(this.currentMemberService.member?.getMemberId()!, this.excludedIds)).subscribe({
       next: (jsonPosts: Post[]) => {
         let newPosts = Post.initializePosts(jsonPosts);
+        console.log(newPosts)
         this.initializePostsMedia(newPosts).then(() => {
           newPosts.forEach(post => {
             this.recommendPostsByTags.push(post)
@@ -68,21 +69,6 @@ export class InterestsComponent extends CookieComponent implements OnInit {
           });
           console.log(this.excludedIds)
         });
-
-        if(jsonPosts.length == 0) {
-          this.postService.getAllEntities().subscribe({
-            next: (jsonPosts: Post[]) => {
-              let newPosts = Post.initializePosts(jsonPosts);
-              this.initializePostsMedia(newPosts).then(() => {
-                newPosts.forEach(post => {
-                  this.allPosts.push(post)
-                  this.excludedIds.push(post.postId!)
-                });
-              });
-            },
-            error: (error: HttpErrorResponse) => console.error(error)
-          });
-        }
       },
       error: (error: HttpErrorResponse) => console.error(error)
     });

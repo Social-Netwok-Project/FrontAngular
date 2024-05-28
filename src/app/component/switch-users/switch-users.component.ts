@@ -58,4 +58,7 @@ export class SwitchUsersComponent extends CookieComponent implements OnInit {
     this.el.nativeElement.style.width = `100%`;
   }
 
+  getFilteredMembers() {
+    return this.allMembers.filter(member => member.username.toLowerCase().includes(this.searchString.toLowerCase()));
+  }
 }
